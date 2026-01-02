@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Gin Rummy</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="game">
+  <h1>GIN RUMMY</h1>
+
+  <div id="scoreboard">
+    Score — You: 0 | CPU: 0
+  </div>
+
+  <div id="status-bar">
+    <div id="message">Click "New Hand" to start.</div>
+    <button id="btn-new">New Hand</button>
+  </div>
+
+  <div id="table">
+    <div class="row">
+      <div>Computer Hand</div>
+      <div id="cpu-hand" class="hand"></div>
+    </div>
+
+    <div id="center-area">
+      <div>
+        <div id="stock" class="card back"><span>GIN</span></div>
+        <div>Stock <span id="stock-count"></span></div>
+      </div>
+      <div>
+        <div id="discard-top" class="card back"><span>EMPTY</span></div>
+        <div>Discard</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>Your Hand</div>
+      <div id="player-hand" class="hand"></div>
+    </div>
+
+    <div style="text-align:center; margin-top:8px;">
+      <button id="btn-draw-stock" disabled>Draw Stock</button>
+      <button id="btn-draw-discard" disabled>Draw Discard</button>
+      <button id="btn-knock" disabled>Knock (≤10)</button>
+      <button id="btn-gin" disabled>Gin (0)</button>
+    </div>
+
+    <div id="deadwood-info">Deadwood: –</div>
+    <div id="log"></div>
+  </div>
+</div>
+
+<script src="gringinrummy.js"></script>
+</body>
+</html>
