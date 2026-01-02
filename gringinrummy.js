@@ -196,9 +196,12 @@
       bestPattern = [];
     }
 
+      console.log("Evaluate: best Deadwood = ", bestDW, "  Best Melds = ", bestPattern);
+      
     return {deadwood: bestDW, melds: bestPattern};
   }
 
+    //_ meldCardIds
   function meldCardIds(hand, evalInfo) {
     const ids = new Set();
     for (const meld of evalInfo.melds) {
@@ -207,7 +210,7 @@
       }
     }
     return ids;
-  }
+  } //meldCardIds
 
   /* ------------------------------
      Scoring + Tally
@@ -283,6 +286,7 @@
      Rendering
   ------------------------------ */
 
+    //__ render
   function render() {
     el.cpu.innerHTML = "";
     for (let i=0;i<game.cpu.length;i++) {
@@ -301,7 +305,11 @@
       const f = cardFace(c);
       if (meldIds.has(c.id)) f.classList.add("meld-card");
       f.onclick = () => playerDiscard(c.id);
-      el.player.appendChild(f);
+	el.player.appendChild(f);
+
+	if (game.drawn === c.id) {
+	    f.classList.add("just-drawn");
+	}
     }
 
     el.deadwood.textContent = "Deadwood: " + evalPlayer.deadwood;
@@ -319,26 +327,49 @@
       el.discard.innerHTML = "<span>EMPTY</span>";
     }
 
-    updateButtons();
-  }
+     updateButtons();
+  } // render
 
-  function updateButtons() {
-    const t = game.turn === "player";
-    const p = game.phase;
+    //__ updateButtons
+    function updateButtons() {
+	
+//	console.log("updateButtons game.turn = ",game.turn );
+	
+	const t = game.turn === "player";
+	const p = game.phase;
 
+//	console.log("updateButtons b: player = ",t, " and phase=", p);
+	
     el.btnDrawStock.disabled   = !(t && p==="await-draw" && game.stock.length);
     el.btnDrawDiscard.disabled = !(t && p==="await-draw" && game.discard.length);
 
     el.btnKnock.disabled = true;
     el.btnGin.disabled   = true;
 
-    if (t && p === "await-discard") {
-      const evalPlayer = evaluate(game.player);
-      if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
-      if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
-    }
-  }
+      if (t && p === "await-discard") {
 
+	  const evalPlayer = evaluate(game.player);
+	  
+	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
+	  
+	  if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
+	  if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
+	  
+      }
+
+	/// try this one out .. if play and awiting to draw
+	if (t && p === "await-draw") {
+	  const evalPlayer = evaluate(game.player);
+	  
+	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
+	  
+	  if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
+	  if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
+	  
+      }
+	
+  } // updateButtons
+    
   /* ------------------------------
      Game Flow
   ------------------------------ */
@@ -368,25 +399,31 @@
     render();
   }
 
-  function drawStock() {
-    if (game.turn!=="player" || game.phase!=="await-draw") return;
-    if (!game.stock.length) return;
-    const c = game.stock.pop();
-    game.player.push(c);
-    game.drawn = c;
-    log("You drew from stock.");
-    game.phase = "await-discard";
-    setMsg("Click a card to discard, or Knock/Gin if available.");
-    render();
-  }
-
+    //__ drawStock
+    function drawStock() {
+	if (game.turn!=="player" || game.phase!=="await-draw") return;
+	if (!game.stock.length) return;
+	const c = game.stock.pop();
+	game.player.push(c);
+	game.drawn = c;
+	
+	log("You drew from stock.", prettyCard(c));
+	
+	game.phase = "await-discard";
+	setMsg("Click a card to discard, or Knock/Gin if available.");
+	render();
+    } //drawStock
+    
   function drawDiscard() {
     if (game.turn!=="player" || game.phase!=="await-draw") return;
     if (!game.discard.length) return;
     const c = game.discard.pop();
     game.player.push(c);
     game.drawn = c;
-    log("You drew " + prettyCard(c) + " from discard.");
+      log("You drew " + prettyCard(c) + " from discard.");
+
+      game.drawn = c.id;
+
     game.phase = "await-discard";
     setMsg("Click a card to discard, or Knock/Gin if available.");
     render();
@@ -398,7 +435,10 @@
     if (i<0) return;
     const [c] = game.player.splice(i,1);
     game.discard.push(c);
-    log("You discarded " + prettyCard(c) + ".");
+      log("You discarded " + prettyCard(c) + ".");
+
+      game.drawn = c.id;
+
     game.drawn = null;
 
     endPlayerTurn();
@@ -563,7 +603,6 @@
       const isMeld = meldIds.has(c.id);
       const meldPenalty = isMeld ? -10 : 0;
       const lowPenalty = (c.rank <= 4 ? -1 : 0);
-      const score = v + meldPenalty
       const score = v + meldPenalty + lowPenalty;
       if (score > bestScore) {
         bestScore = score;
