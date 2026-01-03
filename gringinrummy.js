@@ -263,15 +263,20 @@
       `You: ${matchScore.player}\n` +
       `CPU: ${matchScore.cpu}`;
 
-    alert(tally);
+      alert(tally);
+//       showMessage(tally);
+      showMessage("We have a tally");
+
   }
 
   function checkMatchEnd() {
     if (matchScore.player >= matchScore.target) {
       alert(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
+//      showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
       resetMatch();
     } else if (matchScore.cpu >= matchScore.target) {
       alert(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
+//      showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
       resetMatch();
     }
   }
@@ -301,16 +306,26 @@
     const evalPlayer = evaluate(sorted);
     const meldIds = meldCardIds(sorted, evalPlayer);
 
+  //    console.log("yes in render");
+  //    console.log("game draw = ", game.drawn);
+      
     for (const c of sorted) {
       const f = cardFace(c);
       if (meldIds.has(c.id)) f.classList.add("meld-card");
       f.onclick = () => playerDiscard(c.id);
 	el.player.appendChild(f);
 
+//	console.log("test card=", c.id );
+	
 	if (game.drawn === c.id) {
 	    f.classList.add("just-drawn");
 	}
-    }
+	if (game.drawn?.id === c.id) {
+	    f.classList.add("just-drawn");
+	}
+
+
+    } // for loop
 
     el.deadwood.textContent = "Deadwood: " + evalPlayer.deadwood;
 
@@ -407,29 +422,29 @@
 	game.player.push(c);
 	game.drawn = c;
 	
-	log("You drew from stock.", prettyCard(c));
+	log("You drew from stock: " + prettyCard(c) );
 	
 	game.phase = "await-discard";
 	setMsg("Click a card to discard, or Knock/Gin if available.");
 	render();
     } //drawStock
     
-  function drawDiscard() {
-    if (game.turn!=="player" || game.phase!=="await-draw") return;
-    if (!game.discard.length) return;
-    const c = game.discard.pop();
-    game.player.push(c);
-    game.drawn = c;
-      log("You drew " + prettyCard(c) + " from discard.");
-
-      game.drawn = c.id;
-
-    game.phase = "await-discard";
-    setMsg("Click a card to discard, or Knock/Gin if available.");
-    render();
+    function drawDiscard() {
+	if (game.turn!=="player" || game.phase!=="await-draw") return;
+	if (!game.discard.length) return;
+	const c = game.discard.pop();
+	game.player.push(c);
+	game.drawn = c;
+	log("You drew " + prettyCard(c) + " from discard.");
+	
+	game.drawn = c.id;  //... not sure this is right?
+	
+	game.phase = "await-discard";
+	setMsg("Click a card to discard, or Knock/Gin if available.");
+	render();
   }
-
-  function playerDiscard(id) {
+    
+    function playerDiscard(id) {
     if (game.turn!=="player" || game.phase!=="await-discard") return;
     const i = game.player.findIndex(c=>c.id===id);
     if (i<0) return;
@@ -634,6 +649,7 @@
     render();
   }
 
+    //__ cpuKnock
   function cpuKnock() {
     const cEval = evaluate(game.cpu);
     const pEval = evaluate(game.player);
@@ -666,7 +682,18 @@
     game.phase = "round-over";
     setMsg("CPU knocked. Click New Hand to play again.");
     render();
-  }
+  } //cpuKnock
+
+    
+    function showMessage(msg) {
+	document.getElementById("modal-text").textContent = msg;
+	document.getElementById("modal").style.display = "flex";
+    }
+    
+    function closeModal() {
+	document.getElementById("modal").style.display = "none";
+    }
+    
 
   /* ------------------------------
      Event Wiring
