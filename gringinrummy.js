@@ -263,20 +263,20 @@
       `You: ${matchScore.player}\n` +
       `CPU: ${matchScore.cpu}`;
 
-      alert(tally);
-//       showMessage(tally);
-      showMessage("We have a tally");
+ //     alert(tally);
+       showMessage(tally);
+//      showMessage("We have a tally");
 
   }
 
   function checkMatchEnd() {
     if (matchScore.player >= matchScore.target) {
-      alert(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
-//      showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
+ //     alert(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
+      showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
       resetMatch();
     } else if (matchScore.cpu >= matchScore.target) {
-      alert(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
-//      showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
+   //   alert(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
+      showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
       resetMatch();
     }
   }
@@ -409,6 +409,10 @@
     game.discard.push(game.deck.pop());
     while (game.deck.length) game.stock.push(game.deck.pop());
 
+      console.log("closeModal is", window.closeModal);
+      
+//      showMessage(`Here we go\na and another new line\n the end\n\n`);
+      
     setMsg("Your turn: draw from stock or discard.");
     log("New hand started.");
     render();
@@ -499,13 +503,29 @@
      Knock + Gin
   ------------------------------ */
 
-  function playerKnock() {
-    if (game.turn!=="player" || game.phase!=="await-discard") return;
-    const pEval = evaluate(game.player);
-    if (pEval.deadwood > 10) {
-      alert("You can only knock with deadwood 10 or less.");
+    //__ playerKnock
+    function playerKnock() {
+
+	console.log("I just knocked");
+
+	console.log("game.turn=",game.turn);
+	console.log("game.phase=", game.phase);
+
+//	if (game.turn!=="player" || game.phase!=="await-discard") return;
+//	if (game.turn!=="player") return;
+
+	console.log("at a");
+
+	const pEval = evaluate(game.player);
+
+	if (pEval.deadwood > 10) {
+//      alert("You can only knock with deadwood 10 or less.");
+      showMessage("You can only knock with deadwood 10 or less.");
       return;
     }
+
+		console.log("at b");
+
     const cEval = evaluate(game.cpu);
     const pDW = pEval.deadwood;
     const cDW = cEval.deadwood;
@@ -526,13 +546,14 @@
     game.phase = "round-over";
     setMsg("Hand over. Click New Hand to play again.");
     render();
-  }
+  } // playerKnock
 
   function playerGin() {
     if (game.turn!=="player" || game.phase!=="await-discard") return;
     const pEval = evaluate(game.player);
     if (pEval.deadwood !== 0) {
-      alert("Gin requires 0 deadwood.");
+	//alert("Gin requires 0 deadwood.");
+      showMessage("Gin requires 0 deadwood.");
       return;
     }
     const cEval = evaluate(game.cpu);
@@ -686,14 +707,11 @@
 
     
     function showMessage(msg) {
-	document.getElementById("modal-text").textContent = msg;
+	const padded = msg + "\n\n"; // always add two newlines
+	document.getElementById("modal-text").textContent = padded;
 	document.getElementById("modal").style.display = "flex";
     }
-    
-    function closeModal() {
-	document.getElementById("modal").style.display = "none";
-    }
-    
+
 
   /* ------------------------------
      Event Wiring
@@ -708,3 +726,10 @@
   updateScoreboard();
   render();
 })();
+
+// this make the function global ...
+
+   function closeModal() {
+	console.log("in close");
+	document.getElementById("modal").style.display = "none";
+    }
