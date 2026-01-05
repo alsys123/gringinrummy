@@ -409,7 +409,7 @@
     game.discard.push(game.deck.pop());
     while (game.deck.length) game.stock.push(game.deck.pop());
 
-      console.log("closeModal is", window.closeModal);
+   //   console.log("closeModal is", window.closeModal);
       
 //      showMessage(`Here we go\na and another new line\n the end\n\n`);
       
