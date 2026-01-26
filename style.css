@@ -107,7 +107,7 @@
 .card.just-drawn {
   border-color: #ffb400;
   box-shadow: 0 0 20px #ffb400;
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
   .card.player-card {
