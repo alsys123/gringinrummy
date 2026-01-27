@@ -104,18 +104,19 @@
   /* ------------------------------
      Meld / Deadwood Evaluation
   ------------------------------ */
-
-  function sortHandByRank(hand) {
-    return [...hand].sort((a,b) => {
-      if (a.rank === b.rank) {
-        const order = {"♣":0,"♦":1,"♥":2,"♠":3};
-        return order[a.suit] - order[b.suit];
-      }
-      return a.rank - b.rank;
-    });
-  }
-
-  function isSet(cards) {
+    
+    //__ sortHandByRank
+    function sortHandByRank(hand) {
+	return [...hand].sort((a,b) => {
+	    if (a.rank === b.rank) {
+		const order = {"♣":0,"♦":1,"♥":2,"♠":3};
+		return order[a.suit] - order[b.suit];
+	    }
+	    return a.rank - b.rank;
+	});
+    } // sortHandByRank
+    
+    function isSet(cards) {
     if (cards.length < 3) return false;
     const r = cards[0].rank;
     return cards.every(c => c.rank === r);
@@ -230,7 +231,8 @@
     } else if (result.type === "knock") {
       const diff = Math.abs(result.pDW - result.cDW);
       if (result.winner === "player") points = diff;
-      else points = 10 + diff;
+//      else points = 10 + diff;  .. no reason
+      else points = diff;
     } else if (result.type === "stock") {
       points = Math.abs(result.pDW - result.cDW);
     }
@@ -293,40 +295,183 @@
 
     //__ render
   function render() {
-    el.cpu.innerHTML = "";
-    for (let i=0;i<game.cpu.length;i++) {
-      const b = document.createElement("div");
-      b.className = "card back";
-      b.innerHTML = "<span>CPU</span>";
-      el.cpu.appendChild(b);
+      el.cpu.innerHTML = "";
+/*
+      for (let i = 0; i < game.cpu.length; i++) {
+	  const b = document.createElement("div");
+	  b.className = "card back cpu-card";
+	  
+	  const count = game.cpu.length;
+	  
+	  // TIGHT FAN: small rotation
+	  const angle = (i - (count - 1) / 2) * 2;
+	  
+	  // RIGHT SHIFT
+	  const baseOffset = 450;
+	  const overlap = 10;
+	  const x = baseOffset + i * overlap;
+	  
+	  // ARC: cards rise toward the center
+	  const arcHeight = 18; // adjust for more/less curve
+	  const centerIndex = (count - 1) / 2;
+	  const y = Math.abs(i - centerIndex) * -arcHeight + arcHeight * centerIndex;
+	  
+	  b.style.left = `${x}px`;
+	  b.style.top = `${y}px`;
+	  b.style.transform = `rotate(${angle}deg)`;
+	  
+	  // Add animation class
+	  b.classList.add("cpu-fan-in");
+	  
+	  el.cpu.appendChild(b);
+	  }
+*/
+      
+      // these are the CPU cards
+	for (let i = 0; i < game.cpu.length; i++) {
+	const b = document.createElement("div");
+	b.className = "card back";
+	const count = game.cpu.length;
+	  
+	// tighter fan: smaller angle spread
+	// was 4–5°, now tighter
+	  const angle = (i - (count - 1) / 2) * 2.5;
+	  
+	  // smaller cards: reduce width/height in CSS (below)
+	  // shift fan to the right
+	  const baseOffset = 700;  // shift entire fan right
+	  const overlap = 6;      // tighter overlap
+	  
+	  const x = baseOffset + i * overlap;
+	  
+	  b.style.position = "absolute";
+	  b.style.left = x + "px";
+	  b.style.top = "0px";
+	  b.style.transform = `rotate(${angle}deg)`;
+	  
+	  el.cpu.appendChild(b);
+      }
+
+      // player cards rendering
+      /*
+      el.player.innerHTML = "";
+
+const sorted = sortHandWithMeldsFirst(game.player);
+const evalPlayer = evaluate(sorted);
+const meldIds = meldCardIds(sorted, evalPlayer);
+
+let gapInserted = false;
+
+for (let i = 0; i < sorted.length; i++) {
+    const c = sorted[i];
+    const isMeld = meldIds.has(c.id);
+
+    // Insert visual gap before first non-meld card
+    if (!isMeld && !gapInserted) {
+        const gap = document.createElement("div");
+        gap.className = "meld-gap";
+        el.player.appendChild(gap);
+        gapInserted = true;
     }
 
-    el.player.innerHTML = "";
-    const sorted = sortHandByRank(game.player);
-    const evalPlayer = evaluate(sorted);
-    const meldIds = meldCardIds(sorted, evalPlayer);
+    const f = cardFace(c);
+    f.classList.add("player-card");
 
-  //    console.log("yes in render");
-  //    console.log("game draw = ", game.drawn);
+    if (isMeld) f.classList.add("meld-card");
+
+    // FAN + ARC
+    const count = sorted.length;
+//    const angle = (i - (count - 1) / 2) * 3;   // 3° per card = tight fan
+    const angle = (count - 1) / 2 - i;
+    const angleDeg = angle * 3;   // 3° per card
+
+    const arcHeight = 18;
+    const centerIndex = (count - 1) / 2;
+    const y = Math.abs(i - centerIndex) * -arcHeight + arcHeight * centerIndex;
+
+    f.style.position = "absolute";
+    f.style.left = `${i * 40}px`;  // horizontal spacing
+    
+    f.style.top = `${y}px`;
+    f.style.transform = `rotate(${angle}deg)`;
+
+    // Animation
+    f.classList.add("player-fan-in");
+
+    // Click handler
+    f.onclick = () => playerDiscard(c.id);
+
+    // Just-drawn highlight
+    if (game.drawn === c.id || game.drawn?.id === c.id) {
+        f.classList.add("just-drawn");
+    }
+
+    el.player.appendChild(f);
+}
+
+      */
       
-    for (const c of sorted) {
-      const f = cardFace(c);
-      if (meldIds.has(c.id)) f.classList.add("meld-card");
-      f.onclick = () => playerDiscard(c.id);
-	el.player.appendChild(f);
+      el.player.innerHTML = "";
+      //      const sorted = sortHandByRank(game.player);
+      const sorted = sortHandWithMeldsFirst(game.player);
+      const evalPlayer = evaluate(sorted);
+      const meldIds = meldCardIds(sorted, evalPlayer);
+      
+      //    console.log("yes in render");
+      //    console.log("game draw = ", game.drawn);
+      
+      
+      let gapInserted = false;
+      let i= 0;
+      const offset = 0; // move entire hand right
 
-//	console.log("test card=", c.id );
+for (const c of sorted) {
+    const isMeld = meldIds.has(c.id);
+
+    // Insert gap before the first non-meld card
+    if (!isMeld && !gapInserted) {
+        const gap = document.createElement("div");
+        gap.className = "meld-gap";
+
+	// new gap
+	gap.style.position = "absolute";
+	gap.style.left = `${offset + i * 75}px`;
+	gap.style.top = "400px";
+	//
 	
-	if (game.drawn === c.id) {
-	    f.classList.add("just-drawn");
-	}
-	if (game.drawn?.id === c.id) {
-	    f.classList.add("just-drawn");
-	}
+        el.player.appendChild(gap);
+
+	i++; // gap takes a spot
+	
+        gapInserted = true;
+    }
+
+    const f = cardFace(c);
+    if (isMeld) f.classList.add("meld-card");
+    // REQUIRED — without this, cards do not appear
+    f.style.position = "absolute";
+    
+    f.style.left = `${offset + i * 95}px`;
+    
+    //    f.style.left = `${i * 75}px`;
+    f.style.top = "400px";
+    
+    f.onclick = () => playerDiscard(c.id);
+    el.player.appendChild(f);
+      
+      
+    if (game.drawn === c.id || game.drawn?.id === c.id) {
+        f.classList.add("just-drawn");
+    }
+
+    i++;
+    
+    el.player.appendChild(f);
+}
+      
 
 
-    } // for loop
-
+      // ====== display deadwook count ======
     el.deadwood.textContent = "Deadwood: " + evalPlayer.deadwood;
 
     el.stockCount.textContent = "(" + game.stock.length + ")";
@@ -733,3 +878,67 @@
 	console.log("in close");
 	document.getElementById("modal").style.display = "none";
     }
+
+// --- new sort by melts first routines
+
+function findSets(hand) {
+  const counts = {};
+  for (const c of hand) {
+    counts[c.rank] = (counts[c.rank] || 0) + 1;
+  }
+
+  const setRanks = new Set(
+    Object.keys(counts).filter(r => counts[r] >= 3).map(Number)
+  );
+
+  return hand.filter(c => setRanks.has(c.rank));
+}
+
+function findRuns(hand) {
+  const bySuit = { "♣": [], "♦": [], "♥": [], "♠": [] };
+  hand.forEach(c => bySuit[c.suit].push(c));
+
+  const runs = new Set();
+
+  for (const suit in bySuit) {
+    const cards = bySuit[suit].sort((a,b) => a.rank - b.rank);
+
+    let temp = [cards[0]];
+    for (let i = 1; i < cards.length; i++) {
+      if (cards[i].rank === cards[i-1].rank + 1) {
+        temp.push(cards[i]);
+      } else {
+        if (temp.length >= 3) temp.forEach(c => runs.add(c.id));
+        temp = [cards[i]];
+      }
+    }
+    if (temp.length >= 3) temp.forEach(c => runs.add(c.id));
+  }
+
+  return hand.filter(c => runs.has(c.id));
+}
+
+function sortHandWithMeldsFirst(hand) {
+  const order = {"♣":0,"♦":1,"♥":2,"♠":3};
+
+  const sets = findSets(hand);
+  const runs = findRuns(hand);
+
+  // mark all meld cards
+  const meldIDs = new Set([...sets, ...runs].map(c => c.id));
+
+  return [...hand].sort((a, b) => {
+    const aMeld = meldIDs.has(a.id);
+    const bMeld = meldIDs.has(b.id);
+
+    // melds first
+    if (aMeld && !bMeld) return -1;
+    if (!aMeld && bMeld) return 1;
+
+    // inside melds or inside non-melds → normal sort
+    if (a.rank === b.rank) {
+      return order[a.suit] - order[b.suit];
+    }
+    return a.rank - b.rank;
+  });
+}

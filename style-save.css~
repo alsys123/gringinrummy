@@ -3,8 +3,8 @@
     --card-bg: #fff;
     --card-border: #222;
     --card-radius: 8px;
-    --card-width: 90px;
-    --card-height: 130px;
+    --card-width: 70px;
+    --card-height: 100px;
     --accent: #ffcc00;
   }
 
@@ -103,14 +103,82 @@
     cursor: default;
     transition: transform 0.08s ease, box-shadow 0.08s ease, border-color 0.08s ease;
   }
-  
+
+  /*
 .card.just-drawn {
   border-color: #ffb400;
-  box-shadow: 0 0 20px #ffb400;
-  transform: scale(1.1);
+  box-shadow: 0 0 20px #ffb400;  transform: scale(1.12) rotate(-3deg);
+  animation: pop 0.25s ease-out;
 }
 
-  .card.player-card {
+@keyframes pop {
+    0% { transform: scale(0.5); opacity: 0; }
+    80% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1.12); }
+}
+ */
+.card.just-drawn {
+  border: 4px solid #ffb400;
+  box-shadow: 0 0 25px 10px rgba(255, 180, 0, 0.7);
+  transform: scale(1.12);
+  z-index: 10;
+  animation:
+    pulse 0.8s ease-in-out infinite alternate,
+    glow 1.2s ease-in-out infinite alternate;
+}
+
+
+@keyframes glow {
+  from { box-shadow: 0 0 15px #ffb400; }
+  to   { box-shadow: 0 0 35px #ffb400; }
+}
+#player {
+  position: relative;
+  height: 180px;
+  display: block;
+  overflow: visible;
+}
+
+/*
+#player {
+  position: relative;
+  height: 180px;
+}
+*/
+.player-card {
+  position: absolute;
+  transform-origin: bottom center;
+  transition: transform 0.2s ease;
+  opacity: 0;
+}
+
+/* FAN-IN ANIMATION */
+.player-fan-in {
+  animation: playerFanIn 0.35s ease-out forwards;
+}
+
+@keyframes playerFanIn {
+  0% {
+    transform: scale(0.6) rotate(0deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Gap between melds and deadwood */
+.meld-gap {
+  width: 30px;
+  display: inline-block;
+}
+
+.card.player-card {
     cursor: pointer;
   }
 
@@ -124,34 +192,96 @@
     box-shadow: 0 4px 0 rgba(0,0,0,0.5), 0 0 8px rgba(255,255,255,0.35);
   }
 
-  meld-gap {
-  width: 50px;
+  
+  #cpu {
+  position: relative;
+  height: 150px;
+}
+
+.card.back.cpu-card {
+  width: 55px;
+  height: 80px;
+  border-radius: 6px;
+  position: absolute;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+  transform-origin: bottom center;
+  opacity: 0;
+}
+
+/* FAN-IN ANIMATION */
+.cpu-fan-in {
+  animation: cpuFanIn 0.4s ease-out forwards;
+}
+
+@keyframes cpuFanIn {
+  0% {
+    transform: scale(0.6) rotate(0deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.card.back {
+  width: 60px;      /* smaller */
+  height: 90px;     /* smaller */
+  border-radius: 6px;
+  background: repeating-linear-gradient(
+    135deg,
+    #17506b,
+    #17506b 6px,
+    #0b2b3c 6px,
+    #0b2b3c 12px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e2f3ff;
+  font-weight: 700;
+  font-size: 16px;  /* smaller text */
+  box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+}
+
+.meld-gap {
+  width: 20px;   /* adjust to taste */
   display: inline-block;
 }
 
+  /*
   .card.back {
-    background: repeating-linear-gradient(
-      135deg,
-      #17506b,
-      #17506b 6px,
-      #0b2b3c 6px,
-      #0b2b3c 12px
-    );
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #e2f3ff;
-    font-weight: 700;
-    font-size: 22px;
-  }
+  position: absolute;
+  width: 80px;
+  height: 120px;
+  border-radius: 8px;
+  background: repeating-linear-gradient(
+    135deg,
+    #17506b,
+    #17506b 6px,
+    #0b2b3c 6px,
+    #0b2b3c 12px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e2f3ff;
+  font-weight: 700;
+  font-size: 22px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease;
+}
 
-  /* the cpu cards */
   #cpu {
-      position: relative;
-      height: 150px;
-      padding-left: 600px;
-  }
-
+  position: relative;
+  height: 140px; 
+}
+ */
+ 
   .corner {
     position: absolute;
     top: 4px;
