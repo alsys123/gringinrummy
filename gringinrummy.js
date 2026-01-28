@@ -28,8 +28,8 @@
     stockCount: document.getElementById("stock-count"),
     log: document.getElementById("log"),
     btnNew: document.getElementById("btn-new"),
-    btnDrawStock: document.getElementById("btn-draw-stock"),
-    btnDrawDiscard: document.getElementById("btn-draw-discard"),
+//    btnDrawStock: document.getElementById("btn-draw-stock"),
+//    btnDrawDiscard: document.getElementById("btn-draw-discard"),
     btnKnock: document.getElementById("btn-knock"),
     btnGin: document.getElementById("btn-gin"),
     deadwood: document.getElementById("deadwood-info"),
@@ -54,6 +54,8 @@
       [a[i],a[j]]=[a[j],a[i]];
     }
   }
+    
+
 
   function cardValue(rank) {
     if (rank === 1) return 1;
@@ -295,6 +297,7 @@
 
     //__ render
   function render() {
+
       el.cpu.innerHTML = "";
 /*
       for (let i = 0; i < game.cpu.length; i++) {
@@ -500,8 +503,8 @@ for (const c of sorted) {
 
 //	console.log("updateButtons b: player = ",t, " and phase=", p);
 	
-    el.btnDrawStock.disabled   = !(t && p==="await-draw" && game.stock.length);
-    el.btnDrawDiscard.disabled = !(t && p==="await-draw" && game.discard.length);
+//--    el.btnDrawStock.disabled   = !(t && p==="await-draw" && game.stock.length);
+//--    el.btnDrawDiscard.disabled = !(t && p==="await-draw" && game.discard.length);
 
     el.btnKnock.disabled = true;
     el.btnGin.disabled   = true;
@@ -536,7 +539,10 @@ for (const c of sorted) {
 
   function start() {
     game.deck = createDeck();
-    shuffle(game.deck);
+      shuffle(game.deck);
+
+//      rigDeckForTesting(game.deck);
+      
     game.player = [];
     game.cpu = [];
     game.stock = [];
@@ -558,7 +564,10 @@ for (const c of sorted) {
       
 //      showMessage(`Here we go\na and another new line\n the end\n\n`);
       
-    setMsg("Your turn: draw from stock or discard.");
+      setMsg("Your turn: draw from stock or discard.");
+
+      document.getElementById("btn-new").textContent = "Next Hand";
+
     log("New hand started.");
     render();
   }
@@ -640,7 +649,8 @@ for (const c of sorted) {
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
-    setMsg("Hand over. Click New Hand to play again.");
+      setMsg("Hand over. Click New Hand to play again.");
+
     render();
   }
 
@@ -689,7 +699,8 @@ for (const c of sorted) {
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
-    setMsg("Hand over. Click New Hand to play again.");
+	setMsg("Hand over. Click New Hand to play again.");
+
     render();
   } // playerKnock
 
@@ -715,7 +726,8 @@ for (const c of sorted) {
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
-    setMsg("You Gin! Click New Hand to play again.");
+      setMsg("You Gin! Click New Hand to play again.");
+
     render();
   }
 
@@ -811,7 +823,8 @@ for (const c of sorted) {
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
-    setMsg("CPU went Gin. Click New Hand to play again.");
+      setMsg("CPU went Gin. Click New Hand to play again.");
+
     render();
   }
 
@@ -857,14 +870,28 @@ for (const c of sorted) {
 	document.getElementById("modal").style.display = "flex";
     }
 
+//    add the handlers
+document.getElementById("stock").onclick = () => {
+    if (game.turn === "player") {
+	        drawStock();
+//	console.log("stock draw");
+    }
+};
+
+document.getElementById("discard-top").onclick = () => {
+    if (game.turn === "player") {
+        drawDiscard();
+//	console.log("discard draw");
+    }
+};
 
   /* ------------------------------
      Event Wiring
   ------------------------------ */
 
   el.btnNew.onclick = start;
-  el.btnDrawStock.onclick = drawStock;
-  el.btnDrawDiscard.onclick = drawDiscard;
+//--  el.btnDrawStock.onclick = drawStock;
+//--  el.btnDrawDiscard.onclick = drawDiscard;
   el.btnKnock.onclick = playerKnock;
   el.btnGin.onclick = playerGin;
 
