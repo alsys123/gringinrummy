@@ -36,6 +36,8 @@
     scoreboard: document.getElementById("scoreboard")
   };
 
+    let gBackDoorCode = 0;
+
   /* ------------------------------
      Utility Functions
   ------------------------------ */
@@ -99,11 +101,23 @@
   }
 
   function updateScoreboard() {
-    el.scoreboard.textContent =
-      `Score — You: ${matchScore.player} | CPU: ${matchScore.cpu}`;
-  }
+//    el.scoreboard.textContent =
+      //      `Score — You: ${matchScore.player} | CPU: ${matchScore.cpu}`;
+  document.getElementById("score-you").textContent = matchScore.player;
+  document.getElementById("score-cpu").textContent = matchScore.cpu;
 
-  /* ------------------------------
+  // Optional bump animation
+  document.getElementById("score-you").classList.add("score-bump");
+  document.getElementById("score-cpu").classList.add("score-bump");
+
+      setTimeout(() => {
+	  document.getElementById("score-you").classList.remove("score-bump");
+	  document.getElementById("score-cpu").classList.remove("score-bump");
+      }, 300);
+      
+  }
+    
+    /* ------------------------------
      Meld / Deadwood Evaluation
   ------------------------------ */
     
@@ -199,7 +213,7 @@
       bestPattern = [];
     }
 
-      console.log("Evaluate: best Deadwood = ", bestDW, "  Best Melds = ", bestPattern);
+//      console.log("Evaluate: best Deadwood = ", bestDW, "  Best Melds = ", bestPattern);
       
     return {deadwood: bestDW, melds: bestPattern};
   }
@@ -277,10 +291,16 @@
     function checkMatchEnd() {
 	if (matchScore.player >= matchScore.target) {
 	    showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
+	    document.getElementById("btn-new").textContent = "New Game";
+	resetMatch();
 	} else if (matchScore.cpu >= matchScore.target) {
 	    showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
+	    document.getElementById("btn-new").textContent = "New Game";
+	    resetMatch();
+	} else if (matchScore.cpu >= matchScore.target) {
+	    showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
+
 	}
-	resetMatch();
 	
     } //checkMatchEnd
     
@@ -288,7 +308,6 @@
     matchScore.player = 0;
     matchScore.cpu = 0;
       updateScoreboard();
-            document.getElementById("btn-new").textContent = "New Game";
 
   }
 
@@ -345,62 +364,73 @@
       let gapInserted = false;
       let i= 0;
       const offset = 0; // move entire hand right
+      
+      for (const c of sorted) {
+	  const isMeld = meldIds.has(c.id);
+	  
+	  // for scalling the spaces
+	  let scale = 1;
+	  if (el.player.classList.contains("normal")) scale = 1;
+	  if (el.player.classList.contains("small")) scale = 0.8;
+	  if (el.player.classList.contains("smaller")) scale = 0.65;
+	  if (el.player.classList.contains("tiny")) scale = 0.5;
+	  
+	  const effectiveSpacing = 95 * scale;
+	  
+	  
+	  // Insert gap before the first non-meld card
+	  if (!isMeld && !gapInserted) {
+              const gap = document.createElement("div");
+              gap.className = "meld-gap";
+	      
+	      // new gap
+	      gap.style.position = "absolute";
+//	      gap.style.left = `${offset + i * 75}px`;
+	      gap.style.left = `${offset + i * effectiveSpacing}px`;
 
-for (const c of sorted) {
-    const isMeld = meldIds.has(c.id);
-
-    // for scalling the spaces
-let scale = 1;
-if (el.player.classList.contains("small")) scale = 0.8;
-if (el.player.classList.contains("smaller")) scale = 0.65;
-if (el.player.classList.contains("tiny")) scale = 0.5;
-
-const effectiveSpacing = 95 * scale;
-
-    
-    // Insert gap before the first non-meld card
-    if (!isMeld && !gapInserted) {
-        const gap = document.createElement("div");
-        gap.className = "meld-gap";
-
-	// new gap
-	gap.style.position = "absolute";
-	gap.style.left = `${offset + i * 75}px`;
-	gap.style.top = "400px";
-	//
+	      gap.style.top = "400px";
+	      //
 	
-        el.player.appendChild(gap);
+              el.player.appendChild(gap);
+	      
+	      i++; // gap takes a spot
+	      
+              gapInserted = true;
+	  }
+	  
+	  const f = cardFace(c);
+	  if (isMeld) f.classList.add("meld-card");
+	  // REQUIRED — without this, cards do not appear
+	  f.style.position = "absolute";
+	  
+	  //    f.style.left = `${offset + i * 95}px`;
+	  f.style.left = `${offset + i * effectiveSpacing}px`;
+	  
+	  //    f.style.left = `${i * 75}px`;
+	  f.style.top = "400px";
+	  
+	  f.onclick = () => playerDiscard(c.id);
+//	  el.player.appendChild(f);
+      
+	  if (game.drawn === c.id || game.drawn?.id === c.id) {
+              f.classList.add("just-drawn");
+	      
+	  }
+	  
+	  
+	  i++;
 
-	i++; // gap takes a spot
-	
-        gapInserted = true;
-    }
+	  // open backdoor
+	  f.ondblclick = () => openBackDoor();
 
-    const f = cardFace(c);
-    if (isMeld) f.classList.add("meld-card");
-    // REQUIRED — without this, cards do not appear
-    f.style.position = "absolute";
-    
-//    f.style.left = `${offset + i * 95}px`;
-    f.style.left = `${offset + i * effectiveSpacing}px`;
+	  // append ONCE
+	  el.player.appendChild(f);
 
-    //    f.style.left = `${i * 75}px`;
-    f.style.top = "400px";
-    
-    f.onclick = () => playerDiscard(c.id);
-    el.player.appendChild(f);
+//	  el.player.appendChild(f);
+
+      }
       
       
-    if (game.drawn === c.id || game.drawn?.id === c.id) {
-        f.classList.add("just-drawn");
-    }
-
-    i++;
-    
-    el.player.appendChild(f);
-}
-      
-
 
       // ====== display deadwook count ======
     el.deadwood.textContent = "Deadwood: " + evalPlayer.deadwood;
@@ -428,38 +458,63 @@ const effectiveSpacing = 95 * scale;
 	
 	const t = game.turn === "player";
 	const p = game.phase;
-
-//	console.log("updateButtons b: player = ",t, " and phase=", p);
 	
-//--    el.btnDrawStock.disabled   = !(t && p==="await-draw" && game.stock.length);
-//--    el.btnDrawDiscard.disabled = !(t && p==="await-draw" && game.discard.length);
-
-    el.btnKnock.disabled = true;
-    el.btnGin.disabled   = true;
-
+	el.btnKnock.disabled = true;
+	el.btnGin.disabled   = true;
+	
       if (t && p === "await-discard") {
 
 	  const evalPlayer = evaluate(game.player);
 	  
-	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
+//	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
 	  
 	  if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
 	  if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
-	  
+
+	  // hide
+	  document.getElementById("btn-new").style.display = "none";
+	  // show it
+	document.getElementById("btn-knock").style.display = "";
+	document.getElementById("btn-gin").style.display = "";
+	  return;
       }
 
 	/// try this one out .. if play and awiting to draw
 	if (t && p === "await-draw") {
-	  const evalPlayer = evaluate(game.player);
-	  
-	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
-	  
-	  if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
-	  if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
-	  
-      }
+	    const evalPlayer = evaluate(game.player);
+	    
+	    //	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
+	    
+	    if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
+	    if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
+	    
+	    // hide
+	    document.getElementById("btn-new").style.display = "none";
+	    // show it
+ 	    document.getElementById("btn-knock").style.display = "";
+	    document.getElementById("btn-gin").style.display = "";
+	    return;
+	}
+
+	// show by default
+	document.getElementById("btn-new").style.display = "block";
+	// hide by default
+	document.getElementById("btn-knock").style.display = "none";
+	document.getElementById("btn-gin").style.display = "none";
+
 	
   } // updateButtons
+
+    // open a back door to save and restore game states
+    function openBackDoor() {
+	gBackDoorCode++;
+	//	console.log("Back door - double click: ", gBackDoorCode);
+	if (gBackDoorCode > 3 ) {
+	    document.getElementById("back-door").hidden = false;
+	}
+	return;
+    }
+
     
   /* ------------------------------
      Game Flow
@@ -492,7 +547,7 @@ const effectiveSpacing = 95 * scale;
       
 //      showMessage(`Here we go\na and another new line\n the end\n\n`);
       
-      setMsg("Your turn: draw from stock or discard.");
+      setMsg("Your turn: draw from stock or discard. New hand started.");
 
       document.getElementById("btn-new").textContent = "Next Hand";
 
@@ -554,7 +609,8 @@ const effectiveSpacing = 95 * scale;
     game.phase = "await-draw";
     setMsg("CPU thinking...");
     render();
-    setTimeout(cpuTurn, 650);
+   // setTimeout(cpuTurn, 650);
+    setTimeout(cpuTurn, 0);
   }
 
   function stockDepletionResolution() {
@@ -705,7 +761,7 @@ const effectiveSpacing = 95 * scale;
 
     game.turn = "player";
     game.phase = "await-draw";
-    setMsg("Your turn: draw from stock or discard.");
+    setMsg("Draw from stock or discard.");
     render();
   }
 
@@ -898,41 +954,3 @@ function sortHandWithMeldsFirst(hand) {
   });
 }
 
-// -- part of render
-// -- area:  866 .  Needed:  680 == normal
-function autoScaleHand(container, handLength, cardWidth, spacing) {
-    const table = document.getElementById("table");
-     const areaWidth = table ? table.clientWidth : container.clientWidth || window.innerWidth;
-//    const areaWidth = container.clientWidth;
-    const neededWidth = (handLength - 1) * spacing + cardWidth;
-
-    console.log("area: ",areaWidth, ".  Needed: ", neededWidth );
-    
-    container.classList.remove("normal", "small", "smaller", "tiny");
-
-    // Normal fits
-    if (neededWidth <= areaWidth) {
-        container.classList.add("normal");
-	console.log("Normal scale");
-        return;
-    }
-
-    // Slight scale
-    if (neededWidth * 0.9 <= areaWidth) {
-        container.classList.add("small");
-	console.log("Small scale");
-        return;
-    }
-
-    // Medium scale
-    if (neededWidth * 0.75 <= areaWidth) {
-        container.classList.add("smaller");
-	console.log("Smaller scale");
-        return;
-    }
-
-    // Heavy scale
-    container.classList.add("tiny");
-    console.log("tiny scale");
-
-}

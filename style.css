@@ -44,12 +44,14 @@
   }
 
   #message {
-    flex: 1;
-    padding: 6px 10px;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 999px;
+      flex: 1;
+      padding: 6px 10px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 999px;
+      max-width: 500px;
+      text-align: center;
   }
-
+  
   button {
     border-radius: 999px;
     border: none;
@@ -97,6 +99,11 @@
     cursor: default;
     transition: transform 0.08s ease, box-shadow 0.08s ease, border-color 0.08s ease;
   }
+
+  .hand-area.normal .card {
+  transform: scale(1);
+  transform-origin: top left;
+}
 
   .hand-area.small .card {
   transform: scale(0.8);
@@ -258,3 +265,101 @@
     padding: 14px;
   }
 */
+/*
+.scoreboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  margin: 12px 0 20px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.score-block {
+  background: blue;
+  padding: 8px 18px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  text-align: center;
+  min-width: 80px;
+  transition: transform 0.2s ease;
+}
+
+.score-block .label {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.score-block .value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.divider {
+  font-size: 20px;
+  opacity: 0.5;
+}
+
+
+.score-bump {
+  animation: bump 0.3s ease;
+}
+
+@keyframes bump {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+*/
+.scoreboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  margin: 12px 0 20px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.score-block {
+  background: linear-gradient(180deg, #1e3a8a, #1e40af); /* deep blue */
+  color: white;
+  padding: 10px 22px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25),
+              inset 0 0 10px rgba(255,255,255,0.15);
+  text-align: center;
+  min-width: 90px;
+  transition: transform 0.2s ease;
+}
+
+.score-block .label {
+  font-size: 14px;
+  opacity: 0.85;
+  letter-spacing: 0.5px;
+}
+
+.score-block .value {
+  font-size: 30px;
+  font-weight: 700;
+  margin-top: 2px;
+  text-shadow: 0 0 6px rgba(255,255,255,0.6);
+}
+
+.divider {
+  font-size: 20px;
+  color: #1e3a8a;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+/* Optional bump animation */
+.score-bump {
+  animation: bump 0.3s ease;
+}
+
+@keyframes bump {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}

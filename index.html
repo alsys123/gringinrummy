@@ -11,13 +11,33 @@
 <div id="game">
   <h1>GIN RUMMY</h1>
 
+  <!--
   <div id="scoreboard">
     Score — You: 0 | CPU: 0
   </div>
+  -->
+  <div id="scoreboard" class="scoreboard">
+  <div class="score-block you">
+    <span class="label">You</span>
+    <span id="score-you" class="value">0</span>
+  </div>
+
+  <div class="divider">vs</div>
+
+  <div class="score-block cpu">
+    <span class="label">CPU</span>
+    <span id="score-cpu" class="value">0</span>
+  </div>
+</div>
 
   <div id="status-bar">
-    <div id="message">Click "New Hand" to start.</div>
+    <div id="message">Click "New Game" to start.</div>
     <button id="btn-new">New Game</button>
+  </div>
+
+  <div id="back-door" hidden>
+    <button id="btn-backDoor-save">Save State</button>
+    <button id="btn-backDoor-restore">Restore State</button>
   </div>
 
   <div id="table">
@@ -41,15 +61,12 @@
     </div>
 
     <div style="text-align:center; margin-top:8px;">
-<!--      <button id="btn-draw-stock" disabled>Draw Stock</button>
-	  <button id="btn-draw-discard" disabled>Draw Discard</button>
-	  -->
       <button id="btn-knock" disabled>Knock (≤10)</button>
       <button id="btn-gin" disabled>Gin (0)</button>
     </div>
 
     <div id="deadwood-info">Deadwood: –</div>
-    <div id="log"></div>
+    <div id="log" hidden></div>
 
     <div id="modal" class="modal">
       <div class="modal-content">
@@ -61,6 +78,7 @@
   </div>
 </div>
 
+<script src="render.js"></script>
 <script src="gringinrummy.js"></script>
 </body>
 </html>
