@@ -68,12 +68,6 @@
     box-shadow: none;
   }
 
-  #table {
-    border-radius: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.18);
-    background: radial-gradient(circle at top, #1c7c4b 0, #06402a 50%, #02150e 100%);
-    padding: 14px;
-  }
 
   .row {
     display: flex;
@@ -103,7 +97,22 @@
     cursor: default;
     transition: transform 0.08s ease, box-shadow 0.08s ease, border-color 0.08s ease;
   }
-  
+
+  .hand-area.small .card {
+  transform: scale(0.8);
+  transform-origin: top left;
+}
+
+.hand-area.smaller .card {
+  transform: scale(0.65);
+  transform-origin: top left;
+}
+
+.hand-area.tiny .card {
+  transform: scale(0.5);
+  transform-origin: top left;
+}
+
 .card.just-drawn {
   border-color: #ffb400;
   box-shadow: 0 0 20px #ffb400;
@@ -224,3 +233,28 @@
     color: black;
     white-space: pre-wrap;
 }
+
+#player {
+  width: 100%;
+  display: block;
+  position: relative;
+}
+
+#player.normal .card {
+  transform: scale(1);
+  transform-origin: top left;
+}
+
+#table {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+/*
+  #table {
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    background: radial-gradient(circle at top, #1c7c4b 0, #06402a 50%, #02150e 100%);
+    padding: 14px;
+  }
+*/

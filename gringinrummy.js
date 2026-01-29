@@ -273,18 +273,17 @@
 
   }
 
-  function checkMatchEnd() {
-    if (matchScore.player >= matchScore.target) {
- //     alert(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
-      showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
-      resetMatch();
-    } else if (matchScore.cpu >= matchScore.target) {
-   //   alert(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
-      showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
-      resetMatch();
-    }
-  }
-
+    //__ checkMatchEnd
+    function checkMatchEnd() {
+	if (matchScore.player >= matchScore.target) {
+	    showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
+	} else if (matchScore.cpu >= matchScore.target) {
+	    showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
+	}
+	resetMatch();
+	
+    } //checkMatchEnd
+    
   function resetMatch() {
     matchScore.player = 0;
     matchScore.cpu = 0;
@@ -299,36 +298,6 @@
   function render() {
 
       el.cpu.innerHTML = "";
-/*
-      for (let i = 0; i < game.cpu.length; i++) {
-	  const b = document.createElement("div");
-	  b.className = "card back cpu-card";
-	  
-	  const count = game.cpu.length;
-	  
-	  // TIGHT FAN: small rotation
-	  const angle = (i - (count - 1) / 2) * 2;
-	  
-	  // RIGHT SHIFT
-	  const baseOffset = 450;
-	  const overlap = 10;
-	  const x = baseOffset + i * overlap;
-	  
-	  // ARC: cards rise toward the center
-	  const arcHeight = 18; // adjust for more/less curve
-	  const centerIndex = (count - 1) / 2;
-	  const y = Math.abs(i - centerIndex) * -arcHeight + arcHeight * centerIndex;
-	  
-	  b.style.left = `${x}px`;
-	  b.style.top = `${y}px`;
-	  b.style.transform = `rotate(${angle}deg)`;
-	  
-	  // Add animation class
-	  b.classList.add("cpu-fan-in");
-	  
-	  el.cpu.appendChild(b);
-	  }
-*/
       
       // these are the CPU cards
 	for (let i = 0; i < game.cpu.length; i++) {
@@ -356,67 +325,14 @@
       }
 
       // player cards rendering
-      /*
-      el.player.innerHTML = "";
-
-const sorted = sortHandWithMeldsFirst(game.player);
-const evalPlayer = evaluate(sorted);
-const meldIds = meldCardIds(sorted, evalPlayer);
-
-let gapInserted = false;
-
-for (let i = 0; i < sorted.length; i++) {
-    const c = sorted[i];
-    const isMeld = meldIds.has(c.id);
-
-    // Insert visual gap before first non-meld card
-    if (!isMeld && !gapInserted) {
-        const gap = document.createElement("div");
-        gap.className = "meld-gap";
-        el.player.appendChild(gap);
-        gapInserted = true;
-    }
-
-    const f = cardFace(c);
-    f.classList.add("player-card");
-
-    if (isMeld) f.classList.add("meld-card");
-
-    // FAN + ARC
-    const count = sorted.length;
-//    const angle = (i - (count - 1) / 2) * 3;   // 3° per card = tight fan
-    const angle = (count - 1) / 2 - i;
-    const angleDeg = angle * 3;   // 3° per card
-
-    const arcHeight = 18;
-    const centerIndex = (count - 1) / 2;
-    const y = Math.abs(i - centerIndex) * -arcHeight + arcHeight * centerIndex;
-
-    f.style.position = "absolute";
-    f.style.left = `${i * 40}px`;  // horizontal spacing
-    
-    f.style.top = `${y}px`;
-    f.style.transform = `rotate(${angle}deg)`;
-
-    // Animation
-    f.classList.add("player-fan-in");
-
-    // Click handler
-    f.onclick = () => playerDiscard(c.id);
-
-    // Just-drawn highlight
-    if (game.drawn === c.id || game.drawn?.id === c.id) {
-        f.classList.add("just-drawn");
-    }
-
-    el.player.appendChild(f);
-}
-
-      */
       
       el.player.innerHTML = "";
       //      const sorted = sortHandByRank(game.player);
       const sorted = sortHandWithMeldsFirst(game.player);
+
+      // Auto-scale BEFORE positioning cards
+      autoScaleHand(el.player, sorted.length, 95, 95);
+
       const evalPlayer = evaluate(sorted);
       const meldIds = meldCardIds(sorted, evalPlayer);
       
@@ -431,6 +347,15 @@ for (let i = 0; i < sorted.length; i++) {
 for (const c of sorted) {
     const isMeld = meldIds.has(c.id);
 
+    // for scalling the spaces
+let scale = 1;
+if (el.player.classList.contains("small")) scale = 0.8;
+if (el.player.classList.contains("smaller")) scale = 0.65;
+if (el.player.classList.contains("tiny")) scale = 0.5;
+
+const effectiveSpacing = 95 * scale;
+
+    
     // Insert gap before the first non-meld card
     if (!isMeld && !gapInserted) {
         const gap = document.createElement("div");
@@ -454,8 +379,9 @@ for (const c of sorted) {
     // REQUIRED — without this, cards do not appear
     f.style.position = "absolute";
     
-    f.style.left = `${offset + i * 95}px`;
-    
+//    f.style.left = `${offset + i * 95}px`;
+    f.style.left = `${offset + i * effectiveSpacing}px`;
+
     //    f.style.left = `${i * 75}px`;
     f.style.top = "400px";
     
@@ -968,4 +894,43 @@ function sortHandWithMeldsFirst(hand) {
     }
     return a.rank - b.rank;
   });
+}
+
+// -- part of render
+// -- area:  866 .  Needed:  680 == normal
+function autoScaleHand(container, handLength, cardWidth, spacing) {
+    const table = document.getElementById("table");
+     const areaWidth = table ? table.clientWidth : container.clientWidth || window.innerWidth;
+//    const areaWidth = container.clientWidth;
+    const neededWidth = (handLength - 1) * spacing + cardWidth;
+
+    console.log("area: ",areaWidth, ".  Needed: ", neededWidth );
+    
+    container.classList.remove("normal", "small", "smaller", "tiny");
+
+    // Normal fits
+    if (neededWidth <= areaWidth) {
+        container.classList.add("normal");
+	console.log("Normal scale");
+        return;
+    }
+
+    // Slight scale
+    if (neededWidth * 0.9 <= areaWidth) {
+        container.classList.add("small");
+	console.log("Small scale");
+        return;
+    }
+
+    // Medium scale
+    if (neededWidth * 0.75 <= areaWidth) {
+        container.classList.add("smaller");
+	console.log("Smaller scale");
+        return;
+    }
+
+    // Heavy scale
+    container.classList.add("tiny");
+    console.log("tiny scale");
+
 }
