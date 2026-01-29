@@ -287,7 +287,9 @@
   function resetMatch() {
     matchScore.player = 0;
     matchScore.cpu = 0;
-    updateScoreboard();
+      updateScoreboard();
+            document.getElementById("btn-new").textContent = "New Game";
+
   }
 
   /* ------------------------------
