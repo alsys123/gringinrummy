@@ -1,84 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<title>Gin Rummy</title>
-<link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-<div id="game">
-  <h1>GIN RUMMY</h1>
-
-  <!--
-  <div id="scoreboard">
-    Score — You: 0 | CPU: 0
-  </div>
-  -->
-  <div id="scoreboard" class="scoreboard">
-  <div class="score-block you">
-    <span class="label">You</span>
-    <span id="score-you" class="value">0</span>
-  </div>
-
-  <div class="divider">vs</div>
-
-  <div class="score-block cpu">
-    <span class="label">CPU</span>
-    <span id="score-cpu" class="value">0</span>
-  </div>
-</div>
-
-  <div id="status-bar">
-    <div id="message">Click "New Game" to start.</div>
-    <button id="btn-new">New Game</button>
-  </div>
-
-  <div id="back-door" hidden>
-    <button id="btn-backDoor-save">Save State</button>
-    <button id="btn-backDoor-restore">Restore State</button>
-  </div>
-
-  <div id="table">
-    <div class="row">
-      <div id="cpu-hand" class="hand"></div>
-    </div>
-
-        <div style="text-align:center; margin-top:8px;">
-      <button id="btn-knock" disabled>Knock (≤10)</button>
-      <button id="btn-gin" disabled>Gin (0)</button>
-    </div>
-
-    <div id="deadwood-info">Deadwood: –</div>
-    <div id="log" hidden></div>
-
-    <div id="center-area">
-      <div>
-        <div id="stock" class="card back"></div>
-        <div>Stock <span id="stock-count"></span></div>
-      </div>
-      <div>
-        <div id="discard-top" class="card back"><span>EMPTY</span></div>
-        <div>Discard</div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div id="player-hand" class="hand"></div>
-    </div>
-
-    <div id="modal" class="modal">
-      <div class="modal-content">
-	<span id="modal-text"></span>
-	<button onclick="closeModal()">OK</button>
-      </div>
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gin Rummy</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  
+  <body>
     
-  </div>
-</div>
+    <div id="game">
+      <h1>GIN RUMMY</h1>
+      
+      <!--
+	  <div id="scoreboard">
+	    Score — You: 0 | CPU: 0
+	  </div>
+	  -->
+	  <div id="scoreboard" class="scoreboard">
+	    <div class="score-block you">
+	      <span class="label">You</span>
+	      <span id="score-you" class="value">0</span>
+	    </div>
+	    
+	    <div class="divider">vs</div>
+	    
+	    <div class="score-block cpu">
+	      <span class="label">CPU</span>
+	      <span id="score-cpu" class="value">0</span>
+	    </div>
+	  </div>
+	  
+	  <div id="status-bar">
+	    <div id="message">Click "New Game" to start.</div>
+	    <button id="btn-new">New Game</button>
+	  </div>
+	  
+	  <div id="back-door" hidden>
+	    <button id="btn-backDoor-save">Save State</button>
+	    <button id="btn-backDoor-restore">Restore State</button>
+	    <button id="btn-backDoor-showCpuCards">Show CPU Cards</button>   
+	  </div>
 
-<script src="render.js"></script>
-<script src="gringinrummy.js"></script>
-</body>
+	  
+	  <div id="table">
+	    
+	    <div class="row">
+	      <div id="cpu-hand" class="hand"></div>
+	    </div>
+	    
+            <div style="text-align:center; margin-top:8px;">
+	      <button id="btn-knock" disabled>Knock (≤10)</button>
+	      <button id="btn-gin" disabled>Gin (0)</button>
+	    </div>
+	    
+	    <div id="deadwood-info">Deadwood: –</div>
+	    <div id="log" hidden></div>
+	    
+	    <div id="center-area">
+	      <div>
+		<div id="stock" class="card back"></div>
+		<div>Stock <span id="stock-count"></span></div>
+	      </div>
+	      <div>
+		<div id="discard-top" class="card back"><span>EMPTY</span></div>
+		<div>Discard</div>
+	      </div>
+	    </div>
+	    
+	    <div class="row">
+	      <div id="player-hand" class="hand"></div>
+	    </div>
+	    
+	    <div id="modal" class="modal">
+	      <div class="modal-content">
+		<span id="modal-text"></span>
+		<button onclick="closeModal()">OK</button>
+	      </div>
+	    </div>
+	    
+	  </div>
+    </div>
+
+    <input type="file" id="load-file" accept=".json" style="display:none;">
+
+    <script src="utils.js"></script>
+    <script src="render.js"></script>
+    <script src="gringinrummy.js"></script>
+
+  </body>
 </html>

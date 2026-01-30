@@ -10,7 +10,8 @@
     cpu: [],
     turn: "player",
     phase: "idle",
-    drawn: null
+      drawn: null,
+      revealCpu: false
   };
 
   let matchScore = {
@@ -36,7 +37,7 @@
     scoreboard: document.getElementById("scoreboard")
   };
 
-    let gBackDoorCode = 0;
+//    let gBackDoorCode = 0;
 
   /* ------------------------------
      Utility Functions
@@ -315,141 +316,6 @@
      Rendering
   ------------------------------ */
 
-    //__ render
-  function render() {
-
-      el.cpu.innerHTML = "";
-      
-      // these are the CPU cards
-	for (let i = 0; i < game.cpu.length; i++) {
-	const b = document.createElement("div");
-	b.className = "card back";
-	const count = game.cpu.length;
-	  
-	// tighter fan: smaller angle spread
-	// was 4–5°, now tighter
-	  const angle = (i - (count - 1) / 2) * 2.5;
-	  
-	  // smaller cards: reduce width/height in CSS (below)
-	  // shift fan to the right
-	  const baseOffset = 700;  // shift entire fan right
-	  const overlap = 6;      // tighter overlap
-	  
-	  const x = baseOffset + i * overlap;
-	  
-	  b.style.position = "absolute";
-	  b.style.left = x + "px";
-	  b.style.top = "0px";
-	  b.style.transform = `rotate(${angle}deg)`;
-	  
-	  el.cpu.appendChild(b);
-      }
-
-      // player cards rendering
-      
-      el.player.innerHTML = "";
-      //      const sorted = sortHandByRank(game.player);
-      const sorted = sortHandWithMeldsFirst(game.player);
-
-      // Auto-scale BEFORE positioning cards
-      autoScaleHand(el.player, sorted.length, 95, 95);
-
-      const evalPlayer = evaluate(sorted);
-      const meldIds = meldCardIds(sorted, evalPlayer);
-      
-      //    console.log("yes in render");
-      //    console.log("game draw = ", game.drawn);
-      
-      
-      let gapInserted = false;
-      let i= 0;
-      const offset = 0; // move entire hand right
-      
-      for (const c of sorted) {
-	  const isMeld = meldIds.has(c.id);
-	  
-	  // for scalling the spaces
-	  let scale = 1;
-	  if (el.player.classList.contains("normal")) scale = 1;
-	  if (el.player.classList.contains("small")) scale = 0.8;
-	  if (el.player.classList.contains("smaller")) scale = 0.65;
-	  if (el.player.classList.contains("tiny")) scale = 0.5;
-	  
-	  const effectiveSpacing = 95 * scale;
-	  
-	  
-	  // Insert gap before the first non-meld card
-	  if (!isMeld && !gapInserted) {
-              const gap = document.createElement("div");
-              gap.className = "meld-gap";
-	      
-	      // new gap
-	      gap.style.position = "absolute";
-//	      gap.style.left = `${offset + i * 75}px`;
-	      gap.style.left = `${offset + i * effectiveSpacing}px`;
-
-	      gap.style.top = "400px";
-	      //
-	
-              el.player.appendChild(gap);
-	      
-	      i++; // gap takes a spot
-	      
-              gapInserted = true;
-	  }
-	  
-	  const f = cardFace(c);
-	  if (isMeld) f.classList.add("meld-card");
-	  // REQUIRED — without this, cards do not appear
-	  f.style.position = "absolute";
-	  
-	  //    f.style.left = `${offset + i * 95}px`;
-	  f.style.left = `${offset + i * effectiveSpacing}px`;
-	  
-	  //    f.style.left = `${i * 75}px`;
-	  f.style.top = "400px";
-	  
-	  f.onclick = () => playerDiscard(c.id);
-//	  el.player.appendChild(f);
-      
-	  if (game.drawn === c.id || game.drawn?.id === c.id) {
-              f.classList.add("just-drawn");
-	      
-	  }
-	  
-	  
-	  i++;
-
-	  // open backdoor
-	  f.ondblclick = () => openBackDoor();
-
-	  // append ONCE
-	  el.player.appendChild(f);
-
-//	  el.player.appendChild(f);
-
-      }
-      
-      
-
-      // ====== display deadwook count ======
-    el.deadwood.textContent = "Deadwood: " + evalPlayer.deadwood;
-
-    el.stockCount.textContent = "(" + game.stock.length + ")";
-
-    if (game.discard.length) {
-      const top = game.discard[game.discard.length-1];
-      const f = cardFace(top);
-      el.discard.innerHTML = "";
-      el.discard.className = "card";
-      el.discard.appendChild(f);
-    } else {
-      el.discard.className = "card back";
-      el.discard.innerHTML = "<span>EMPTY</span>";
-    }
-
-     updateButtons();
-  } // render
 
     //__ updateButtons
     function updateButtons() {
@@ -504,16 +370,6 @@
 
 	
   } // updateButtons
-
-    // open a back door to save and restore game states
-    function openBackDoor() {
-	gBackDoorCode++;
-	//	console.log("Back door - double click: ", gBackDoorCode);
-	if (gBackDoorCode > 3 ) {
-	    document.getElementById("back-door").hidden = false;
-	}
-	return;
-    }
 
     
   /* ------------------------------
