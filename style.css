@@ -10,20 +10,38 @@
 
   * { box-sizing: border-box; }
 
-  body {
-    margin: 0;
-    font-family: system-ui, sans-serif;
-    background: radial-gradient(circle at top, #0f7f4f 0, #053322 50%, #02150e 100%);
-    color: #f5f5f5;
-    display: flex;
-    justify-content: center;
-  }
+ 
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+/*  background: #053322; */
+  background: linear-gradient(
+  to bottom,
+  #0f7f4f,
+  #02150e
+);
 
+  color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+}
+#game {
+  max-width: 1200px;
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+}
+/*
   #game {
     max-width: 1200px;
     width: 100%;
     padding: 16px;
   }
+*/
+html, body {
+  height: 100%;
+  background: linear-gradient(to bottom, #0f7f4f, #02150e);
+}
 
   h1 {
     text-align: center;
@@ -78,9 +96,10 @@
     align-items: center;
   }
 
+
   .hand {
     display: flex;
-    gap: 8px;
+    gap: 20px;
     flex-wrap: wrap;
   }
 
@@ -246,6 +265,7 @@
   display: block;
   position: relative;
 }
+
 
 #player.normal .card {
   transform: scale(1);

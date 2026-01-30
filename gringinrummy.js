@@ -1,4 +1,4 @@
-(function() {
+//(function() {
   const ranks = [1,2,3,4,5,6,7,8,9,10,11,12,13];
   const suits = ["♣","♦","♥","♠"];
 
@@ -848,42 +848,44 @@
   } //cpuKnock
 
     
-    function showMessage(msg) {
+function showMessage(msg) {
 	const padded = msg + "\n\n"; // always add two newlines
 	document.getElementById("modal-text").textContent = padded;
 	document.getElementById("modal").style.display = "flex";
-    }
+} // showMessage
+
 
 //    add the handlers
 document.getElementById("stock").onclick = () => {
     if (game.turn === "player") {
-	        drawStock();
-//	console.log("stock draw");
+	drawStock();
+	//	console.log("stock draw");
     }
-};
+};  // handler stock
 
 document.getElementById("discard-top").onclick = () => {
     if (game.turn === "player") {
         drawDiscard();
-//	console.log("discard draw");
+	//	console.log("discard draw");
     }
-};
+}; // handler discard
 
   /* ------------------------------
      Event Wiring
   ------------------------------ */
 
-  el.btnNew.onclick = start;
+el.btnNew.onclick = start;
 //--  el.btnDrawStock.onclick = drawStock;
 //--  el.btnDrawDiscard.onclick = drawDiscard;
-  el.btnKnock.onclick = playerKnock;
-  el.btnGin.onclick = playerGin;
+el.btnKnock.onclick = playerKnock;
+el.btnGin.onclick = playerGin;
 
-  updateScoreboard();
-  render();
-})();
+updateScoreboard();
+render();
 
-// this make the function global ...
+//})();
+
+// functions global ...
 
    function closeModal() {
 	console.log("in close");
