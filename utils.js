@@ -91,7 +91,8 @@ function loadGameFromFile(file) {
 	    
 	    // Restore all fields into the existing game object
       Object.assign(game, obj);
-	    
+	    Object.assign(matchScore, obj.matchScore);
+		
 	    render();
 	    setMsg("Game restored.");
 	} catch (err) {
