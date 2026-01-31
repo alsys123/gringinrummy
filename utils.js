@@ -68,7 +68,7 @@ document.getElementById("load-file").addEventListener("change", (e) => {
 
 
 function saveGameToFile() {
-  const data = JSON.stringify(game,matchScore, null, 2); // pretty JSON
+  const data = JSON.stringify({game,matchScore}, null, 2); // pretty JSON
 
   const blob = new Blob([data], { type: "application/json" });
   const url = URL.createObjectURL(blob);
