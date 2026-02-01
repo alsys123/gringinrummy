@@ -254,3 +254,10 @@ function autoScaleHand(container, handLength, cardWidth, spacing) {
 
 // make global
 //window.autoScaleHand = autoScaleHand;
+
+function cardBack() {
+  const div = document.createElement("div");
+  div.className = "card back";
+  div.textContent = ""; // or "CPU" or leave empty
+  return div;
+}
