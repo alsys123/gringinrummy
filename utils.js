@@ -90,9 +90,15 @@ function loadGameFromFile(file) {
 	    const obj = JSON.parse(cleaned);
 	    
 	    // Restore all fields into the existing game object
-      Object.assign(game, obj);
+	    Object.assign(game, obj.game);
 	    Object.assign(matchScore, obj.matchScore);
-		
+
+	    // one time cleanup
+//	    delete game.game;    
+//	    delete game.matchScore?.matchScore;
+	    // -- end of cleanup
+
+	    updateScoreboard();
 	    render();
 	    setMsg("Game restored.");
 	} catch (err) {
@@ -124,4 +130,5 @@ function openLoadDialog() {
 document.getElementById("btn-backDoor-showCpuCards").onclick = () => {
     game.revealCpu = !game.revealCpu;
     render();
+    console.log("Game object: ", game)
 }
