@@ -66,6 +66,14 @@ document.getElementById("load-file").addEventListener("change", (e) => {
     }
 });
 
+document.getElementById("btn-backDoor-testMelds").onclick = () => {
+    testMelds();
+};
+
+document.getElementById("btn-backDoor-testDeadwood").onclick = () => {
+    testBestCombos();
+};
+
 
 function saveGameToFile() {
   const data = JSON.stringify({game,matchScore}, null, 2); // pretty JSON

@@ -253,6 +253,9 @@ html, body {
   background: white;
   padding: 20px;
   border-radius: 8px;
+  max-height: 80vh;      
+  overflow-y: auto;      
+  box-sizing: border-box;
 }
 
 #modal-text {

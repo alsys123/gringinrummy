@@ -189,6 +189,14 @@ function sortHandWithMeldsFirst(hand) {
   
 */
 
+function getAllMeldsv2(hand) {
+  const { sets, remaining } = findSetsv2(hand);
+  const runs = findRunsv2(hand, remaining);
+
+  return [...sets, ...runs];
+} //getAllMeldsv2
+
+
 function findSetsv2(hand) {
   const sets = [];
   const byRank = {};
@@ -222,18 +230,7 @@ function findSetsv2(hand) {
   return { sets, remaining };
 } //findSetsv2
 
-
-
-
-function getAllMeldsv2(hand) {
-  const { sets, remaining } = findSetsv2(hand);
-  const runs = findRunsv2(hand, remaining);
-
-  return [...sets, ...runs];
-} //getAllMeldsv2
-
-
-
+//__ findRunsv2
 function findRunsv2(hand, remainingIdxs) {
   const runs = [];
   const bySuit = {};
@@ -282,3 +279,75 @@ function findRunsv2(hand, remainingIdxs) {
 
   return runs;
 } //findRunsv2
+
+
+/*
+
+  GENERATING BEST MELD COBMO TO MAXIMIZE DEADWOOD
+  
+  */
+
+function bestMeldCombo(hand) {
+  const allMelds = getAllMeldsv2(hand);
+  const combos = generateMeldCombos(allMelds);
+
+  let best = null;
+
+  for (const combo of combos) {
+    const deadwood = computeDeadwood(hand, combo);
+
+    if (!best || deadwood < best.deadwood) {
+      best = { melds: combo, deadwood };
+    }
+  }
+
+  return best || { melds: [], deadwood: computeDeadwood(hand, []) };
+} // bestMeldCombo
+
+
+function computeDeadwood(hand, melds) {
+  const used = new Set();
+  melds.forEach(m => m.forEach(i => used.add(i)));
+
+  let total = 0;
+  for (let i = 0; i < hand.length; i++) {
+    if (!used.has(i)) {
+      total += cardDeadwoodValue(hand[i]);
+    }
+  }
+  return total;
+} // computeDeadwood
+
+
+function generateMeldCombos(allMelds) {
+  const results = [];
+
+  function dfs(index, current, used) {
+    if (index === allMelds.length) {
+      results.push(current.slice());
+      return;
+    }
+
+    // Option 1: skip this meld
+    dfs(index + 1, current, used);
+
+    // Option 2: take this meld if no overlap
+    const meld = allMelds[index];
+    if (meld.every(i => !used.has(i))) {
+      meld.forEach(i => used.add(i));
+      current.push(meld);
+      dfs(index + 1, current, used);
+      current.pop();
+      meld.forEach(i => used.delete(i));
+    }
+  }
+
+  dfs(0, [], new Set());
+  return results;
+} // generateMeldCombos
+
+function cardDeadwoodValue(card) {
+  if (card.rank === "A") return 1;
+  if (["J","Q","K"].includes(card.rank)) return 10;
+  return Number(card.rank);
+} //cardDeadwoodValue
