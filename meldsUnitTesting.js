@@ -72,7 +72,8 @@ function testMelds() {
 
 // Helper to build cards
 function C(rank, suit) {
-  const values = { A:1, J:10, Q:10, K:10 };
+//  const values = { A:1, J:10, Q:10, K:10 };
+  const values = { A:1, J:11, Q:12, K:13 };
   return {
     rank,
     suit,
@@ -126,10 +127,6 @@ function testMelds() {
 
 
   for (const t of meldTests) {
-
-      
-      
-      
      const result = normalize(getAllMeldsv3(t.hand));
 
 //      const result = normalize(getAllMeldsv2(t.hand));
@@ -191,7 +188,7 @@ const meldTests = [
       [0,1,2,3]
     ]
   },
-
+    
   // ---------------------------------------------------------
   // TEST 3 — Pure Set (4‑card set)
   // ---------------------------------------------------------
@@ -665,7 +662,6 @@ const meldTests = [
     [6,7,8]
   ]
 },
-
     
 
 ];

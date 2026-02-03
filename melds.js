@@ -396,7 +396,7 @@ function eliminateDeadCards(hand) {
   }
 
   return { live, dead };
-}
+} // eliminateDeadCards
 
 
 //------------------------------------------------------------
@@ -457,10 +457,23 @@ const patterns = {
 };
 
 // Compute required meld cards
-function requiredCards(pattern) {
+// eventually get rid of this and put the total in the data structure
+function requiredCards(pattern) { 
   return pattern.reduce((sum, m) => sum + parseInt(m.slice(1)), 0);
-}
+  }
 
+
+/*
+//with debug got back to old later
+function requiredCards(pattern) {
+    console.log( "\n");
+  return pattern.reduce((sum, m) => {
+    const val = parseInt(m.slice(1));
+    console.log(`Adding ${val} from ${m} → running total = ${sum + val}`);
+    return sum + val;
+  }, 0);
+}
+*/
 
 //------------------------------------------------------------
 // 3. FEASIBILITY CHECKS (RUNS + SETS)
@@ -476,7 +489,7 @@ function computeStats(live) {
   }
 
   for (const s in suitRanks) suitRanks[s].sort((a,b)=>a-b);
-
+/*
   function longestRun(arr) {
     if (arr.length === 0) return 0;
     let max = 1, cur = 1;
@@ -489,6 +502,33 @@ function computeStats(live) {
     }
     return max;
   }
+*/
+    function longestRun(arr) {
+//	console.log(" longestRun input:", arr.join(" "));
+  if (arr.length === 0) return 0;
+
+  let max = 1;
+  let cur = 1;
+
+  for (let i = 1; i < arr.length; i++) {
+    const prev = arr[i - 1];
+    const curr = arr[i];
+
+    if (curr === prev) {
+      // duplicate rank in same suit: ignore, don't reset
+      continue;
+    }
+
+    if (curr === prev + 1) {
+      cur++;
+      if (cur > max) max = cur;
+    } else {
+      cur = 1;
+    }
+  }
+
+  return max;
+}
 
   const runLengths = Object.values(suitRanks).map(longestRun).sort((a,b)=>b-a);
   const maxRun = runLengths[0] || 0;
@@ -501,7 +541,7 @@ function computeStats(live) {
   }
 
   return { maxRun, secondRun, ranks3, ranks4 };
-}
+} //longestRun
 
 function feasible(pattern, stats) {
   for (const m of pattern) {
@@ -516,7 +556,7 @@ function feasible(pattern, stats) {
     }
   }
   return true;
-}
+} //feasible
 
 
 //------------------------------------------------------------
@@ -603,16 +643,29 @@ function meldsToIndexes(melds, hand) {
   );
 }
 
+
 function solveHand(hand) {
   const { live, dead } = eliminateDeadCards(hand);
   const M = live.length;
   const stats = computeStats(live);
 
+    console.log( "---" );
+    console.log(  "Live (",M,"): ", live.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+
+    console.log("VALUES:", live.map(c => `${c.rank}:${c.value}`).join(" "));
+
+    console.log(  "Dead:",          dead.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+
+   console.log( `Stats: maxRun=${stats.maxRun}, secondRun=${stats.secondRun}, ranks3=${stats.ranks3}, ranks4=${stats.ranks4}`
+);
+ 
   // Step 2: filter patterns by card count + feasibility
   const feasiblePatterns = Object.entries(patterns)
     .filter(([id, pat]) => requiredCards(pat) <= M)
     .filter(([id, pat]) => feasible(pat, stats));
 
+    console.log( feasiblePatterns.map(([id, pat]) => `${id}: ${pat.join(",")}`).join("  &  ") );
+    
   // Step 3a: only one pattern → return immediately
   if (feasiblePatterns.length === 1) {
     const [id, pat] = feasiblePatterns[0];
