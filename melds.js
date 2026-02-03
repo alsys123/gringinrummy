@@ -351,3 +351,289 @@ function cardDeadwoodValue(card) {
   if (["J","Q","K"].includes(card.rank)) return 10;
   return Number(card.rank);
 } //cardDeadwoodValue
+
+
+
+//------------------------------------------------------------
+// V3 of melds
+//------------------------------------------------------------
+
+//------------------------------------------------------------
+// 1. DEAD CARD ELIMINATION
+//------------------------------------------------------------
+
+function eliminateDeadCards(hand) {
+  const rankCounts = {};
+  const suitRanks = { "♣": [], "♦": [], "♥": [], "♠": [] };
+
+  // Build rank counts and suit→rank lists
+  for (const card of hand) {
+    rankCounts[card.rank] = (rankCounts[card.rank] || 0) + 1;
+    suitRanks[card.suit].push(card.value);
+  }
+
+  // Sort suit ranks
+  for (const s in suitRanks) {
+    suitRanks[s].sort((a,b)=>a-b);
+  }
+
+  // Helper: does this card have adjacency in its suit?
+  function hasRunNeighbor(card) {
+    const ranks = suitRanks[card.suit];
+    const v = card.value;
+    return ranks.includes(v-1) || ranks.includes(v+1);
+  }
+
+  const live = [];
+  const dead = [];
+
+  for (const card of hand) {
+    const canSet = rankCounts[card.rank] >= 3;
+    const canRun = hasRunNeighbor(card);
+
+    if (canSet || canRun) live.push(card);
+    else dead.push(card);
+  }
+
+  return { live, dead };
+}
+
+
+//------------------------------------------------------------
+// 2. PATTERN DEFINITIONS + REQUIRED CARD COUNTS
+//------------------------------------------------------------
+
+const patterns = {
+  P1:  ["R3"],             // 3
+  P2:  ["R4"],             // 4
+  P3:  ["R5"],             // 5
+  P4:  ["R6"],             // 6
+  P5:  ["R7"],             // 7
+  P6:  ["R8"],             // 8
+  P7:  ["R9"],             // 9
+  P8:  ["R10"],            // 10
+
+  P9:  ["S3"],             // 3
+  P10: ["S4"],             // 4
+
+  P11: ["R3","R3"],        // 6
+  P12: ["R3","R4"],        // 7
+  P13: ["R3","R5"],        // 8
+  P14: ["R3","R6"],        // 9
+  P15: ["R3","R7"],        // 10
+  P16: ["R4","R4"],        // 8
+  P17: ["R4","R5"],        // 9
+  P18: ["R4","R6"],        // 10
+  P19: ["R5","R5"],        // 10
+//  P20: ["R5","R6"],        // 11 (never feasible)
+
+  P21: ["S3","S3"],        // 6
+  P22: ["S3","S4"],        // 7
+  P23: ["S4","S4"],        // 8
+
+  P24: ["S3","R3"],        // 6
+  P25: ["S3","R4"],        // 7
+  P26: ["S3","R5"],        // 8
+  P27: ["S3","R6"],        // 9
+  P28: ["S3","R7"],        // 10
+  P29: ["S4","R3"],        // 7
+  P30: ["S4","R4"],        // 8
+  P31: ["S4","R5"],        // 9
+  P32: ["S4","R6"],        // 10
+
+  P33: ["R3","R3","R3"],   // 9
+  P34: ["R3","R3","R4"],   // 10
+
+  P35: ["S3","S3","S3"],   // 9
+  P36: ["S3","S3","S4"],   // 10
+
+  P37: ["S3","R3","R3"],   // 9
+  P38: ["S3","R3","R4"],   // 10
+  P39: ["S4","R3","R3"],   // 10
+
+  P40: ["S3","S3","R3"],   // 9
+  P41: ["S3","S3","R4"],   // 10
+  P42: ["S3","S4","R3"]    // 10
+};
+
+// Compute required meld cards
+function requiredCards(pattern) {
+  return pattern.reduce((sum, m) => sum + parseInt(m.slice(1)), 0);
+}
+
+
+//------------------------------------------------------------
+// 3. FEASIBILITY CHECKS (RUNS + SETS)
+//------------------------------------------------------------
+
+function computeStats(live) {
+  const rankCounts = {};
+  const suitRanks = { "♣": [], "♦": [], "♥": [], "♠": [] };
+
+  for (const c of live) {
+    rankCounts[c.rank] = (rankCounts[c.rank] || 0) + 1;
+    suitRanks[c.suit].push(c.value);
+  }
+
+  for (const s in suitRanks) suitRanks[s].sort((a,b)=>a-b);
+
+  function longestRun(arr) {
+    if (arr.length === 0) return 0;
+    let max = 1, cur = 1;
+    for (let i=1;i<arr.length;i++) {
+      if (arr[i] === arr[i-1]) continue;
+      if (arr[i] === arr[i-1] + 1) {
+        cur++;
+        max = Math.max(max, cur);
+      } else cur = 1;
+    }
+    return max;
+  }
+
+  const runLengths = Object.values(suitRanks).map(longestRun).sort((a,b)=>b-a);
+  const maxRun = runLengths[0] || 0;
+  const secondRun = runLengths[1] || 0;
+
+  let ranks3 = 0, ranks4 = 0;
+  for (const c of Object.values(rankCounts)) {
+    if (c >= 3) ranks3++;
+    if (c >= 4) ranks4++;
+  }
+
+  return { maxRun, secondRun, ranks3, ranks4 };
+}
+
+function feasible(pattern, stats) {
+  for (const m of pattern) {
+    const type = m[0];
+    const size = parseInt(m.slice(1));
+
+    if (type === "R") {
+      if (stats.maxRun < size) return false;
+    } else {
+      if (size === 3 && stats.ranks3 < 1) return false;
+      if (size === 4 && stats.ranks4 < 1) return false;
+    }
+  }
+  return true;
+}
+
+
+//------------------------------------------------------------
+// 4. CONSTRUCT MELDS FOR A GIVEN PATTERN
+//------------------------------------------------------------
+
+function buildMeldsForPattern(pattern, live) {
+  const melds = [];
+  const used = new Set();
+
+  // Helper: find a run of size k
+  function findRun(k) {
+    const suits = ["♣","♦","♥","♠"];
+    for (const s of suits) {
+      const ranks = live.filter(c => c.suit === s).map(c => c.value).sort((a,b)=>a-b);
+      for (let i=0;i<ranks.length;i++) {
+        let seq = [ranks[i]];
+        for (let j=i+1;j<ranks.length;j++) {
+          if (ranks[j] === seq[seq.length-1] + 1) seq.push(ranks[j]);
+          else if (ranks[j] > seq[seq.length-1] + 1) break;
+        }
+        if (seq.length >= k) {
+          const cards = seq.slice(0,k).map(v => live.find(c => c.suit===s && c.value===v && !used.has(c)));
+          if (cards.every(Boolean)) return cards;
+        }
+      }
+    }
+    return null;
+  }
+
+  // Helper: find a set of size k
+  function findSet(k) {
+    const ranks = {};
+    for (const c of live) {
+      if (!used.has(c)) {
+        ranks[c.rank] = ranks[c.rank] || [];
+        ranks[c.rank].push(c);
+      }
+    }
+    for (const r in ranks) {
+      if (ranks[r].length >= k) return ranks[r].slice(0,k);
+    }
+    return null;
+  }
+
+  for (const m of pattern) {
+    const type = m[0];
+    const size = parseInt(m.slice(1));
+    let meld;
+
+    if (type === "R") meld = findRun(size);
+    else meld = findSet(size);
+
+    if (!meld) return null;
+
+    meld.forEach(c => used.add(c));
+    melds.push(meld);
+  }
+
+  return melds;
+}
+
+
+//------------------------------------------------------------
+// 5. MAIN SOLVER
+//------------------------------------------------------------
+
+function getAllMeldsv3(hand) {
+    const result = solveHand(hand);
+    if (!result || !result.melds) {
+	return [];
+    }
+    const full = meldsToIndexes(result.melds, hand);
+    // If no pattern produced valid melds, return empty array (old behavior)
+    if (!full) {
+	return [];
+    }
+    return full;
+}
+
+function meldsToIndexes(melds, hand) {
+  return melds.map(meld =>
+    meld.map(card => hand.indexOf(card))
+  );
+}
+
+function solveHand(hand) {
+  const { live, dead } = eliminateDeadCards(hand);
+  const M = live.length;
+  const stats = computeStats(live);
+
+  // Step 2: filter patterns by card count + feasibility
+  const feasiblePatterns = Object.entries(patterns)
+    .filter(([id, pat]) => requiredCards(pat) <= M)
+    .filter(([id, pat]) => feasible(pat, stats));
+
+  // Step 3a: only one pattern → return immediately
+  if (feasiblePatterns.length === 1) {
+    const [id, pat] = feasiblePatterns[0];
+    const melds = buildMeldsForPattern(pat, live);
+    return { pattern: id, melds, deadwood: dead };
+  }
+
+  // Step 3b: multiple patterns → test each
+  let best = null;
+
+  for (const [id, pat] of feasiblePatterns) {
+    const melds = buildMeldsForPattern(pat, live);
+    if (!melds) continue;
+
+    const used = new Set(melds.flat());
+    const dw = hand.filter(c => !used.has(c));
+
+    if (!best || dw.length < best.deadwood.length) {
+      best = { pattern: id, melds, deadwood: dw };
+    }
+  }
+
+  return best;
+}

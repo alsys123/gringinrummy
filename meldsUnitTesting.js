@@ -128,8 +128,14 @@ function testMelds() {
   for (const t of meldTests) {
 
       
-    const result = normalize(getAllMeldsv2(t.hand));
-    const expected = normalize(t.expected);
+      
+      
+     const result = normalize(getAllMeldsv3(t.hand));
+
+//      const result = normalize(getAllMeldsv2(t.hand));
+//      console.log("my Result: ", result);
+      
+      const expected = normalize(t.expected);
 
     const pass = JSON.stringify(result) === JSON.stringify(expected);
       if (pass) passed++;
