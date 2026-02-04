@@ -3,6 +3,7 @@
      General Backdoor
   ------------------------------ */
 
+const gBackDoorLock = 3;  // when to open/close back door
 let gBackDoorCode = 0;
 let gBackDoorDir = 1; // +1 going up, -1 going down ... the direction
 
@@ -11,8 +12,8 @@ function openCloseBackDoor() {
   gBackDoorCode += gBackDoorDir;
 
   // Clamp and flip direction at the ends
-  if (gBackDoorCode >= 4) {
-    gBackDoorCode = 4;
+  if (gBackDoorCode >= gBackDoorLock) {
+    gBackDoorCode = gBackDoorLock;
     gBackDoorDir = -1; // start going down
   } else if (gBackDoorCode <= 0) {
     gBackDoorCode = 0;
@@ -20,7 +21,7 @@ function openCloseBackDoor() {
   }
 
   // Show only when fully open
-  const open = gBackDoorCode === 4;
+  const open = gBackDoorCode === gBackDoorLock;
   document.getElementById("back-door").hidden = !open;
 
 //  console.log("code:", gBackDoorCode, "dir:", gBackDoorDir, "open:", open);

@@ -2,19 +2,103 @@
   /* ------------------------------
      Rendering
   ------------------------------ */
+function renderCPU(sortedCpu,evalCpu,cpuMeldIds, el) {
+    console.log("\nRender CPU: ");
+    console.log("sortedCpu:", sortedCpu.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
+    //    console.log("evalCpu:", evalCpu.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
+    console.log(
+	`evalCpu = { deadwood:${evalCpu.deadwood}, melds:${evalCpu.melds
+    .map(m => `[${m.join(",")}]`)
+    .join(" ")} }`
+    );
+    
+//    console.log("cpuMeldIds:", JSON.stringify(cpuMeldIds));
+    console.log("=> cpuMeldIds:", Array.from(cpuMeldIds));
 
-    //__ render
-  function render() {
-el.cpu.innerHTML = "";
+    let gapInserted = false;
 
-const sortedCpu = sortHandWithMeldsFirst(game.cpu);
-const evalCpu = evaluate(sortedCpu);
-const cpuMeldIds = meldCardIds(sortedCpu, evalCpu);
+// ??? why with player      const sorted = sortHandWithMeldsFirst(game.player);
 
-let gapInserted = false;
+	
+    // ----- the CPU cards -----
+    for (let i = 0; i < sortedCpu.length; i++) {
+	const card = sortedCpu[i];
 
+	const isMeld = cpuMeldIds.has(card.id);
+	//const isMeld = cpuMeldIds.has(i);
+//	  const isMeld = meldIds.has(c.id);
+
+	// ⭐ Insert gap before first non-meld card
+	if (!isMeld && !gapInserted) {
+            const gap = document.createElement("div");
+            gap.className = "meld-gap";
+	    
+            // Position gap in CPU fan
+            const count = sortedCpu.length;
+            const angle = (i - (count - 1) / 2) * 2.5;
+            const baseOffset = 700;
+            const overlap = 6;
+            const x = baseOffset + i * overlap;
+	    
+            gap.style.position = "absolute";
+            gap.style.left = x + "px";
+            gap.style.top = "0px";
+            gap.style.transform = `rotate(${angle}deg)`;
+	    
+            el.cpu.appendChild(gap);
+            gapInserted = true;
+
+	    i++; //gap takes a spot
+
+	} // if: !isMeld && !gapInserted
+	
+	// ⭐ Now render the CPU card (face-up or back)
+	const b = document.createElement("div");
+	
+	if (game.revealCpu) {
+            const face = cardFace(card);
+            face.style.position = "absolute";
+            face.style.left = "0px";
+            face.style.top = "0px";
+            b.appendChild(face);
+            b.className = "card";
+	} else {
+            b.className = "card back";
+	}
+	
+	const count = sortedCpu.length;
+	const angle = (i - (count - 1) / 2) * 2.5;
+	const baseOffset = 700;
+	const overlap = 25;
+	const x = baseOffset + i * overlap;
+	
+	b.style.position = "absolute";
+	b.style.left = x + "px";
+	b.style.top = "0px";
+	b.style.transform = `rotate(${angle}deg)`;
+	
+	el.cpu.appendChild(b);
+    } // for sortedCPU
+    
+} // renderCPU
+
+//__ render
+function render() {
+    el.cpu.innerHTML = "";
+    
+    const sortedCpu = sortHandWithMeldsFirst(game.cpu);
+    const evalCpu = evaluate(sortedCpu);
+    const cpuMeldIds = meldCardIds(sortedCpu, evalCpu);
+    
+    renderCPU(sortedCpu,evalCpu,cpuMeldIds, el);
+
+    let gapInserted = false;
+
+    /*
       // ----- the CPU cards -----
-for (let i = 0; i < sortedCpu.length; i++) {
+    let gapInserted = false;
+
+    for (let i = 0; i < sortedCpu.length; i++) {
     const card = sortedCpu[i];
     const isMeld = cpuMeldIds.has(card.id);
 
@@ -37,7 +121,7 @@ for (let i = 0; i < sortedCpu.length; i++) {
 
         el.cpu.appendChild(gap);
         gapInserted = true;
-    }
+    } // if: !isMeld && !gapInserted
 
     // ⭐ Now render the CPU card (face-up or back)
     const b = document.createElement("div");
@@ -65,57 +149,9 @@ for (let i = 0; i < sortedCpu.length; i++) {
     b.style.transform = `rotate(${angle}deg)`;
 
     el.cpu.appendChild(b);
-}
-
-/*
-      el.cpu.innerHTML = "";
-//      const sortedCpu = sortHandWithMeldsFirst(game.cpu);
-
-      
-      // these are the CPU cards
-//	for (let i = 0; i < game.cpu.length; i++) {
-	for (let i = 0; i < sortedCpu.length; i++) {
-	    const card = sortedCpu[i];
-	    const b = document.createElement("div");
-
-	    //	    b.className = "card back";
-// If revealCpu is ON → show face-up
-if (game.revealCpu) {
-    //    const face = cardFace(game.cpu[i]);  // same function used for player cards
-    const face = cardFace(card);
-    face.style.position = "absolute";
-    face.style.left = "0px";
-    face.style.top = "0px";
-    b.appendChild(face);
-    b.className = "card"; // no 'back'
-} else {
-    // normal hidden CPU card
-    b.className = "card back";
-}	    
-//	    const count = game.cpu.length;
-	    const count = sortedCpu.length;
-	  
-	// tighter fan: smaller angle spread
-	// was 4–5°, now tighter
-	  const angle = (i - (count - 1) / 2) * 2.5;
-	  
-	  // smaller cards: reduce width/height in CSS (below)
-	  // shift fan to the right
-	  const baseOffset = 700;  // shift entire fan right
-//	  const overlap = 6;      // tighter overlap
-	  const overlap = 25;      // tighter overlap
-	  
-	  const x = baseOffset + i * overlap;
-	  
-	  b.style.position = "absolute";
-	  b.style.left = x + "px";
-	  b.style.top = "0px";
-	  b.style.transform = `rotate(${angle}deg)`;
-	  
-	  el.cpu.appendChild(b);
-      }
-*/
-      
+} // for sortedCPU
+    */
+    
       // player cards rendering
       
       el.player.innerHTML = "";
@@ -167,7 +203,7 @@ if (game.revealCpu) {
 	      i++; // gap takes a spot
 	      
               gapInserted = true;
-	  }
+	  } // if: !isMeld && !gapInserted
 	  
 	  const f = cardFace(c);
 	  if (isMeld) f.classList.add("meld-card");
@@ -199,7 +235,7 @@ if (game.revealCpu) {
 
 //	  el.player.appendChild(f);
 
-      }
+      } // for sorted - the player
       
       
 

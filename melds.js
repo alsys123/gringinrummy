@@ -51,13 +51,20 @@
     return melds;
   }
 
+// ENTRY POINT
 //__ evaluate
   function evaluate(hand) {
+//      console.log("-- evaluate -- ");
+//      console.log(  "\nHand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+      console.log("\n" +  
+	  `Hand: ${hand.map((c,i) => `${i}) ${c.rank}${c.suit}`).join("  ")}`  );
 
 //          const melds = getAllMelds(hand);
       const melds = getAllMeldsv2(hand);
-//      console.log("MELDS:", JSON.stringify(melds));
+      console.log("In evaluate v2 ... MELDS:", JSON.stringify(melds));
 
+      const testResult = getAllMeldsv3(hand);
+      console.log("In evaluate v3 ... MELDS:", JSON.stringify(testResult));
       
     let bestDW = Infinity;
     let bestPattern = [];
@@ -106,13 +113,27 @@
   }
 
     //_ meldCardIds
-  function meldCardIds(hand, evalInfo) {
-    const ids = new Set();
+function meldCardIds(hand, evalInfo) {
+//    console.log("\nIn meldCardIds");
+//      console.log("hand:", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
+//      console.log(
+//	  `evalCpu = { deadwood:${evalInfo.deadwood}, melds:${evalInfo.melds
+//    .map(m => `[${m.join(",")}]`)
+//    .join(" ")} }`
+//      );
+      
+      const ids = new Set();
     for (const meld of evalInfo.melds) {
       for (const idx of meld) {
         ids.add(hand[idx].id);
+//	  ids.add(idx);
+
       }
     }
+
+    //    console.log("=> MeldCardIds:", JSON.stringify(ids));
+//    console.log("=> MeldCardIds:", Array.from(ids));
+
     return ids;
   } //meldCardIds
 
@@ -157,6 +178,8 @@ function findRuns(hand) {
 }
 
 function sortHandWithMeldsFirst(hand) {
+//    console.log("In sortHandWithMeldsFirst: ", hand);
+
   const order = {"♣":0,"♦":1,"♥":2,"♠":3};
 
   const sets = findSets(hand);
@@ -649,15 +672,18 @@ function solveHand(hand) {
   const M = live.length;
   const stats = computeStats(live);
 
-    console.log( "---" );
-    console.log(  "Live (",M,"): ", live.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
-
-    console.log("VALUES:", live.map(c => `${c.rank}:${c.value}`).join(" "));
-
-    console.log(  "Dead:",          dead.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
-
-   console.log( `Stats: maxRun=${stats.maxRun}, secondRun=${stats.secondRun}, ranks3=${stats.ranks3}, ranks4=${stats.ranks4}`
-);
+    // -- test log
+//    console.log( "---" );
+//    console.log(  "Hand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+//
+//    console.log(  "Live (",M,"): ", live.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+//
+//    console.log("VALUES:",  live.map(c => `${c.rank}:${c.value}`).join(" "));
+//
+//    console.log(  "Dead:",   dead.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+//
+//   console.log( `Stats: maxRun=${stats.maxRun}, secondRun=${stats.secondRun}, ranks3=${stats.ranks3}, ranks4=${stats.ranks4}`
+//);
  
   // Step 2: filter patterns by card count + feasibility
   const feasiblePatterns = Object.entries(patterns)
