@@ -53,20 +53,31 @@
 
 // ENTRY POINT
 //__ evaluate
-  function evaluate(hand) {
-//      console.log("-- evaluate -- ");
-//      console.log(  "\nHand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
-      console.log("\n" +  
-	  `Hand: ${hand.map((c,i) => `${i}) ${c.rank}${c.suit}`).join("  ")}`  );
+function evaluate(hand) {
+    //      console.log("-- evaluate -- ");
+    //      console.log(  "\nHand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+    console.log("\n" +  
+		`Hand: ${hand.map((c,i) => `${i}) ${c.rank}${c.suit}`).join("  ")}`  );
+    console.log("\n" +  
+		`Hand: ${hand.map((c,i) => `C("${c.rank}","${c.suit}")`).join(",")}`  );
+
+console.log("In Evaluate: VALUES:", hand.map(c => `${c.rank}:${c.runValue}`).join("  "));
 
 //          const melds = getAllMelds(hand);
-      const melds = getAllMeldsv2(hand);
-      console.log("In evaluate v2 ... MELDS:", JSON.stringify(melds));
+const melds = getAllMeldsv2(hand);
+console.log("In evaluate v2 ... MELDS:", JSON.stringify(melds));
 
-      const testResult = getAllMeldsv3(hand);
-      console.log("In evaluate v3 ... MELDS:", JSON.stringify(testResult));
-      
-    let bestDW = Infinity;
+const testResult = getAllMeldsv3(hand);
+
+console.log("In evaluate v3 ... MELDS:", JSON.stringify(testResult));
+
+// debug only
+if (JSON.stringify(melds) != JSON.stringify(testResult)){
+    showMessage("oops! v2 v3 mismatch"+JSON.stringify(melds)+
+		"\n"+JSON.stringify(testResult));
+}
+
+let bestDW = Infinity;
     let bestPattern = [];
 
     function dfs(meldIndex, used, chosen) {
@@ -260,26 +271,27 @@ function findRunsv2(hand, remainingIdxs) {
 
 //    console.log("RUN GROUP:", suit, arr.map(x => `${x.value}:${hand[x.i].rank}${hand[x.i].suit}`).join(" "));
 
-  // group remaining cards by suit
+    // group remaining cards by suit
+    // changed .value to .runVALUE 
   remainingIdxs.forEach(i => {
     const card = hand[i];
 //      const value = Number(card.value);   // <-- force numeric
-      const value = Number(card.value ?? card.rank);
+      const value = Number(card.runValue ?? card.rank);
     if (!bySuit[card.suit]) bySuit[card.suit] = [];
-    bySuit[card.suit].push({ i, value });
+    bySuit[card.suit].push({ i, runValue });
   });
 
   // scan each suit for consecutive sequences
   for (const suit in bySuit) {
-    const arr = bySuit[suit].sort((a, b) => a.value - b.value);
+    const arr = bySuit[suit].sort((a, b) => a.runValue - b.runValue);
 
     if (arr.length < 3) continue;
 
     let run = [arr[0]];
 
     for (let k = 1; k < arr.length; k++) {
-      const prev = arr[k - 1].value;
-      const curr = arr[k].value;
+      const prev = arr[k - 1].runValue;
+      const curr = arr[k].runValue;
 
       if (curr === prev + 1) {
         run.push(arr[k]);
@@ -386,13 +398,20 @@ function cardDeadwoodValue(card) {
 //------------------------------------------------------------
 
 function eliminateDeadCards(hand) {
+        console.log("eliminateDeadCards:" +  
+		`Hand: ${hand.map((c,i) => `C("${c.rank}","${c.suit}")`).join(",")}`  );
+
+    console.log("VALUES:", hand.map(c => `${c.rank}:${c.runValue} (${typeof c.runValue})`).join("  "));
+    console.log("VALUES dead:", hand.map(c => `${c.rank}:${c.deadwoodValue} (${typeof c.deadwoodValue})`).join("  "));
+
   const rankCounts = {};
   const suitRanks = { "♣": [], "♦": [], "♥": [], "♠": [] };
 
-  // Build rank counts and suit→rank lists
+    // Build rank counts and suit→rank lists
+    // change .value to .runValue
   for (const card of hand) {
     rankCounts[card.rank] = (rankCounts[card.rank] || 0) + 1;
-    suitRanks[card.suit].push(card.value);
+    suitRanks[card.suit].push(card.runValue);
   }
 
   // Sort suit ranks
@@ -403,7 +422,7 @@ function eliminateDeadCards(hand) {
   // Helper: does this card have adjacency in its suit?
   function hasRunNeighbor(card) {
     const ranks = suitRanks[card.suit];
-    const v = card.value;
+    const v = card.runValue;
     return ranks.includes(v-1) || ranks.includes(v+1);
   }
 
@@ -502,13 +521,14 @@ function requiredCards(pattern) {
 // 3. FEASIBILITY CHECKS (RUNS + SETS)
 //------------------------------------------------------------
 
+// change .value to .runValue
 function computeStats(live) {
   const rankCounts = {};
   const suitRanks = { "♣": [], "♦": [], "♥": [], "♠": [] };
 
   for (const c of live) {
     rankCounts[c.rank] = (rankCounts[c.rank] || 0) + 1;
-    suitRanks[c.suit].push(c.value);
+    suitRanks[c.suit].push(c.runValue);
   }
 
   for (const s in suitRanks) suitRanks[s].sort((a,b)=>a-b);
@@ -590,11 +610,12 @@ function buildMeldsForPattern(pattern, live) {
   const melds = [];
   const used = new Set();
 
+    // change .value to .runValue
   // Helper: find a run of size k
   function findRun(k) {
     const suits = ["♣","♦","♥","♠"];
     for (const s of suits) {
-      const ranks = live.filter(c => c.suit === s).map(c => c.value).sort((a,b)=>a-b);
+      const ranks = live.filter(c => c.suit === s).map(c => c.runValue).sort((a,b)=>a-b);
       for (let i=0;i<ranks.length;i++) {
         let seq = [ranks[i]];
         for (let j=i+1;j<ranks.length;j++) {
@@ -602,7 +623,7 @@ function buildMeldsForPattern(pattern, live) {
           else if (ranks[j] > seq[seq.length-1] + 1) break;
         }
         if (seq.length >= k) {
-          const cards = seq.slice(0,k).map(v => live.find(c => c.suit===s && c.value===v && !used.has(c)));
+          const cards = seq.slice(0,k).map(v => live.find(c => c.suit===s && c.runValue===v && !used.has(c)));
           if (cards.every(Boolean)) return cards;
         }
       }
@@ -642,12 +663,111 @@ function buildMeldsForPattern(pattern, live) {
   return melds;
 }
 
+/*
+function buildMeldsForPattern(pattern, live) {
+  const melds = [];
+  const usedIds = new Set();   // ⭐ track by ID, not object reference
+
+  // ------------------------------------------------------------
+  // Helper: find a run of size k
+  // ------------------------------------------------------------
+  function findRun(k) {
+    const suits = ["♣","♦","♥","♠"];
+
+    for (const s of suits) {
+      // Collect runValues for this suit
+      const ranks = live
+        .filter(c => c.suit === s)
+        .map(c => c.runValue)
+        .sort((a,b) => a - b);
+
+      // Scan for sequences
+      for (let i = 0; i < ranks.length; i++) {
+        let seq = [ranks[i]];
+
+        for (let j = i + 1; j < ranks.length; j++) {
+          if (ranks[j] === seq[seq.length - 1] + 1) {
+            seq.push(ranks[j]);
+          } else if (ranks[j] > seq[seq.length - 1] + 1) {
+            break;
+          }
+        }
+
+        if (seq.length >= k) {
+          // Convert runValues → actual card objects
+          const cards = seq.slice(0, k).map(v =>
+            live.find(c =>
+              c.suit === s &&
+              c.runValue === v &&
+              !usedIds.has(c.id)
+            )
+          );
+
+          if (cards.every(Boolean)) {
+            return cards;
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+
+  // ------------------------------------------------------------
+  // Helper: find a set of size k
+  // ------------------------------------------------------------
+  function findSet(k) {
+    const groups = {};
+
+    for (const c of live) {
+      if (!usedIds.has(c.id)) {
+        groups[c.rank] = groups[c.rank] || [];
+        groups[c.rank].push(c);
+      }
+    }
+
+    for (const r in groups) {
+      if (groups[r].length >= k) {
+        return groups[r].slice(0, k);
+      }
+    }
+
+    return null;
+  }
+
+  // ------------------------------------------------------------
+  // Build melds for each pattern element
+  // ------------------------------------------------------------
+  for (const m of pattern) {
+    const type = m[0];
+    const size = parseInt(m.slice(1), 10);
+
+    let meld =
+      type === "R"
+        ? findRun(size)
+        : findSet(size);
+
+    if (!meld) return null;
+
+    meld.forEach(c => usedIds.add(c.id));
+    melds.push(meld);
+  }
+
+  return melds;
+} //buildMeldsForPattern
+*/
+
 
 //------------------------------------------------------------
 // 5. MAIN SOLVER
 //------------------------------------------------------------
 
 function getAllMeldsv3(hand) {
+
+    console.log("getAllMeldsv3:" +  
+		`Hand: ${hand.map((c,i) => `C("${c.rank}","${c.suit}")`).join(",")}`  );
+    console.log("with VALUES:", hand.map(c => `${c.rank}:${c.runValue}`).join("  "));
+
     const result = solveHand(hand);
     if (!result || !result.melds) {
 	return [];
@@ -672,26 +792,27 @@ function solveHand(hand) {
   const M = live.length;
   const stats = computeStats(live);
 
-    // -- test log
-//    console.log( "---" );
-//    console.log(  "Hand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
-//
-//    console.log(  "Live (",M,"): ", live.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
-//
-//    console.log("VALUES:",  live.map(c => `${c.rank}:${c.value}`).join(" "));
-//
-//    console.log(  "Dead:",   dead.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
-//
-//   console.log( `Stats: maxRun=${stats.maxRun}, secondRun=${stats.secondRun}, ranks3=${stats.ranks3}, ranks4=${stats.ranks4}`
-//);
+
+    //Usefull: test log
+    console.log( "---" );
+    console.log(  "Hand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+    
+    console.log(  "Live (",M,"): ", live.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+    
+    console.log("VALUES:",  live.map(c => `${c.rank}:${c.runValue}`).join(" "));
+    
+    console.log(  "Dead:",   dead.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+    
+    console.log( `Stats: maxRun=${stats.maxRun}, secondRun=${stats.secondRun}, ranks3=${stats.ranks3}, ranks4=${stats.ranks4}`
+	       );
  
   // Step 2: filter patterns by card count + feasibility
   const feasiblePatterns = Object.entries(patterns)
     .filter(([id, pat]) => requiredCards(pat) <= M)
     .filter(([id, pat]) => feasible(pat, stats));
 
-    console.log( feasiblePatterns.map(([id, pat]) => `${id}: ${pat.join(",")}`).join("  &  ") );
-    
+    console.log( "Feasible Patterns: ",
+		 feasiblePatterns.map(([id, pat]) => `${id}: ${pat.join(",")}`).join("  &  ") );   
   // Step 3a: only one pattern → return immediately
   if (feasiblePatterns.length === 1) {
     const [id, pat] = feasiblePatterns[0];
@@ -708,6 +829,13 @@ function solveHand(hand) {
 
     const used = new Set(melds.flat());
     const dw = hand.filter(c => !used.has(c));
+
+//      console.log("used: ", used);
+//      console.log("dw: ", dw);
+      
+      // fix but now worse
+      //      const usedIds = new Set(melds.flat().map(c => c.id));
+//      const dw = hand.filter(c => !usedIds.has(c.id));
 
     if (!best || dw.length < best.deadwood.length) {
       best = { pattern: id, melds, deadwood: dw };

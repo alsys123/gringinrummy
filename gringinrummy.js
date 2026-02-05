@@ -43,6 +43,7 @@
      Utility Functions
   ------------------------------ */
 
+/*
   function createDeck() {
     const d = [];
     for (const s of suits)
@@ -50,6 +51,23 @@
         d.push({rank:r, suit:s, id:s+r});
     return d;
   }
+*/
+
+function createDeck() {
+  const d = [];
+  for (const s of suits) {
+    for (const r of ranks) {
+      d.push({
+        rank: r,
+        suit: s,
+        runValue: runValue(r),          // for runs
+        deadwoodValue: deadwoodValue(r),// for scoring
+        id: s + r
+      });
+    }
+  }
+  return d;
+}
 
   function shuffle(a) {
     for (let i=a.length-1;i>0;i--) {
@@ -58,7 +76,6 @@
     }
   }
     
-
 
   function cardValue(rank) {
     if (rank === 1) return 1;
