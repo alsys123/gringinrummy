@@ -11,3 +11,16 @@ function deadwoodValue(rank) {
   if (["J","Q","K"].includes(rank)) return 10;
   return Number(rank);
 }
+
+function printCards(arr) {
+  console.log(
+    arr.map(c => `${c.rank}${c.suit} (run:${c.runValue}, dead:${c.deadwoodValue}, id:${c.id})`)
+       .join("  ")
+  );
+}
+
+function printSet(set) {
+  console.log(
+    [...set].map(c => `${c.rank}${c.suit} (id:${c.id}, run:${c.runValue})`).join("  ")
+  );
+}

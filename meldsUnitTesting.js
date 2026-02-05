@@ -1,4 +1,5 @@
 
+let nextCardID = 0;
 /* ------------------------------
    Unit Testing of Meld
    ------------------------------ */
@@ -8,7 +9,8 @@ function upgradeCard(c) {
     suit: c.suit,
     runValue: runValue(c.rank),
     deadwoodValue: deadwoodValue(c.rank),
-    id: c.id
+      //    id: c.id
+      id: c.id ?? nextCardID++   // ⭐ only assign if missing
   };
 }
 
@@ -31,11 +33,14 @@ function testMelds() {
     
     for (const t of meldTests) {
 	
-	console.log("Run test: ",t.name);
+	console.log("**** Run test **** : ",t.name);
 
-	console.log("orig t.hand: ",t.hand);
+	// *** THIS IS FOR TESTING ONE TEST ONLY!!!
+	if (!t.name.startsWith("BC15")) { continue; }
+	
+	//	console.log("orig t.hand: ",t.hand);
 	const newHand = upgradeHand(t.hand);
-	console.log("new ==> ",newHand);
+//	console.log("new ==> ",newHand);
 	
 	// before the upgrade
 //	const result = normalize(getAllMeldsv3(t.hand));
@@ -44,12 +49,15 @@ function testMelds() {
 		`Hand: ${t.hand.map((c,i) => `C("${c.rank}","${c.suit}")`).join(",")}`  );
 
 	//      const result = normalize(getAllMeldsv2(t.hand));
-	      console.log("my Result: ", result);
+//	console.log("In evaluate v3 ... MELDS:", JSON.stringify(testResult));
+
+	console.log("my Result: ", JSON.stringify(result));
       
 	const expected = normalize(t.expected);
 	
 	const pass = JSON.stringify(result) === JSON.stringify(expected);
 	if (pass) passed++;
+
 	
 	message += `**${t.name}**\n`;
 	message += `Hand: ${t.hand.map((c,i)=>`${i}) ${c.rank}${c.suit}`).join("  ")}  `;

@@ -73,8 +73,9 @@ console.log("In evaluate v3 ... MELDS:", JSON.stringify(testResult));
 
 // debug only
 if (JSON.stringify(melds) != JSON.stringify(testResult)){
-    showMessage("oops! v2 v3 mismatch"+JSON.stringify(melds)+
-		"\n"+JSON.stringify(testResult));
+    showMessage("oops! " + game.turn + " -> " + "v2 v3 mismatch v2: " +
+		JSON.stringify(melds) +
+		"\nv3: "+JSON.stringify(testResult));
 }
 
 let bestDW = Infinity;
@@ -547,8 +548,10 @@ function computeStats(live) {
   }
 */
     function longestRun(arr) {
+
 //	console.log(" longestRun input:", arr.join(" "));
-  if (arr.length === 0) return 0;
+
+	if (arr.length === 0) return 0;
 
   let max = 1;
   let cur = 1;
@@ -825,22 +828,38 @@ function solveHand(hand) {
 
   for (const [id, pat] of feasiblePatterns) {
     const melds = buildMeldsForPattern(pat, live);
-    if (!melds) continue;
+      if (!melds) {
+	  console.log("No melds for pattern: ", id, JSON.stringify(pat));
+	  continue
+      };
 
     const used = new Set(melds.flat());
     const dw = hand.filter(c => !used.has(c));
 
-//      console.log("used: ", used);
-//      console.log("dw: ", dw);
       
+      console.log("Pattern: ", id, JSON.stringify(pat));    
+      console.log("used and dw:");
+      printSet(used);
+      printCards(dw);
+
       // fix but now worse
       //      const usedIds = new Set(melds.flat().map(c => c.id));
 //      const dw = hand.filter(c => !usedIds.has(c.id));
+      if (best) {
+      console.log("Testing the best: dw.length < best.deadwood.length",
+		  JSON.stringify(dw.length),
+		  JSON.stringify(best.deadwood.length));
+      } else {
+	  console.log("Testing the (not best yet) best: dw.length:",
+		      JSON.stringify(dw.length));
+      } // debug if
 
+      
     if (!best || dw.length < best.deadwood.length) {
       best = { pattern: id, melds, deadwood: dw };
     }
-  }
+      
+  } // for
 
   return best;
 }
