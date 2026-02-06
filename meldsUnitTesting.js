@@ -36,7 +36,7 @@ function testMelds() {
 	console.log("**** Run test **** : ",t.name);
 
 	// *** THIS IS FOR TESTING ONE TEST ONLY!!!
-	if (!t.name.startsWith("BC15")) { continue; }
+//	if (!t.name.startsWith("BC15")) { continue; }
 	
 	//	console.log("orig t.hand: ",t.hand);
 	const newHand = upgradeHand(t.hand);

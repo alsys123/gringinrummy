@@ -460,43 +460,42 @@ const patterns = {
   P10: ["S4"],             // 4
 
   P11: ["R3","R3"],        // 6
-  P12: ["R3","R4"],        // 7
-  P13: ["R3","R5"],        // 8
-  P14: ["R3","R6"],        // 9
-  P15: ["R3","R7"],        // 10
+  P12: ["R4","R3"],        // 7
+    P13: ["R5","R3"],        // 8
+  P14: ["R6","R3"],        // 9
+  P15: ["R7","R3"],        // 10
   P16: ["R4","R4"],        // 8
-  P17: ["R4","R5"],        // 9
-  P18: ["R4","R6"],        // 10
+  P17: ["R5","R4"],        // 9
+  P18: ["R6","R4"],        // 10
   P19: ["R5","R5"],        // 10
-//  P20: ["R5","R6"],        // 11 (never feasible)
-
+//gap
   P21: ["S3","S3"],        // 6
-  P22: ["S3","S4"],        // 7
+  P22: ["S4","S3"],        // 7
   P23: ["S4","S4"],        // 8
 
   P24: ["S3","R3"],        // 6
-  P25: ["S3","R4"],        // 7
-  P26: ["S3","R5"],        // 8
-  P27: ["S3","R6"],        // 9
-  P28: ["S3","R7"],        // 10
+    P25: ["R4","S3"],        // 7
+    P26: ["R5","S3"],        // 8
+  P27: ["R6","S3"],        // 9
+  P28: ["R7","S3"],        // 10
   P29: ["S4","R3"],        // 7
   P30: ["S4","R4"],        // 8
-  P31: ["S4","R5"],        // 9
-  P32: ["S4","R6"],        // 10
+    P31: ["R5","S4"],        // 9
+    P32: ["R6","S4"],        // 10
 
   P33: ["R3","R3","R3"],   // 9
-  P34: ["R3","R3","R4"],   // 10
+    P34: ["R4","R3","R3"],   // 10
 
   P35: ["S3","S3","S3"],   // 9
-  P36: ["S3","S3","S4"],   // 10
+    P36: ["S4","S3","S3"],   // 10
 
   P37: ["S3","R3","R3"],   // 9
-  P38: ["S3","R3","R4"],   // 10
+    P38: ["R4","S3","R3"],   // 10
   P39: ["S4","R3","R3"],   // 10
 
   P40: ["S3","S3","R3"],   // 9
-  P41: ["S3","S3","R4"],   // 10
-  P42: ["S3","S4","R3"]    // 10
+    P41: ["R4","S3","S3"],   // 10
+    P42: ["S4","S3","R3"]    // 10
 };
 
 // Compute required meld cards
@@ -610,6 +609,15 @@ function feasible(pattern, stats) {
 //------------------------------------------------------------
 
 function buildMeldsForPattern(pattern, live) {
+
+// debug only
+//    if (JSON.stringify(pattern) === JSON.stringify(["R3","R4"])) {
+//	
+//	console.log("buildMeldsForPattern: ",JSON.stringify(pattern),
+//		    "Live (",live.length,"): ",
+//		    live.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+//    }
+
   const melds = [];
   const used = new Set();
 
@@ -666,99 +674,6 @@ function buildMeldsForPattern(pattern, live) {
   return melds;
 }
 
-/*
-function buildMeldsForPattern(pattern, live) {
-  const melds = [];
-  const usedIds = new Set();   // ⭐ track by ID, not object reference
-
-  // ------------------------------------------------------------
-  // Helper: find a run of size k
-  // ------------------------------------------------------------
-  function findRun(k) {
-    const suits = ["♣","♦","♥","♠"];
-
-    for (const s of suits) {
-      // Collect runValues for this suit
-      const ranks = live
-        .filter(c => c.suit === s)
-        .map(c => c.runValue)
-        .sort((a,b) => a - b);
-
-      // Scan for sequences
-      for (let i = 0; i < ranks.length; i++) {
-        let seq = [ranks[i]];
-
-        for (let j = i + 1; j < ranks.length; j++) {
-          if (ranks[j] === seq[seq.length - 1] + 1) {
-            seq.push(ranks[j]);
-          } else if (ranks[j] > seq[seq.length - 1] + 1) {
-            break;
-          }
-        }
-
-        if (seq.length >= k) {
-          // Convert runValues → actual card objects
-          const cards = seq.slice(0, k).map(v =>
-            live.find(c =>
-              c.suit === s &&
-              c.runValue === v &&
-              !usedIds.has(c.id)
-            )
-          );
-
-          if (cards.every(Boolean)) {
-            return cards;
-          }
-        }
-      }
-    }
-
-    return null;
-  }
-
-  // ------------------------------------------------------------
-  // Helper: find a set of size k
-  // ------------------------------------------------------------
-  function findSet(k) {
-    const groups = {};
-
-    for (const c of live) {
-      if (!usedIds.has(c.id)) {
-        groups[c.rank] = groups[c.rank] || [];
-        groups[c.rank].push(c);
-      }
-    }
-
-    for (const r in groups) {
-      if (groups[r].length >= k) {
-        return groups[r].slice(0, k);
-      }
-    }
-
-    return null;
-  }
-
-  // ------------------------------------------------------------
-  // Build melds for each pattern element
-  // ------------------------------------------------------------
-  for (const m of pattern) {
-    const type = m[0];
-    const size = parseInt(m.slice(1), 10);
-
-    let meld =
-      type === "R"
-        ? findRun(size)
-        : findSet(size);
-
-    if (!meld) return null;
-
-    meld.forEach(c => usedIds.add(c.id));
-    melds.push(meld);
-  }
-
-  return melds;
-} //buildMeldsForPattern
-*/
 
 
 //------------------------------------------------------------
