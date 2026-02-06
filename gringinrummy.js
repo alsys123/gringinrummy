@@ -37,21 +37,6 @@
     scoreboard: document.getElementById("scoreboard")
   };
 
-//    let gBackDoorCode = 0;
-
-  /* ------------------------------
-     Utility Functions
-  ------------------------------ */
-
-/*
-  function createDeck() {
-    const d = [];
-    for (const s of suits)
-      for (const r of ranks)
-        d.push({rank:r, suit:s, id:s+r});
-    return d;
-  }
-*/
 
 function createDeck() {
   const d = [];
@@ -392,9 +377,11 @@ function createDeck() {
       cDW
     });
 
-    showHandTally(scored);
-    checkMatchEnd();
-    game.phase = "round-over";
+//      console.log("ehh ..show cpu prepre!",game.revealCpu);
+	 
+      showHandTally(scored);
+      checkMatchEnd();
+      game.phase = "round-over";
       setMsg("Hand over. Click New Hand to play again.");
 
     render();
@@ -577,13 +564,16 @@ function createDeck() {
       cDW: 0
     });
 
-    log("CPU went Gin.");
-    showHandTally(scored);
-    checkMatchEnd();
-    game.phase = "round-over";
-      setMsg("CPU went Gin. Click New Hand to play again.");
+      log("CPU went Gin.");
 
-    render();
+//      game.revealCpu = "true";  ........... here i am .. revealing CPU cards
+      
+      showHandTally(scored);
+      checkMatchEnd();
+      game.phase = "round-over";
+      setMsg("CPU went Gin. Click New Hand to play again.");
+      
+      render();
   }
 
     //__ cpuKnock
@@ -662,7 +652,7 @@ render();
 // functions global ...
 
    function closeModal() {
-	console.log("in close");
+//	console.log("in close");
 	document.getElementById("modal").style.display = "none";
     }
 

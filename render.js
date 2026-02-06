@@ -3,17 +3,17 @@
      Rendering
   ------------------------------ */
 function renderCPU(sortedCpu,evalCpu,cpuMeldIds, el) {
-    console.log("\nRender CPU: ");
-    console.log("sortedCpu:", sortedCpu.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
+ //   console.log("\nRender CPU: ");
+//    console.log("sortedCpu:", sortedCpu.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
     //    console.log("evalCpu:", evalCpu.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
-    console.log(
-	`evalCpu = { deadwood:${evalCpu.deadwood}, melds:${evalCpu.melds
-    .map(m => `[${m.join(",")}]`)
-    .join(" ")} }`
-    );
+//    console.log(
+//	`evalCpu = { deadwood:${evalCpu.deadwood}, melds:${evalCpu.melds
+//    .map(m => `[${m.join(",")}]`)
+//    .join(" ")} }`
+//    );
     
 //    console.log("cpuMeldIds:", JSON.stringify(cpuMeldIds));
-    console.log("=> cpuMeldIds:", Array.from(cpuMeldIds));
+//    console.log("=> cpuMeldIds:", Array.from(cpuMeldIds));
 
     let gapInserted = false;
 
@@ -29,7 +29,7 @@ function renderCPU(sortedCpu,evalCpu,cpuMeldIds, el) {
 //	  const isMeld = meldIds.has(c.id);
 
 	// ⭐ Insert gap before first non-meld card
-	if (!isMeld && !gapInserted) {
+	if (!isMeld && !gapInserted && game.revealCpu) {
             const gap = document.createElement("div");
             gap.className = "meld-gap";
 	    
@@ -54,8 +54,13 @@ function renderCPU(sortedCpu,evalCpu,cpuMeldIds, el) {
 	
 	// ⭐ Now render the CPU card (face-up or back)
 	const b = document.createElement("div");
+
+	console.log("show cpu pre!",game.revealCpu);
 	
 	if (game.revealCpu) {
+
+	    console.log("show cpu!");
+	    
             const face = cardFace(card);
             face.style.position = "absolute";
             face.style.left = "0px";

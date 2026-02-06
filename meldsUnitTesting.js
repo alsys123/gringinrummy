@@ -33,10 +33,12 @@ function testMelds() {
     
     for (const t of meldTests) {
 	
-	console.log("**** Run test **** : ",t.name);
+//	console.log("**** Run test **** : ",t.name);
 
 	// *** THIS IS FOR TESTING ONE TEST ONLY!!!
-//	if (!t.name.startsWith("BC15")) { continue; }
+//	if (!t.name.startsWith("Man4")) { continue; }
+	// *** THIS IS FOR TESTING ONE TEST ONLY!!!
+
 	
 	//	console.log("orig t.hand: ",t.hand);
 	const newHand = upgradeHand(t.hand);
@@ -45,13 +47,13 @@ function testMelds() {
 	// before the upgrade
 //	const result = normalize(getAllMeldsv3(t.hand));
 	const result = normalize(getAllMeldsv3(newHand));
-	console.log("\n" +  
-		`Hand: ${t.hand.map((c,i) => `C("${c.rank}","${c.suit}")`).join(",")}`  );
+//	console.log("\n" +  
+//		`Hand: ${t.hand.map((c,i) => `C("${c.rank}","${c.suit}")`).join(",")}`  );
 
 	//      const result = normalize(getAllMeldsv2(t.hand));
 //	console.log("In evaluate v3 ... MELDS:", JSON.stringify(testResult));
 
-	console.log("my Result: ", JSON.stringify(result));
+//	console.log("my Result: ", JSON.stringify(result));
       
 	const expected = normalize(t.expected);
 	
@@ -80,7 +82,7 @@ showMessage(message);
 /*
   TESTING BEST COMBO and deadwood
 */
-
+/*
 function testBestCombos() {
     
     let message = "🔥 Best Combo + Deadwood Tests\n\n";
@@ -121,3 +123,4 @@ function testBestCombos() {
   showMessage(message);
 }
 
+*/

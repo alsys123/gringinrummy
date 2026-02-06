@@ -71,10 +71,6 @@ document.getElementById("btn-backDoor-testMelds").onclick = () => {
     testMelds();
 };
 
-document.getElementById("btn-backDoor-testDeadwood").onclick = () => {
-    testBestCombos();
-};
-
 
 function saveGameToFile() {
   const data = JSON.stringify({game,matchScore}, null, 2); // pretty JSON
@@ -139,5 +135,5 @@ function openLoadDialog() {
 document.getElementById("btn-backDoor-showCpuCards").onclick = () => {
     game.revealCpu = !game.revealCpu;
     render();
-    console.log("Game object: ", game)
+//    console.log("Game object: ", game)
 }
