@@ -55,11 +55,11 @@ function renderCPU(sortedCpu,evalCpu,cpuMeldIds, el) {
 	// ⭐ Now render the CPU card (face-up or back)
 	const b = document.createElement("div");
 
-	console.log("show cpu pre!",game.revealCpu);
+//	console.log("show cpu pre!",game.revealCpu);
 	
 	if (game.revealCpu) {
 
-	    console.log("show cpu!");
+//	    console.log("show cpu!");
 	    
             const face = cardFace(card);
             face.style.position = "absolute";

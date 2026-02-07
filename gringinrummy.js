@@ -152,6 +152,8 @@ function createDeck() {
     return result;
   }
 
+//__ showHandTally
+// maybe here  ... game.revealCpu = "true"
   function showHandTally(result) {
     let title = "";
     if (result.type === "gin") {
@@ -176,8 +178,8 @@ function createDeck() {
  //     alert(tally);
        showMessage(tally);
 //      showMessage("We have a tally");
-
-  }
+      
+  } //showHandTally
 
     //__ checkMatchEnd
     function checkMatchEnd() {
@@ -280,7 +282,9 @@ function createDeck() {
     game.turn = "player";
     game.phase = "await-draw";
     game.drawn = null;
-    el.log.innerHTML = "";
+      game.revealCpu = false;
+
+      el.log.innerHTML = "";
 
     for (let i=0;i<10;i++) {
       game.player.push(game.deck.pop());
@@ -298,7 +302,7 @@ function createDeck() {
 
       document.getElementById("btn-new").textContent = "Next Hand";
 
-    log("New hand started.");
+ //   log("New hand started.");
     render();
   }
 
@@ -393,16 +397,16 @@ function createDeck() {
 
     //__ playerKnock
     function playerKnock() {
+	game.revealCpu = true;
 
-	console.log("I just knocked");
-
-	console.log("game.turn=",game.turn);
-	console.log("game.phase=", game.phase);
+//	console.log("I just knocked");
+//	console.log("game.turn=",game.turn);
+//	console.log("game.phase=", game.phase);
 
 //	if (game.turn!=="player" || game.phase!=="await-discard") return;
 //	if (game.turn!=="player") return;
 
-	console.log("at a");
+//	console.log("at a");
 
 	const pEval = evaluate(game.player);
 
@@ -412,11 +416,14 @@ function createDeck() {
       return;
     }
 
-		console.log("at b");
+//		console.log("at b");
 
     const cEval = evaluate(game.cpu);
-    const pDW = pEval.deadwood;
-    const cDW = cEval.deadwood;
+
+	const pDW = pEval.deadwood; 
+	const cDW = cEval.deadwood;
+
+	// .... here i am ... the deadwood for cpu is off .. test 1
 
     let winner = "tie";
     if (pDW < cDW) winner = "player";
@@ -437,8 +444,10 @@ function createDeck() {
     render();
   } // playerKnock
 
-  function playerGin() {
-    if (game.turn!=="player" || game.phase!=="await-discard") return;
+function playerGin() {
+    
+    if (game.turn!=="player" || game.phase!=="await-draw") return;
+
     const pEval = evaluate(game.player);
     if (pEval.deadwood !== 0) {
 	//alert("Gin requires 0 deadwood.");
@@ -455,12 +464,15 @@ function createDeck() {
       cDW
     });
 
-    log("You went Gin.");
-    showHandTally(scored);
-    checkMatchEnd();
-    game.phase = "round-over";
-      setMsg("You Gin! Click New Hand to play again.");
+      showHandTally(scored);
 
+
+    checkMatchEnd();
+      game.phase = "round-over";
+      game.revealCpu = true;
+
+      setMsg("You had Gin! Click New Hand to play again.");
+      
     render();
   }
 

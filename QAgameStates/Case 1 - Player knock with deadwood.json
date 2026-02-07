@@ -376,7 +376,7 @@
     "turn": "player",
     "phase": "await-draw",
     "drawn": null,
-    "revealCpu": true
+    "revealCpu": false
   },
   "matchScore": {
     "player": 8,

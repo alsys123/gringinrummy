@@ -137,3 +137,34 @@ document.getElementById("btn-backDoor-showCpuCards").onclick = () => {
     render();
 //    console.log("Game object: ", game)
 }
+
+  /* ------------------------------
+     Show game statistics
+  ------------------------------ */
+
+document.getElementById("btn-backDoor-showStats").onclick = () => {
+    showGameStats();
+}
+
+
+function showGameStats() {
+
+//    const winnerLine = result.winner
+//	  ? `Result Type: ${result.type}  Result Winner: ${result.winner}\n`
+//	  : `\n`;
+    
+    const stats =
+	  `*** Game Statistics ***\n` +
+	  `Game Turn: ${game.turn}   Game Phase: ${game.phase}\n` +
+//	  winnerLine +
+	  `\n` +
+	  `Match Score:\n` +
+	  `You: ${matchScore.player}\n` +
+	  `CPU: ${matchScore.cpu}    MatchScore Target: ${matchScore.target}` +
+	  `\n\n` +
+	  `---`;
+    
+
+    showMessage(stats);
+    
+}
