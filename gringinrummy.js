@@ -224,9 +224,7 @@ function createDeck() {
       if (t && p === "await-discard") {
 
 	  const evalPlayer = evaluate(game.player);
-	  
-//	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
-	  
+	   
 	  if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
 	  if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
 
@@ -240,9 +238,10 @@ function createDeck() {
 
 	/// try this one out .. if play and awiting to draw
 	if (t && p === "await-draw") {
+
 	    const evalPlayer = evaluate(game.player);
 	    
-	    //	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
+//	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
 	    
 	    if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
 	    if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;

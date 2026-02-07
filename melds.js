@@ -54,30 +54,13 @@
 // ENTRY POINT
 //__ evaluate
 function evaluate(hand) {
-    //      console.log("-- evaluate -- ");
-    //      console.log(  "\nHand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
-//    console.log("\n" +  
-//		`Hand: ${hand.map((c,i) => `${i}) ${c.rank}${c.suit}`).join("  ")}`  );
-//console.log("\n" +  
-//	    `Hand: ${hand.map((c,i) => `C("${c.rank}","${c.suit}")`).join(",")}`  );
-//console.log("In Evaluate: VALUES:", hand.map(c => `${c.rank}:${c.runValue}`).join("  "));
 
-//          const melds = getAllMelds(hand);
-//const melds = getAllMeldsv2(hand);  <-- old one!
-//console.log("In evaluate v2 ... MELDS:", JSON.stringify(melds));
-const melds = getAllMeldsv3(hand);
+    
+    const melds = getAllMeldsv3(hand);
 
-//const testResult = getAllMeldsv3(hand);
-//console.log("In evaluate v3 ... MELDS:", JSON.stringify(testResult));
+  //  consoleLogHand(hand,melds);
 
-// debug only
-//if (JSON.stringify(melds) != JSON.stringify(testResult)){
-//    console.log("oops! " + game.turn + " -> " + "v2 v3 mismatch v2: " +
-//		JSON.stringify(melds) +
-//		"\nv3: "+JSON.stringify(testResult) );
-//}
-
-let bestDW = Infinity;
+    let bestDW = Infinity;
     let bestPattern = [];
 
     function dfs(meldIndex, used, chosen) {
@@ -107,10 +90,11 @@ let bestDW = Infinity;
         dfs(meldIndex+1, used2, chosen);
         chosen.pop();
       }
-    }
+    } //dfs
 
     dfs(0, new Set(), []);
 
+    // otherwise count them all
     if (bestDW === Infinity) {
       let dw = 0;
       for (const c of hand) dw += cardValue(c.rank);
@@ -440,64 +424,6 @@ function eliminateDeadCards(hand) {
   return { live, dead };
 } // eliminateDeadCards
 
-
-//------------------------------------------------------------
-// 2. PATTERN DEFINITIONS + REQUIRED CARD COUNTS
-//------------------------------------------------------------
-
-const patterns = {
-  P1:  ["R3"],             // 3
-  P2:  ["R4"],             // 4
-  P3:  ["R5"],             // 5
-  P4:  ["R6"],             // 6
-  P5:  ["R7"],             // 7
-  P6:  ["R8"],             // 8
-  P7:  ["R9"],             // 9
-  P8:  ["R10"],            // 10
-
-  P9:  ["S3"],             // 3
-  P10: ["S4"],             // 4
-
-  P11: ["R3","R3"],        // 6
-  P12: ["R4","R3"],        // 7
-    P13: ["R5","R3"],        // 8
-  P14: ["R6","R3"],        // 9
-  P15: ["R7","R3"],        // 10
-  P16: ["R4","R4"],        // 8
-  P17: ["R5","R4"],        // 9
-  P18: ["R6","R4"],        // 10
-  P19: ["R5","R5"],        // 10
-//gap
-  P21: ["S3","S3"],        // 6
-  P22: ["S4","S3"],        // 7
-  P23: ["S4","S4"],        // 8
-
-    P24: ["R3","S3"],        // 6  .. flipped around from S3 R3
-    P24a: ["S3","R3"],        // 6 
-    
-    P25: ["R4","S3"],        // 7
-    P26: ["R5","S3"],        // 8
-  P27: ["R6","S3"],        // 9
-  P28: ["R7","S3"],        // 10
-  P29: ["S4","R3"],        // 7
-  P30: ["S4","R4"],        // 8
-    P31: ["R5","S4"],        // 9
-    P32: ["R6","S4"],        // 10
-
-  P33: ["R3","R3","R3"],   // 9
-    P34: ["R4","R3","R3"],   // 10
-
-  P35: ["S3","S3","S3"],   // 9
-    P36: ["S4","S3","S3"],   // 10
-
-  P37: ["S3","R3","R3"],   // 9
-    P38: ["R4","S3","R3"],   // 10
-  P39: ["S4","R3","R3"],   // 10
-
-  P40: ["S3","S3","R3"],   // 9
-    P41: ["R4","S3","S3"],   // 10
-    P42: ["S4","S3","R3"]    // 10
-};
 
 // Compute required meld cards
 // eventually get rid of this and put the total in the data structure
