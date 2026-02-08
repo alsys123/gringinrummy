@@ -236,7 +236,7 @@ function createDeck() {
 	  return;
       }
 
-	/// try this one out .. if play and awiting to draw
+	/// try this one out .. if play and awaiting to draw
 	if (t && p === "await-draw") {
 
 	    const evalPlayer = evaluate(game.player);

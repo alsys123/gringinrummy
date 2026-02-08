@@ -58,7 +58,7 @@ function evaluate(hand) {
     
     const melds = getAllMeldsv3(hand);
 
-  //  consoleLogHand(hand,melds);
+    consoleLogHand(hand,melds);
 
     let bestDW = Infinity;
     let bestPattern = [];

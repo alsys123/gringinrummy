@@ -39,9 +39,10 @@ function printSet(set) {
 
 function consoleLogHand(hand,melds) {
 //    console.log("-- evaluate -- ");
-//    console.log(  "\nHand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
-    console.log("\n" +  
-    		`Hand: ${hand.map((c,i) => `${i}) ${c.rank}${c.suit}`).join(" ")}`  );
+    //    console.log(  "\nHand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+    console.log("\n"); 
+    console.log(`Game Turn: ${game.turn}`);
+    console.log(`Hand: ${hand.map((c,i) => `${i}) ${c.rank}${c.suit}`).join(" ")}`  );
 console.log("" +  
     	    `Hand: ${hand.map((c,i) => `C("${c.rank}","${c.suit}")`).join(",")}`  );
 console.log("VALUES:", hand.map(c => `${c.rank}:${c.runValue}`).join("  "));
