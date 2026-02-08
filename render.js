@@ -109,7 +109,8 @@ function render() {
     const sortedCpu = sortHandWithMeldsFirst(game.cpu);
     const evalCpu = evaluate(sortedCpu);
     const cpuMeldIds = meldCardIds(sortedCpu, evalCpu);
-    
+    // sortHandUsingPattern(hand, pattern)
+	
     renderCPU(sortedCpu,evalCpu,cpuMeldIds, el);
 
     let gapInserted = false;
@@ -120,7 +121,8 @@ function render() {
       el.player.innerHTML = "";
       //      const sorted = sortHandByRank(game.player);
       const sorted = sortHandWithMeldsFirst(game.player);
-
+// sortHandUsingPattern(hand, pattern)
+	
       // Auto-scale BEFORE positioning cards
       autoScaleHand(el.player, sorted.length, 95, 95);
 
