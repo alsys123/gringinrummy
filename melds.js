@@ -171,7 +171,37 @@ function findRuns(hand) {
 
   return hand.filter(c => runs.has(c.id));
 }
+// new one Feb 8
+	function sortHandWithMeldsFirst(hand) {
+  const order = {"♣":0,"♦":1,"♥":2,"♠":3};
 
+  const sets = findSets(hand).flat();   // flatten in case they return arrays
+  const runs = findRuns(hand).flat();
+
+  const meldIDs = new Set([...sets, ...runs].map(c => c.id));
+
+  function rankValue(r) {
+    if (typeof r === "number") return r;
+    if (r === "A") return 1;
+    if (["J","Q","K"].includes(r)) return 10;
+    return Number(r);
+  }
+
+  return [...hand].sort((a, b) => {
+    const aM = meldIDs.has(a.id);
+    const bM = meldIDs.has(b.id);
+
+    if (aM !== bM) return aM ? -1 : 1;
+
+    const ar = rankValue(a.rank);
+    const br = rankValue(b.rank);
+
+    if (ar !== br) return ar - br;
+
+    return order[a.suit] - order[b.suit];
+  });
+}
+/*
 function sortHandWithMeldsFirst(hand) {
 //    console.log("In sortHandWithMeldsFirst: ", hand);
 
@@ -199,7 +229,7 @@ function sortHandWithMeldsFirst(hand) {
   });
 }
 
-
+*/
 
 /*
 
