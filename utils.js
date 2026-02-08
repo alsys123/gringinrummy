@@ -168,3 +168,35 @@ function showGameStats() {
     showMessage(stats);
     
 }
+
+function sortHandUsingPattern(hand, pattern) {
+  // Flatten meld indices in order
+  const meldOrder = pattern.flat();
+
+  // Map card.id → its meld position (0,1,2,...)
+  const meldPos = new Map();
+  meldOrder.forEach((idx, pos) => {
+    meldPos.set(hand[idx].id, pos);
+  });
+
+  return [...hand].sort((a, b) => {
+    const aIn = meldPos.has(a.id);
+    const bIn = meldPos.has(b.id);
+
+    // Meld cards first
+    if (aIn && !bIn) return -1;
+    if (!aIn && bIn) return 1;
+
+    // If both are meld cards, sort by their meld position
+    if (aIn && bIn) {
+      return meldPos.get(a.id) - meldPos.get(b.id);
+    }
+
+    // Both are deadwood → normal sort
+    if (a.rank === b.rank) {
+      const order = {"♣":0,"♦":1,"♥":2,"♠":3};
+      return order[a.suit] - order[b.suit];
+    }
+    return a.rank - b.rank;
+  });
+}
