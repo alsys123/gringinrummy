@@ -681,8 +681,8 @@ function layoutStars() {
 //  const game = document.getElementById("game");
 //  const w = game.clientWidth;
 //  const h = game.clientHeight;
-const h = window.innerheight;
-const w = window.innerwidth;
+const h = window.innerHeight;
+const w = window.innerWidth;
 	
   const margin = 0.05;   // 5%
 
