@@ -677,4 +677,40 @@ render();
 	document.getElementById("modal").style.display = "none";
     }
 
+function layoutStars() {
+  const game = document.getElementById("game");
+  const w = game.clientWidth;
+  const h = game.clientHeight;
+
+  const margin = 0.05;   // 5%
+
+  const tl = document.getElementById("star-tl");
+  const tr = document.getElementById("star-tr");
+  const bl = document.getElementById("star-bl");
+  const br = document.getElementById("star-br");
+  const ml = document.getElementById("star-midleft");
+
+  // Top-left
+  tl.style.left = (w * margin) + "px";
+  tl.style.top  = (h * margin) + "px";
+
+  // Top-right
+  tr.style.left = (w * (1 - margin)) + "px";
+  tr.style.top  = (h * margin) + "px";
+
+  // Bottom-left
+  bl.style.left = (w * margin) + "px";
+  bl.style.top  = (h * (1 - margin)) + "px";
+
+  // Bottom-right
+  br.style.left = (w * (1 - margin)) + "px";
+  br.style.top  = (h * (1 - margin)) + "px";
+
+  // Mid-left (50% down, 5% in)
+  ml.style.left = (w * margin) + "px";
+  ml.style.top  = (h * 0.5) + "px";
+}
+
+window.addEventListener("load", layoutStars);
+window.addEventListener("resize", layoutStars);
 
