@@ -381,6 +381,13 @@ html, body {
   animation: bump 0.3s ease;
 }
 
+.star {
+  position: absolute;
+  font-size: 24px;     /* adjust as needed */
+  color: gold;         /* or whatever theme you want */
+  pointer-events: none;
+}
+
 @keyframes bump {
   0%   { transform: scale(1); }
   50%  { transform: scale(1.25); }
