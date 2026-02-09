@@ -152,7 +152,10 @@ function showGameStats() {
 //    const winnerLine = result.winner
 //	  ? `Result Type: ${result.type}  Result Winner: ${result.winner}\n`
 //	  : `\n`;
-    
+    const gameBoard = document.getElementById("game");
+  const w = gameBoard.clientWidth;
+  const h = gameBoard.clientHeight;
+	
     const stats =
 	  `*** Game Statistics ***\n` +
 	  `Game Turn: ${game.turn}   Game Phase: ${game.phase}\n` +
@@ -162,6 +165,7 @@ function showGameStats() {
 	  `You: ${matchScore.player}\n` +
 	  `CPU: ${matchScore.cpu}    MatchScore Target: ${matchScore.target}` +
 	  `\n\n` +
+		`GameBoard is ${w} wide and ${h} high\n` +
 	  `---`;
     
 
