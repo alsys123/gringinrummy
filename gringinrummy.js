@@ -678,10 +678,12 @@ render();
     }
 
 function layoutStars() {
-  const game = document.getElementById("game");
-  const w = game.clientWidth;
-  const h = game.clientHeight;
-
+//  const game = document.getElementById("game");
+//  const w = game.clientWidth;
+//  const h = game.clientHeight;
+const h = window.innerheight;
+const w = window.innerwidth;
+	
   const margin = 0.05;   // 5%
 
   const tl = document.getElementById("star-tl");
