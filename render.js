@@ -106,33 +106,13 @@ function renderCPU(sortedCpu,evalCpu,cpuMeldIds, el) {
 function render() {
     el.cpu.innerHTML = "";
 
-    //orig v1
-//    const sortedCpu = sortHandWithMeldsFirst(game.cpu);
-//    const evalCpu = evaluate(sortedCpu);
-//    const cpuMeldIds = meldCardIds(sortedCpu, evalCpu);
-    // sortHandUsingPattern(game.cpu, evalCpu.melds)
-
-
-    // -- new way ... v2
-//    const sortedCpu = sortHandWithMeldsFirst(game.cpu);
-//    const evalCpu    = evaluate(game.cpu);
-//    console.log("evalCpu:", evalCpu.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
-//
-//    const sortedCpu  = sortHandUsingPattern(game.cpu, evalCpu.melds)
-//    const cpuMeldIds = meldCardIds(sortedCpu, evalCpu);
-
     // version 3
     const evalCpu    = evaluate(game.cpu);
-
-    //    console.log("evalcpu:", evalCpu)
-
-//    consoleLogHand(game.cpu,evalCpu.melds);
-
-      const cpuMeldCardIds = evalCpu.melds
+    const cpuMeldCardIds = evalCpu.melds
 	  .flat()
 	  .map(i => game.cpu[i].id);
     const cpuMeldIds = new Set(cpuMeldCardIds);
-
+    
     const sortedCpuFinal = sortHandWithMeldsFirstv2(game.cpu, evalCpu.melds);
 
 //    console.log("after the sort");
@@ -280,6 +260,7 @@ function render() {
 // -- part of render
 // -- area:  866 .  Needed:  680 == normal
 function autoScaleHand(container, handLength, cardWidth, spacing) {
+// -- future    const table = document.getElementById("game"); // or your main game container
     const table = document.getElementById("table"); // or your main game container
     const areaWidth = table.clientWidth;            // <-- REAL width
 

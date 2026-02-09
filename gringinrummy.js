@@ -218,21 +218,29 @@ function createDeck() {
 	const t = game.turn === "player";
 	const p = game.phase;
 	
-	el.btnKnock.disabled = true;
-	el.btnGin.disabled   = true;
-	
+//	el.btnKnock.disabled = true;
+	//	el.btnGin.disabled   = true;
+	//hide
+	document.getElementById("btn-knock").style.display = "none";
+	document.getElementById("btn-gin").style.display = "none";
+
+	// player - await-discard
       if (t && p === "await-discard") {
 
 	  const evalPlayer = evaluate(game.player);
 	   
-	  if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
-	  if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
-
+//	  if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
+//	  if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
+	  if (evalPlayer.deadwood === 0)
+	      document.getElementById("btn-gin").style.display = "inline-block";
+	  if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
+	      document.getElementById("btn-knock").style.display = "inline-block";
+	  
 	  // hide
 	  document.getElementById("btn-new").style.display = "none";
 	  // show it
-	document.getElementById("btn-knock").style.display = "";
-	document.getElementById("btn-gin").style.display = "";
+//	  document.getElementById("btn-knock").style.display = "";
+//	  document.getElementById("btn-gin").style.display = "";
 	  return;
       }
 
@@ -243,14 +251,16 @@ function createDeck() {
 	    
 //	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
 	    
-	    if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
-	    if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
+	    if (evalPlayer.deadwood === 0)
+		document.getElementById("btn-gin").style.display = "inline-block";
+	    if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
+		document.getElementById("btn-knock").style.display = "inline-block";
 	    
 	    // hide
 	    document.getElementById("btn-new").style.display = "none";
 	    // show it
- 	    document.getElementById("btn-knock").style.display = "";
-	    document.getElementById("btn-gin").style.display = "";
+// 	    document.getElementById("btn-knock").style.display = "none";
+//	    document.getElementById("btn-gin").style.display = "none";
 	    return;
 	}
 
