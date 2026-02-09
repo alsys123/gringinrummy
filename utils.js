@@ -153,8 +153,11 @@ function showGameStats() {
 //	  ? `Result Type: ${result.type}  Result Winner: ${result.winner}\n`
 //	  : `\n`;
     const gameBoard = document.getElementById("game");
-  const w = gameBoard.clientWidth;
+  constr w = gameBoard.clientWidth;
   const h = gameBoard.clientHeight;
+	
+	constr iw = window.innerWidth;
+  const ih = window.innerHeight;
 	
     const stats =
 	  `*** Game Statistics ***\n` +
@@ -166,6 +169,8 @@ function showGameStats() {
 	  `CPU: ${matchScore.cpu}    MatchScore Target: ${matchScore.target}` +
 	  `\n\n` +
 		`GameBoard is ${w} wide and ${h} high\n` +
+		`\n\n` +
+		`GameBoard viewable at ${iw} wide and ${ih} high\n` +
 	  `---`;
     
 
