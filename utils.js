@@ -153,10 +153,10 @@ function showGameStats() {
 //	  ? `Result Type: ${result.type}  Result Winner: ${result.winner}\n`
 //	  : `\n`;
     const gameBoard = document.getElementById("game");
-  constr w = gameBoard.clientWidth;
+  const w = gameBoard.clientWidth;
   const h = gameBoard.clientHeight;
 	
-	constr iw = window.innerWidth;
+	const iw = window.innerWidth;
   const ih = window.innerHeight;
 	
     const stats =
