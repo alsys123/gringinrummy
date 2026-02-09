@@ -58,7 +58,7 @@ function evaluate(hand) {
     
     const melds = getAllMeldsv3(hand);
 
-    consoleLogHand(hand,melds);
+//    consoleLogHand(hand,melds);
 
     let bestDW = Infinity;
     let bestPattern = [];
@@ -109,13 +109,13 @@ function evaluate(hand) {
 
     //_ meldCardIds
 function meldCardIds(hand, evalInfo) {
-//    console.log("\nIn meldCardIds");
-//      console.log("hand:", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
-//      console.log(
-//	  `evalCpu = { deadwood:${evalInfo.deadwood}, melds:${evalInfo.melds
-//    .map(m => `[${m.join(",")}]`)
-//    .join(" ")} }`
-//      );
+    console.log("\nIn meldCardIds");
+      console.log("hand:", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
+      console.log(
+	  `evalCpu = { deadwood:${evalInfo.deadwood}, melds:${evalInfo.melds
+    .map(m => `[${m.join(",")}]`)
+    .join(" ")} }`
+      );
       
       const ids = new Set();
     for (const meld of evalInfo.melds) {
@@ -126,8 +126,8 @@ function meldCardIds(hand, evalInfo) {
       }
     }
 
-    //    console.log("=> MeldCardIds:", JSON.stringify(ids));
-//    console.log("=> MeldCardIds:", Array.from(ids));
+    console.log("=> MeldCardIds string:", JSON.stringify(ids));
+    console.log("=> MeldCardIds array:", Array.from(ids));
 
     return ids;
   } //meldCardIds
@@ -171,8 +171,65 @@ function findRuns(hand) {
 
   return hand.filter(c => runs.has(c.id));
 }
+function sortHandWithMeldsFirstv2(hand, pattern) {
+  const suitOrder = {"♣":0,"♦":1,"♥":2,"♠":3};
+
+  // Build meld ID list in EXACT pattern order
+  const meldCardIds = pattern.flat().map(i => hand[i].id);
+
+  // Map card.id → its position in the meld sequence
+  const meldPos = new Map();
+  meldCardIds.forEach((id, idx) => meldPos.set(id, idx));
+
+  return [...hand].sort((a, b) => {
+    const aIn = meldPos.has(a.id);
+    const bIn = meldPos.has(b.id);
+
+    // Melds first
+    if (aIn && !bIn) return -1;
+    if (!aIn && bIn) return 1;
+
+    // Both meld cards → sort by meld pattern order
+    if (aIn && bIn) {
+      return meldPos.get(a.id) - meldPos.get(b.id);
+    }
+
+    // Both deadwood → normal sort
+    if (a.rank === b.rank) {
+      return suitOrder[a.suit] - suitOrder[b.suit];
+    }
+    return a.rank - b.rank;
+  });
+}
+/*
+//feb 9
+function sortHandWithMeldsFirstv2(hand, pattern) {
+  const suitOrder = {"♣":0,"♦":1,"♥":2,"♠":3};
+
+//    return(hand);
+    
+  // Build meld ID list from pattern
+  const meldCardIds = pattern.flat().map(i => hand[i].id);
+  const meldSet = new Set(meldCardIds);
+
+  return [...hand].sort((a, b) => {
+    const aM = meldSet.has(a.id);
+    const bM = meldSet.has(b.id);
+
+    // Melds first
+    if (aM && !bM) return -1;
+    if (!aM && bM) return 1;
+
+    // Inside melds or inside deadwood → normal sort
+    if (a.rank === b.rank) {
+      return suitOrder[a.suit] - suitOrder[b.suit];
+    }
+    return a.rank - b.rank;
+  });
+}
+*/
 // new one Feb 8
-	function sortHandWithMeldsFirst(hand) {
+function sortHandWithMeldsFirst(hand) {
   const order = {"♣":0,"♦":1,"♥":2,"♠":3};
 
   const sets = findSets(hand).flat();   // flatten in case they return arrays
@@ -200,7 +257,8 @@ function findRuns(hand) {
 
     return order[a.suit] - order[b.suit];
   });
-}
+  }
+  
 /*
 function sortHandWithMeldsFirst(hand) {
 //    console.log("In sortHandWithMeldsFirst: ", hand);
@@ -736,3 +794,65 @@ function solveHand(hand) {
 
   return best;
 }
+
+//__ sortHandUsingPattern
+function sortHandUsingPattern(hand, pattern) {
+  // Flatten meld indices in order
+  const meldOrder = pattern.flat();
+
+  // Map card.id → its meld position (0,1,2,...)
+  const meldPos = new Map();
+  meldOrder.forEach((idx, pos) => {
+    meldPos.set(hand[idx].id, pos);
+  });
+
+  return [...hand].sort((a, b) => {
+    const aIn = meldPos.has(a.id);
+    const bIn = meldPos.has(b.id);
+
+    // Meld cards first
+    if (aIn && !bIn) return -1;
+    if (!aIn && bIn) return 1;
+
+    // If both are meld cards, sort by their meld position
+    if (aIn && bIn) {
+      return meldPos.get(a.id) - meldPos.get(b.id);
+    }
+
+    // Both are deadwood → normal sort
+    if (a.rank === b.rank) {
+      const order = {"♣":0,"♦":1,"♥":2,"♠":3};
+      return order[a.suit] - order[b.suit];
+    }
+    return a.rank - b.rank;
+  });
+} //sortHandUsingPattern
+
+//__sortHandUsingMeldIds
+function sortHandUsingMeldIds(hand, meldCardIds) {
+  // Map card.id → its meld position
+  const meldPos = new Map();
+  meldCardIds.forEach((id, pos) => meldPos.set(id, pos));
+
+  const suitOrder = {"♣":0,"♦":1,"♥":2,"♠":3};
+
+  return [...hand].sort((a, b) => {
+    const aIn = meldPos.has(a.id);
+    const bIn = meldPos.has(b.id);
+
+    // Meld cards first
+    if (aIn && !bIn) return -1;
+    if (!aIn && bIn) return 1;
+
+    // Both meld cards → sort by meld order
+    if (aIn && bIn) {
+      return meldPos.get(a.id) - meldPos.get(b.id);
+    }
+
+    // Both deadwood → normal sort
+    if (a.rank === b.rank) {
+      return suitOrder[a.suit] - suitOrder[b.suit];
+    }
+    return a.rank - b.rank;
+  });
+} //sortHandUsingMeldIds

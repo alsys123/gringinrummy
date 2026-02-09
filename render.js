@@ -105,35 +105,88 @@ function renderCPU(sortedCpu,evalCpu,cpuMeldIds, el) {
 //__ render
 function render() {
     el.cpu.innerHTML = "";
-    
-    const sortedCpu = sortHandWithMeldsFirst(game.cpu);
-    const evalCpu = evaluate(sortedCpu);
-    const cpuMeldIds = meldCardIds(sortedCpu, evalCpu);
-    // sortHandUsingPattern(game.cpu, evalCpu.melds)
-	
-    renderCPU(sortedCpu,evalCpu,cpuMeldIds, el);
 
-    let gapInserted = false;
+    //orig v1
+//    const sortedCpu = sortHandWithMeldsFirst(game.cpu);
+//    const evalCpu = evaluate(sortedCpu);
+//    const cpuMeldIds = meldCardIds(sortedCpu, evalCpu);
+    // sortHandUsingPattern(game.cpu, evalCpu.melds)
+
+
+    // -- new way ... v2
+//    const sortedCpu = sortHandWithMeldsFirst(game.cpu);
+//    const evalCpu    = evaluate(game.cpu);
+//    console.log("evalCpu:", evalCpu.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
+//
+//    const sortedCpu  = sortHandUsingPattern(game.cpu, evalCpu.melds)
+//    const cpuMeldIds = meldCardIds(sortedCpu, evalCpu);
+
+    // version 3
+    const evalCpu    = evaluate(game.cpu);
+
+    //    console.log("evalcpu:", evalCpu)
+
+//    consoleLogHand(game.cpu,evalCpu.melds);
+
+      const cpuMeldCardIds = evalCpu.melds
+	  .flat()
+	  .map(i => game.cpu[i].id);
+    const cpuMeldIds = new Set(cpuMeldCardIds);
+
+    const sortedCpuFinal = sortHandWithMeldsFirstv2(game.cpu, evalCpu.melds);
+
+//    console.log("after the sort");
+//    consoleLogHand(sortedCpuFinal,evalCpu.melds);
+
+    //    console.log("evalcpu:", evalCpu)
+//    console.log("sortedCpu:",sortedCpuFinal);
+
+    //
+//    console.log("cpuMeldIds:",cpuMeldIds);
+//    
+//    const sortedCpuFinal = sortHandUsingMeldIds(sortedCpu, cpuMeldCardIds);
+//    console.log("sortedCpuFinal:",sortedCpuFinal);
+    
+//    renderCPU(sortedCpuFinal, evalCpu, cpuMeldIds, el);
+    renderCPU(sortedCpuFinal, evalCpu, cpuMeldIds, el);
+    
+// v1 and v2    renderCPU(sortedCpu,evalCpu,cpuMeldIds, el);
+
 
     
       // player cards rendering
       
       el.player.innerHTML = "";
-      //      const sorted = sortHandByRank(game.player);
-      const sorted = sortHandWithMeldsFirst(game.player);
-// 
-	
-      // Auto-scale BEFORE positioning cards
-      autoScaleHand(el.player, sorted.length, 95, 95);
+    //      const sorted = sortHandByRank(game.player);
 
+
+    // new one!
+
+    const evalPlayer    = evaluate(game.player);
+    const playerMeldCardIds = evalPlayer.melds
+	  .flat()
+	  .map(i => game.player[i].id);
+    const meldIds = new Set(playerMeldCardIds);
+    const sorted = sortHandWithMeldsFirstv2(game.player, evalPlayer.melds);
+ 
+/*
+    // orig  
+        const sorted = sortHandWithMeldsFirst(game.player);
       const evalPlayer = evaluate(sorted);
       const meldIds = meldCardIds(sorted, evalPlayer);
-  //   comst sorted = sortHandUsingPattern(game.player, evalPlayer.melds);
+  */  
+    
+    //   comst sorted = sortHandUsingPattern(game.player, evalPlayer.melds);
       //    console.log("yes in render");
       //    console.log("game draw = ", game.drawn);
       
-      
-      gapInserted = false;
+//    renderPlayer(sortedCpuFinal, evalCpu, cpuMeldIds, el);
+
+    // Auto-scale BEFORE positioning cards
+      autoScaleHand(el.player, sorted.length, 95, 95);
+
+    let gapInserted = false;
+//      gapInserted = false;
       let i= 0;
       const offset = 0; // move entire hand right
       
