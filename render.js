@@ -120,15 +120,15 @@ function render() {
       
       el.player.innerHTML = "";
       //      const sorted = sortHandByRank(game.player);
-      const sorted1 = sortHandWithMeldsFirst(game.player);
+      const sorted = sortHandWithMeldsFirst(game.player);
 // 
 	
       // Auto-scale BEFORE positioning cards
-      autoScaleHand(el.player, sorted1.length, 95, 95);
+      autoScaleHand(el.player, sorted.length, 95, 95);
 
-      const evalPlayer = evaluate(sorted1);
-      const meldIds = meldCardIds(sorted1, evalPlayer);
-     comst sorted = sortHandUsingPattern(game.player, evalPlayer.melds);
+      const evalPlayer = evaluate(sorted);
+      const meldIds = meldCardIds(sorted, evalPlayer);
+  //   comst sorted = sortHandUsingPattern(game.player, evalPlayer.melds);
       //    console.log("yes in render");
       //    console.log("game draw = ", game.drawn);
       
