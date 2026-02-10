@@ -1,7 +1,8 @@
 
   /* ------------------------------
      Rendering
-  ------------------------------ */
+     ------------------------------ */
+/*
 function renderCPU(sortedCpu,evalCpu,cpuMeldIds, el) {
 
 //       console.log("\nRender CPU: ");
@@ -101,6 +102,7 @@ function renderCPU(sortedCpu,evalCpu,cpuMeldIds, el) {
     } // for sortedCPU
     
 } // renderCPU
+*/
 
 //__ render
 function render() {
@@ -240,7 +242,7 @@ function render() {
       // ====== display deadwook count ======
     el.deadwood.textContent = "Deadwood: " + evalPlayer.deadwood;
 
-    el.stockCount.textContent = "(" + game.stock.length + ")";
+//    el.stockCount.textContent = "(" + game.stock.length + ")";
 
     if (game.discard.length) {
       const top = game.discard[game.discard.length-1];
@@ -297,3 +299,152 @@ function cardBack() {
   div.textContent = ""; // or "CPU" or leave empty
   return div;
 }
+
+
+// --- new renderCPU
+
+function computeCpuSlots() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    const SLOTS = 11;            // 10 cards + 1 gap
+    const SPACING = 25;          // horizontal spacing
+    const ANGLE_STEP = 2.5;      // degrees per card
+    const fanWidth = SLOTS * SPACING; // 250px
+    
+    const rightMargin = w * 0.10;   // 0.05=5% from right edge
+    const topMargin   = h * 0.17;   // 0.05=5% from top
+
+    const LEFT_SHIFT = fanWidth * 1; // shift left by half the fan
+    
+    const rightmostX = w - rightMargin - LEFT_SHIFT;
+
+    const slots = [];
+
+    for (let i = 0; i < SLOTS; i++) {
+	const angle = -((i - (SLOTS - 1) / 2) * ANGLE_STEP);
+	const x = rightmostX + i * SPACING;
+        slots.push({ x, angle, top: topMargin });
+    }
+
+    return slots;
+} //computeCpuSlots
+
+
+function placeCpuItem(type, card, slot, container) {
+    const div = document.createElement("div");
+
+    if (type === "gap") {
+        div.className = "meld-gap";
+    } else {
+        div.className = game.revealCpu ? "card" : "card back";
+
+        if (game.revealCpu) {
+            const face = cardFace(card);
+            face.style.position = "absolute";
+            face.style.left = "0px";
+            face.style.top = "0px";
+            div.appendChild(face);
+        }
+    }
+
+    div.style.position = "absolute";
+    div.style.left = slot.x + "px";
+    div.style.top = slot.top + "px";
+    div.style.transformOrigin = "50% 50%";
+    
+    div.style.transform = `rotate(${slot.angle}deg)`;
+
+    container.appendChild(div);
+} //placeCpuItem
+
+function splitCpuCards(sortedCpu, cpuMeldIds) {
+    const melds = [];
+    const nonMelds = [];
+
+    for (const card of sortedCpu) {
+        if (cpuMeldIds.has(card.id)) {
+            melds.push(card);
+        } else {
+            nonMelds.push(card);
+        }
+    }
+
+    return { melds, nonMelds };
+}//splitCpuCards
+
+function renderCPU(sortedCpu, evalCpu, cpuMeldIds, el) {
+    el.cpu.innerHTML = ""; // clear previous render
+
+    const slots = computeCpuSlots();
+    const { melds, nonMelds } = splitCpuCards(sortedCpu, cpuMeldIds);
+
+    let slotIndex = 0;
+
+    // 1. Render meld cards (left side)
+    for (const card of melds) {
+        placeCpuItem("card", card, slots[slotIndex], el.cpu);
+        slotIndex++;
+    }
+
+    // 2. Insert gap (only if CPU cards are revealed)
+    if (game.revealCpu) {
+        placeCpuItem("gap", null, slots[slotIndex], el.cpu);
+        slotIndex++;
+    }
+
+    // 3. Render non-meld cards (right side)
+    for (const card of nonMelds) {
+        placeCpuItem("card", card, slots[slotIndex], el.cpu);
+        slotIndex++;
+    }
+
+    /// for DEBUG ONLY
+    ///logCpuFanBounds(el);
+    
+
+} //renderCPU
+
+/// for DEBUG ONLY
+function logCpuFanBounds(el) {
+    const cards = Array.from(el.cpu.children);
+
+    let minLeft = Infinity;
+    let maxRight = -Infinity;
+    let minTop = Infinity;
+    let maxBottom = -Infinity;
+
+    for (const c of cards) {
+        const r = c.getBoundingClientRect();
+        minLeft = Math.min(minLeft, r.left);
+        maxRight = Math.max(maxRight, r.right);
+        minTop = Math.min(minTop, r.top);
+        maxBottom = Math.max(maxBottom, r.bottom);
+    }
+
+    const bounds = {
+        left: Math.round(minLeft),
+        right: Math.round(maxRight),
+        top: Math.round(minTop),
+        bottom: Math.round(maxBottom),
+        width: Math.round(maxRight - minLeft),
+        height: Math.round(maxBottom - minTop)
+    };
+
+    console.log("CPU fan bounds:", bounds);
+
+    /*
+    // fix the right-hand side
+    const rect = el.cpu.getBoundingClientRect();
+    const overflow = bounds.right - window.innerWidth;
+    
+    if (overflow > 0) {
+	el.cpu.style.transform = `translateX(-${overflow}px)`;
+    }
+    */
+    
+}
+
+
+
+

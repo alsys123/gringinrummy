@@ -146,6 +146,8 @@ document.getElementById("btn-backDoor-showStats").onclick = () => {
     showGameStats();
 }
 
+// another day ... grab ...     el.cpu.innerHTML = ""; 
+/// then use logCpuFanBounds  to see where the cpu cards are placed.
 
 function showGameStats() {
 
