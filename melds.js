@@ -109,13 +109,13 @@ function evaluate(hand) {
 
     //_ meldCardIds
 function meldCardIds(hand, evalInfo) {
-    console.log("\nIn meldCardIds");
-      console.log("hand:", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
-      console.log(
-	  `evalCpu = { deadwood:${evalInfo.deadwood}, melds:${evalInfo.melds
-    .map(m => `[${m.join(",")}]`)
-    .join(" ")} }`
-      );
+//    console.log("\nIn meldCardIds");
+//      console.log("hand:", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
+//      console.log(
+//	  `evalCpu = { deadwood:${evalInfo.deadwood}, melds:${evalInfo.melds
+//    .map(m => `[${m.join(",")}]`)
+//    .join(" ")} }`
+//      );
       
       const ids = new Set();
     for (const meld of evalInfo.melds) {
@@ -126,8 +126,8 @@ function meldCardIds(hand, evalInfo) {
       }
     }
 
-    console.log("=> MeldCardIds string:", JSON.stringify(ids));
-    console.log("=> MeldCardIds array:", Array.from(ids));
+//    console.log("=> MeldCardIds string:", JSON.stringify(ids));
+//    console.log("=> MeldCardIds array:", Array.from(ids));
 
     return ids;
   } //meldCardIds

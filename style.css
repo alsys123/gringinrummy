@@ -50,7 +50,7 @@ html, body {
   height: 100%;
   background: linear-gradient(to bottom, #0f7f4f, #02150e);
 }
-
+/* orig
   h1 {
     text-align: center;
     margin: 0 0 8px;
@@ -59,6 +59,22 @@ html, body {
     color: #ffe58f;
     text-shadow: 0 0 8px #000;
   }
+*/
+
+h1 {
+    letter-spacing: 0.08em;
+    font-size: 24px;
+    color: #ffe58f;
+    text-shadow: 0 0 8px #000;
+  }
+
+#title {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  pointer-events: none; /* optional: title shouldn't block clicks */
+}
+
 
   #status-bar {
     display: flex;
@@ -77,6 +93,7 @@ html, body {
       max-width: 500px;
       text-align: center;
   }
+
   
   button {
     border-radius: 999px;
@@ -90,12 +107,59 @@ html, body {
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
   }
 
+  #btn-new {
+    border-radius: 999px;
+    border: none;
+    padding:10px 20px;
+    font-size:1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ffe58f, #ffb400);
+    color: #333;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+    position: absolute;
+    width: 140px;   /* or whatever looks good */
+  text-align: center;
+  }
+
+  
+  #btn-knock {
+    border-radius: 999px;
+    border: none;
+    padding:10px 20px;
+    font-size:1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ffe58f, #ffb400);
+    color: #333;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+    position: absolute;
+    width: 140px;   /* or whatever looks good */
+  text-align: center;
+  }
+  
+  #btn-gin {
+    border-radius: 999px;
+    border: none;
+    padding:10px 20px;
+    font-size:1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ffe58f, #ffb400);
+    color: #333;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+    position: absolute;
+    width: 140px;   /* or whatever looks good */
+  text-align: center;
+  }
+ 
+  /*
   button:disabled {
     opacity: 0.4;
     cursor: default;
     box-shadow: none;
   }
-
+*/
 
   .row {
     display: flex;

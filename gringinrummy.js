@@ -221,8 +221,10 @@ function createDeck() {
 //	el.btnKnock.disabled = true;
 	//	el.btnGin.disabled   = true;
 	//hide
-	document.getElementById("btn-knock").style.display = "none";
-	document.getElementById("btn-gin").style.display = "none";
+//	document.getElementById("btn-knock").style.display = "none";  // hide
+//	document.getElementById("btn-gin").style.display = "none";
+	document.getElementById("btn-knock").style.visibility = "hidden";  // hide
+	document.getElementById("btn-gin").style.visibility = "hidden";
 
 	// player - await-discard
       if (t && p === "await-discard") {
@@ -232,9 +234,9 @@ function createDeck() {
 //	  if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
 //	  if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
 	  if (evalPlayer.deadwood === 0)
-	      document.getElementById("btn-gin").style.display = "inline-block";
+	      document.getElementById("btn-gin").style.visibility = "visible"; // show
 	  if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
-	      document.getElementById("btn-knock").style.display = "inline-block";
+	      document.getElementById("btn-knock").style.visibility = "visible";
 	  
 	  // hide
 	  document.getElementById("btn-new").style.display = "none";
@@ -252,9 +254,9 @@ function createDeck() {
 //	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
 	    
 	    if (evalPlayer.deadwood === 0)
-		document.getElementById("btn-gin").style.display = "inline-block";
+		document.getElementById("btn-gin").style.visibility = "visible";
 	    if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
-		document.getElementById("btn-knock").style.display = "inline-block";
+		document.getElementById("btn-knock").style.visibility = "visible";
 	    
 	    // hide
 	    document.getElementById("btn-new").style.display = "none";
@@ -265,10 +267,10 @@ function createDeck() {
 	}
 
 	// show by default
-	document.getElementById("btn-new").style.display = "block";
+	document.getElementById("btn-new").style.display = "";
 	// hide by default
-	document.getElementById("btn-knock").style.display = "none";
-	document.getElementById("btn-gin").style.display = "none";
+	document.getElementById("btn-knock").style.visibility = "hidden";
+	document.getElementById("btn-gin").style.visibility = "hidden";
 
 	
   } // updateButtons
@@ -290,7 +292,7 @@ function createDeck() {
     game.discard = [];
     game.turn = "player";
     game.phase = "await-draw";
-    game.drawn = null;
+      game.drawn = null;
       game.revealCpu = false;
 
       el.log.innerHTML = "";
@@ -586,6 +588,7 @@ function playerGin() {
     });
 
       log("CPU went Gin.");
+      game.revealCpu = true;
 
 //      game.revealCpu = "true";  ........... here i am .. revealing CPU cards
       
@@ -603,6 +606,8 @@ function playerGin() {
     const pEval = evaluate(game.player);
     const cDW = cEval.deadwood;
     const pDW = pEval.deadwood;
+
+      game.revealCpu = true;
 
     let winner = "tie";
     if (cDW < pDW) winner = "cpu";
@@ -716,3 +721,76 @@ const w = window.innerWidth;
 window.addEventListener("load", layoutStars);
 window.addEventListener("resize", layoutStars);
 
+//__ layoutTitle
+function layoutTitle() {
+    const title = document.getElementById("title");
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const margin = 0.05; // 0.05 is 5%
+    
+//  title.style.position = "absolute";
+  title.style.left = (w * margin) + "px";
+  title.style.top = (h * 0.02) + "px";
+}//layoutTitle
+
+window.addEventListener("load", layoutTitle);
+window.addEventListener("resize", layoutTitle);
+
+//__ layoutButton
+function layoutButton() {
+    const btn = document.getElementById("btn-new");
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const margin = 0.05; // 0.05 is 5% .. take into account button size
+    
+    const bw = btn.offsetWidth;
+     const bh = btn.offsetHeight;
+
+    //  title.style.position = "absolute";
+    btn.style.left = (w * (1 - margin) - bw) + "px";
+    btn.style.top = (h * 0.5 - bh / 2) + "px";
+    
+}//layoutButton
+
+window.addEventListener("load", layoutButton);
+window.addEventListener("resize", layoutButton);
+
+// knock
+//__ layoutButton
+function layoutButtonKnock() {
+    const btn = document.getElementById("btn-knock");
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const margin = 0.05; // 0.05 is 5% .. take into account button size
+    const bw = btn.offsetWidth;
+     const bh = btn.offsetHeight;
+    const extraOffset = 20;
+
+    //  title.style.position = "absolute";
+    btn.style.left = (w * (1 - margin) - bw - extraOffset) + "px";
+    btn.style.top = (h * 0.5 - bh / 2) + "px";
+    
+}//layoutButton
+
+window.addEventListener("load", layoutButtonKnock);
+window.addEventListener("resize", layoutButtonKnock);
+
+//gin
+//__ layoutButton
+function layoutButtonGin() {
+    const btn = document.getElementById("btn-gin");
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const margin = 0.05; // 0.05 is 5% .. take into account button size
+    const bw = btn.offsetWidth;
+    const bh = btn.offsetHeight;
+    const extraOffset = 20;
+
+    //  title.style.position = "absolute";
+    btn.style.left = (w * (1 - margin) - bw - extraOffset) + "px";
+    btn.style.top = (h * 0.5 - bh / 2) + "px";
+    
+}//layoutButton
+
+window.addEventListener("load", layoutButtonGin);
+window.addEventListener("resize", layoutButtonGin);

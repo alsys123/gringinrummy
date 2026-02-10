@@ -9,8 +9,8 @@
   <body>
     
     <div id="game">
-      <h1>
-	GIN RUMMY <span style="font-size: 0.5em;">(v13 - Feb 9, 2026)</span>
+      <h1 id="title">
+	GIN RUMMY <span style="font-size: 0.5em;">(v15 - Feb 10, 2026)</span>
       </h1>
       
       <!--
@@ -34,8 +34,7 @@
 	  
 	  <div id="status-bar">
 	    <div id="message">Click "New Game" to start.</div>
-	    <button id="btn-new" style="font-size:1.4rem; padding:10px 20px;">
-	      New Game</button>
+	    
 	  </div>
 	  
 	  <div id="back-door" hidden>
@@ -52,12 +51,13 @@
 	    <div class="row">
 	      <div id="cpu-hand" class="hand"></div>
 	    </div>
-	    
+
+	    <!--
             <div style="text-align:center; margin-top:8px;">
 	      <button id="btn-knock" style="display:none">Knock</button>
 	      <button id="btn-gin"   style="display:none">Gin</button>
 	    </div>
-	    
+-->	    
 	    <div id="deadwood-info">Deadwood: –</div>
 	    <div id="log" hidden></div>
 	    
@@ -84,12 +84,17 @@
 	    </div>
 	    
 	  </div>
-		<div id="star-tl" class="star">★</div>
-<div id="star-tr" class="star">★</div>
-<div id="star-bl" class="star">★</div>
-<div id="star-br" class="star">★</div>
-<div id="star-midleft" class="star">★</div>
+	  
+	  <div id="star-tl" class="star">★</div>
+	  <div id="star-tr" class="star">★</div>
+	  <div id="star-bl" class="star">★</div>
+	  <div id="star-br" class="star">★</div>
+	  <div id="star-midleft" class="star">★</div>
 
+	  <button id="btn-new"  >New Game</button>
+	  <button id="btn-knock">Knock</button>
+	  <button id="btn-gin"  >Gin</button>
+	  
     </div>
 
     <input type="file" id="load-file" accept=".json" style="display:none;">
