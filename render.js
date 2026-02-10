@@ -261,7 +261,8 @@ function render() {
 // -- area:  866 .  Needed:  680 == normal
 function autoScaleHand(container, handLength, cardWidth, spacing) {
 // -- future    const table = document.getElementById("game"); // or your main game container
-    const table = document.getElementById("table"); // or your main game container
+// was...!!!    const table = document.getElementById("table"); // or your main game container
+    const table = document.getElementById("game"); // or your main game container
     const areaWidth = table.clientWidth;            // <-- REAL width
 
     const neededWidth = (handLength - 1) * spacing + cardWidth;
