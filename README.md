@@ -1,4 +1,5 @@
-# Grin-Gin-Rummy
+# Grin Gin Rummy Game
+
 Gin Rummy web-based 2 player card game
 
 public site with latest release:  
