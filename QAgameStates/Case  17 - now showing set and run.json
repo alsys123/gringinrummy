@@ -311,10 +311,10 @@
       },
       {
         "rank": 5,
-        "suit": "♠",
+        "suit": "♣",
         "runValue": 5,
         "deadwoodValue": 5,
-        "id": "♠5"
+        "id": "♣5"
       },
       {
         "rank": 5,
@@ -346,10 +346,10 @@
       },
       {
         "rank": 4,
-        "suit": "♠",
+        "suit": "♣",
         "runValue": 4,
         "deadwoodValue": 4,
-        "id": "♠4"
+        "id": "♣4"
       },
       {
         "rank": 3,
