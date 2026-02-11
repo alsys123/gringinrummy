@@ -154,34 +154,69 @@ function createDeck() {
 
 //__ showHandTally
 // maybe here  ... game.revealCpu = "true"
-  function showHandTally(result) {
-    let title = "";
-    if (result.type === "gin") {
-      title = result.winner === "player" ? "You went Gin!" : "CPU went Gin!";
-    } else if (result.type === "knock") {
-      if (result.winner === "player") title = "You won by knocking!";
-      else if (result.winner === "cpu") title = "CPU won by knocking!";
-      else title = "Knock — deadwood tie.";
-    } else if (result.type === "stock") {
-      title = "Stock depleted";
+function showHandTally(result) {
+//    console.log("Result: ", result);
+//    const actor = result.who;
+
+    const actionText = {
+	gin: {
+	    player: "You went Gin!",
+	    cpu: "CPU went Gin!"
+	},
+	knock: {
+	    player: "You knocked.",
+	    cpu: "CPU knocked."
+	},
+	stock: {
+	    na: "Stock depleted."
+	}
+    };
+    const resultText = {
+	player: "You won the hand.",
+	cpu: "CPU won the hand.",
+	tie: "Deadwood tie."
+    };
+    
+    const actor = result.who;      // player, cpu, or na
+    const winner = result.winner;  // player, cpu, tie
+    const type = result.type;      // gin, knock, stock
+    
+    let title = actionText[type][actor];
+    
+    // Stock has no winner
+    if (type !== "stock") {
+	title += " " + resultText[winner];
     }
-
+    
+    /*    
+	  let title = "";
+    if (result.type === "gin") {
+    title = result.winner === "player" ? "You went Gin!" : "CPU went Gin!";
+    } else if (result.type === "knock") {
+    if (result.winner === "player") title = "You won by knocking!";
+    else if (result.winner === "cpu") title = "CPU won by knocking!";
+    else title = "Knock — deadwood tie.";
+    } else if (result.type === "stock") {
+    title = "Stock depleted";
+    }
+    */
+    
     const tally =
-      `${title}\n\n` +
-      `Your deadwood: ${result.pDW}\n` +
-      `CPU deadwood: ${result.cDW}\n\n` +
-      `Points this hand: ${result.points}\n\n` +
-      `Match Score:\n` +
-      `You: ${matchScore.player}\n` +
-      `CPU: ${matchScore.cpu}`;
+	  `${title}\n\n` +
+	  `Your deadwood: ${result.pDW}\n` +
+	  `CPU deadwood: ${result.cDW}\n\n` +
+	  `Points this hand: ${result.points}\n\n` +
+	  `Match Score:\n` +
+	  `You: ${matchScore.player}\n` +
+	  `CPU: ${matchScore.cpu}`;
+    
+    //     alert(tally);
+    showMessage(tally);
+    //      showMessage("We have a tally");
+    
+} //showHandTally
 
- //     alert(tally);
-       showMessage(tally);
-//      showMessage("We have a tally");
-      
-  } //showHandTally
-
-    //__ checkMatchEnd
+//__ checkMatchEnd
     function checkMatchEnd() {
 	if (matchScore.player >= matchScore.target) {
 	    showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
@@ -311,8 +346,11 @@ function createDeck() {
       
       setMsg("Your turn: draw from stock or discard. New hand started.");
 
-      document.getElementById("btn-new").textContent = "Next Hand";
+//      updateButtons();
 
+
+//      checkMatchEnd();
+      
  //   log("New hand started.");
     render();
   }
@@ -389,7 +427,8 @@ function createDeck() {
       winner,
       type: "stock",
       pDW,
-      cDW
+	cDW,
+	who: "na"
     });
 
 //      console.log("ehh ..show cpu prepre!",game.revealCpu);
@@ -407,7 +446,8 @@ function createDeck() {
   ------------------------------ */
 
     //__ playerKnock
-    function playerKnock() {
+function playerKnock() {
+    
 	game.revealCpu = true;
 
 //	console.log("I just knocked");
@@ -444,7 +484,8 @@ function createDeck() {
       winner,
       type: "knock",
       pDW,
-      cDW
+	cDW,
+	who: "player"
     });
 
     showHandTally(scored);
@@ -472,7 +513,8 @@ function playerGin() {
       winner: "player",
       type: "gin",
       pDW: pEval.deadwood,
-      cDW
+	cDW,
+	who: "player"
     });
 
       showHandTally(scored);
@@ -515,7 +557,7 @@ function playerGin() {
       if (evalWith.deadwood + 1 <= cDW) {
         drawn = game.discard.pop();
           log("CPU drew " + prettyCard(drawn) + " from discard.");
-	   animateCpuTakeFromDiscard(drawn);
+//	   animateCpuTakeFromDiscard(drawn);
       }
     }// if from topDiscard
       
@@ -525,7 +567,7 @@ function playerGin() {
         return;
       }
 	drawn = game.stock.pop();
-	animateCpuTakeFromStock(drawn);
+//	animateCpuTakeFromStock(drawn);
 	log("CPU drew from stock.");
     }
       
@@ -534,7 +576,7 @@ function playerGin() {
     const idx = cpuChooseDiscardIndex();
     const [d] = game.cpu.splice(idx,1);
 
-      animateCpuToDiscard(d);
+//      animateCpuToDiscard(d);
       
       game.discard.push(d);
       log("CPU discarded " + prettyCard(d) + ".");
@@ -584,7 +626,8 @@ function playerGin() {
       winner: "cpu",
       type: "gin",
       pDW,
-      cDW: 0
+	cDW: 0,
+	who: "cpu"
     });
 
       log("CPU went Gin.");
@@ -598,7 +641,7 @@ function playerGin() {
       setMsg("CPU went Gin. Click New Hand to play again.");
       
       render();
-  }
+  } //cpuGin
 
     //__ cpuKnock
   function cpuKnock() {
@@ -617,7 +660,8 @@ function playerGin() {
       winner,
       type: "knock",
       pDW,
-      cDW
+	cDW,
+	who: "cpu"
     });
 
     let msg;

@@ -248,8 +248,10 @@ function render() {
       const top = game.discard[game.discard.length-1];
       const f = cardFace(top);
       el.discard.innerHTML = "";
-      el.discard.className = "card";
-      el.discard.appendChild(f);
+	el.discard.className = "card";
+//	el.discard.className = "card discard-animate"; // ⭐ add animation class
+	el.discard.appendChild(f);
+//	  setTimeout(() => el.discard.classList.remove("discard-animate"), 200);
     } else {
       el.discard.className = "card back";
       el.discard.innerHTML = "<span>EMPTY</span>";
