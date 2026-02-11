@@ -23,14 +23,14 @@ function deadwoodValue(rank) {
   return Number(r);
 }
 
-function printCards(arr) {
+function logPrintCards(arr) {
   console.log(
     arr.map(c => `${c.rank}${c.suit} (run:${c.runValue}, dead:${c.deadwoodValue}, id:${c.id})`)
        .join("  ")
   );
 }
 
-function printSet(set) {
+function logPrintSet(set) {
   console.log(
     [...set].map(c => `${c.rank}${c.suit} (id:${c.id}, run:${c.runValue})`).join("  ")
   );
