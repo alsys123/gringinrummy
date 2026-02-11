@@ -51,3 +51,14 @@ console.log("VALUES:", hand.map(c => `${c.rank}:${c.runValue}`).join("  "));
 console.log("MELDS:", JSON.stringify(melds));
 
 }    
+
+// for melds
+function logBest(Desc, best) {
+    if (!best) return;
+    console.log( 
+	`${Desc} : Best Pattern: ${best.pattern}\n` +
+	    `Melds: ${JSON.stringify(best.melds)}\n` +
+	    `Deadwood: ${JSON.stringify(best.deadwood)}`
+    );
+    
+}

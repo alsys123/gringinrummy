@@ -752,9 +752,14 @@ function solveHand(hand) {
   let best = null;
 
   for (const [id, pat] of feasiblePatterns) {
-    const melds = buildMeldsForPattern(pat, live);
+      const melds = buildMeldsForPattern(pat, live);
+
+      consoleLogHand(live,melds);
+
       if (!melds) {
+
 	  console.log("No melds for pattern: ", id, JSON.stringify(pat));
+
 	  continue;
       };
 
@@ -765,7 +770,7 @@ function solveHand(hand) {
       console.log("Pattern: ", id, JSON.stringify(pat));    
       console.log("used and dw:");
       logPrintSet(used);
-      logPrintCards(dw);
+      console.log("*** These are deadwoods: "), logPrintCards(dw);
 
       /*
       // fix but now worse
@@ -781,17 +786,19 @@ function solveHand(hand) {
       } // debug if
 */
 
-      console.log("Best in loop:\n" + JSON.stringify(best, null, 2));
+	logBest("in loop:", best);
 
     if (!best || dw.length < best.deadwood.length) {
-      best = { pattern: id, melds, deadwood: dw };
-      console.log("Best in IF:\n" + JSON.stringify(best, null, 2));
+	best = { pattern: id, melds, deadwood: dw };
 
+	console.log("dw lenght:",dw.length, ". best length: ",best.deadwood.length);
+	logBest("** in if - ", best);
+	
     }
       
   } // for
 
-      console.log("Best FINAL:\n" + JSON.stringify(best, null, 2));
+	logBest("FINAL:", best);
     
   return best;
 }
