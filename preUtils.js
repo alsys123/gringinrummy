@@ -38,6 +38,7 @@ function printSet(set) {
 
 
 function consoleLogHand(hand,melds) {
+//    console.log(melds);
 //    console.log("-- evaluate -- ");
     //    console.log(  "\nHand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
     console.log("\n"); 
