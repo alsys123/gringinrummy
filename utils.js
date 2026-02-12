@@ -3,7 +3,7 @@
      General Backdoor
   ------------------------------ */
 
-const gBackDoorLock = 3;  // when to open/close back door
+const gBackDoorLock = 1;  // when to open/close back door .. 3 is good
 let gBackDoorCode = 0;
 let gBackDoorDir = 1; // +1 going up, -1 going down ... the direction
 
@@ -173,14 +173,16 @@ function showGameStats() {
     const playerHand =
 	  sortedPlayerFinal
 	  .slice()
-	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
-	  .join("  ");
+//	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
+	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`)
+	  .join(", ");
 
     const cpuHand =
 	  sortedCpuFinal
 	  .slice()
-	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
-	  .join("  ");
+//	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
+	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`)
+	  .join(", ");
 
 
     // results of meld and deadwood tes
@@ -189,24 +191,22 @@ function showGameStats() {
 //    console.log("in status: ", allResultsPlayer);
 
     const stats =
-	  `*** Game Statistics ***\n` +
-	  `Game Turn: ${game.turn}   Game Phase: ${game.phase}\n` +
+	  `*** Game Statistics ***` + "\n" +
+	  `Game Turn: ${game.turn}   Game Phase: ${game.phase}` + "\n" +
 	  //	  winnerLine +
 	  `\n` +
-	  `Match Score:\n` +
-	  `You: ${matchScore.player}\n` +
-	  `CPU: ${matchScore.cpu}    MatchScore Target: ${matchScore.target}` +
-	  `\n\n` +
-		`GameBoard is ${w} wide and ${h} high\n` +
-		`\n\n` +
-	  `GameBoard viewable at ${iw} wide and ${ih} high\n\n` +
-	  "Player Hand: : "  + playerHand + "\n" +
+	  `Match Score:` + "\n" +
+	  `You: ${matchScore.player}` + "\n" +
+	  `CPU: ${matchScore.cpu}    MatchScore Target: ${matchScore.target}` + "\n" + "\n" +
+	  `GameBoard is ${w} wide and ${h} high` + "\n" + "\n" +
+	  `GameBoard viewable at ${iw} wide and ${ih}` + "\n" + "\n" +
+	  "rank-suite(runvalue, deadwoodValue, id)" + "\n" +
+	  "Player Hand: "  + playerHand + "\n" +
 	   meldPlayerResults + "\n" + "\n" +
-	  "CPU Hand: : "     + cpuHand + "\n" +
+	  "CPU Hand   : "  + cpuHand + "\n" +
 	   meldCpuResults    + "\n" + "\n" +
 	  `---`;
     
-
     showMessage(stats);
 
     // **** experimenting with changing the size of a hand
