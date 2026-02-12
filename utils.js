@@ -3,7 +3,7 @@
      General Backdoor
   ------------------------------ */
 
-const gBackDoorLock = 1;  // when to open/close back door .. 3 is good
+const gBackDoorLock = 3;  // when to open/close back door .. 3 is good
 let gBackDoorCode = 0;
 let gBackDoorDir = 1; // +1 going up, -1 going down ... the direction
 
