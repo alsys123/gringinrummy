@@ -38,11 +38,11 @@ function logPrintSet(set) {
 
 
 function consoleLogHand(hand,melds) {
-//    console.log(melds);
-//    console.log("-- evaluate -- ");
+    //    console.log(melds);
+    //    console.log("-- evaluate -- ");
     //    console.log(  "\nHand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
     console.log("\n"); 
-//    console.log(`Game Turn: ${game.turn}`);
+    //    console.log(`Game Turn: ${game.turn}`);
     console.log(`Hand: ${hand.map((c,i) => `${i}) ${c.rank}${c.suit}`).join(" ")}`  );
 console.log("" +  
     	    `Hand: ${hand.map((c,i) => `C("${c.rank}","${c.suit}")`).join(",")}`  );

@@ -37,6 +37,8 @@
     scoreboard: document.getElementById("scoreboard")
   };
 
+const allResultsCpu    = [];
+const allResultsPlayer = [];
 
 function createDeck() {
   const d = [];

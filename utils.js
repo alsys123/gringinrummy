@@ -155,16 +155,39 @@ function showGameStats() {
 //	  ? `Result Type: ${result.type}  Result Winner: ${result.winner}\n`
 //	  : `\n`;
     const gameBoard = document.getElementById("game");
-  const w = gameBoard.clientWidth;
-  const h = gameBoard.clientHeight;
-	
-	const iw = window.innerWidth;
-  const ih = window.innerHeight;
-	
+    const w = gameBoard.clientWidth;
+    const h = gameBoard.clientHeight;
+    
+    const iw = window.innerWidth;
+    const ih = window.innerHeight;
+
+    // Print the player and CPU hands
+    const evalCpu    = evaluate(game.cpu);
+    const sortedCpuFinal = sortHandWithMeldsFirstv2(game.cpu, evalCpu.melds);
+    const evalPlayer    = evaluate(game.player);
+    const sortedPlayerFinal = sortHandWithMeldsFirstv2(game.player, evalPlayer.melds);
+
+    const playerHand =
+	  sortedPlayerFinal
+	  .slice()
+	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
+	  .join("  ");
+
+    const cpuHand =
+	  sortedCpuFinal
+	  .slice()
+	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
+	  .join("  ");
+    
+    // results of meld and deadwood tes
+    //    solveHand(playerHand);
+    console.log("in status: ", allResultsPlayer);
+    const meldsPlayerResult = formatAllPatternResults(allResultsPlayer);
+
     const stats =
 	  `*** Game Statistics ***\n` +
 	  `Game Turn: ${game.turn}   Game Phase: ${game.phase}\n` +
-//	  winnerLine +
+	  //	  winnerLine +
 	  `\n` +
 	  `Match Score:\n` +
 	  `You: ${matchScore.player}\n` +
@@ -172,11 +195,25 @@ function showGameStats() {
 	  `\n\n` +
 		`GameBoard is ${w} wide and ${h} high\n` +
 		`\n\n` +
-		`GameBoard viewable at ${iw} wide and ${ih} high\n` +
+	  `GameBoard viewable at ${iw} wide and ${ih} high\n\n` +
+	  "Player Hand: : " + playerHand + "\n" +
+	  "Meld Results: " + meldsPlayerResult + "\n" + "\n" +
+	  "CPU Hand: : " + cpuHand + "\n" +
 	  `---`;
     
 
     showMessage(stats);
     
+}
+
+
+function formatAllPatternResults(results) {
+  return results
+    .map(r =>
+      `Pattern ${r.pattern} | DW=${r.deadwoodValue}\n` +
+      `  Melds: ${JSON.stringify(r.melds.map(m => m.map(c => c.id)))}\n` +
+      `  Deadwood: ${r.deadwood.map(c => `${c.rank}${c.suit}`).join(", ")}\n`
+    )
+    .join("\n");
 }
 

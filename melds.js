@@ -486,20 +486,7 @@ function computeStats(live) {
   }
 
   for (const s in suitRanks) suitRanks[s].sort((a,b)=>a-b);
-/*
-  function longestRun(arr) {
-    if (arr.length === 0) return 0;
-    let max = 1, cur = 1;
-    for (let i=1;i<arr.length;i++) {
-      if (arr[i] === arr[i-1]) continue;
-      if (arr[i] === arr[i-1] + 1) {
-        cur++;
-        max = Math.max(max, cur);
-      } else cur = 1;
-    }
-    return max;
-  }
-*/
+
     function longestRun(arr) {
 
 //	console.log(" longestRun input:", arr.join(" "));
@@ -658,7 +645,7 @@ function meldsToIndexes(melds, hand) {
   );
 }
 
-
+//__solveHand
 function solveHand(hand) {
   const { live, dead } = eliminateDeadCards(hand);
   const M = live.length;
@@ -687,8 +674,9 @@ function solveHand(hand) {
   }
 
   // Step 3b: multiple patterns → test each
-  let best = null;
-
+    let best = null;
+    let allResultsPlayer = [];   /// test which one in the FUTURE
+    
   for (const [id, pat] of feasiblePatterns) {
       const melds = buildMeldsForPattern(pat, live);
 
@@ -726,7 +714,9 @@ function solveHand(hand) {
 		      JSON.stringify(dw.length));
       } // debug if
 */
-
+      // Store this pattern’s result
+      const result = { pattern: id, melds, dw, dwValue };
+      allResultsPlayer.push(result);  /// test CPU or Player -- FUTURE !!!
 //	logBest("in loop:", best);
 
 //prev      if (!best || dw.length < best.deadwood.length) {
@@ -743,9 +733,11 @@ function solveHand(hand) {
   } // for
 
 //	logBest("FINAL:", best);
+
+//    console.log("in solveHand", allResultsPlayer );
     
   return best;
-}
+} //solveHand
 
 //__ sortHandUsingPattern
 function sortHandUsingPattern(hand, pattern) {
