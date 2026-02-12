@@ -36,7 +36,7 @@ function testMelds() {
 //	console.log("**** Run test **** : ",t.name);
 
 	// *** THIS IS FOR TESTING ONE TEST ONLY!!!
-	if (!t.name.startsWith("Man5")) { continue; }
+//	if (!t.name.startsWith("Man5")) { continue; }
 	// *** THIS IS FOR TESTING ONE TEST ONLY!!!
 
 	
