@@ -675,7 +675,10 @@ function solveHand(hand) {
 
   // Step 3b: multiple patterns → test each
     let best = null;
-    let allResultsPlayer = [];   /// test which one in the FUTURE
+
+    allMeldResults.length = 0;
+    
+//    window.allResultsPlayer.length = 0; // clear it
     
   for (const [id, pat] of feasiblePatterns) {
       const melds = buildMeldsForPattern(pat, live);
@@ -716,7 +719,10 @@ function solveHand(hand) {
 */
       // Store this pattern’s result
       const result = { pattern: id, melds, dw, dwValue };
-      allResultsPlayer.push(result);  /// test CPU or Player -- FUTURE !!!
+
+      allMeldResults.push(result);
+      
+//      window.allResultsPlayer.push(result);
 //	logBest("in loop:", best);
 
 //prev      if (!best || dw.length < best.deadwood.length) {

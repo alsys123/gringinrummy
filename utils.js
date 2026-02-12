@@ -162,10 +162,13 @@ function showGameStats() {
     const ih = window.innerHeight;
 
     // Print the player and CPU hands
-    const evalCpu    = evaluate(game.cpu);
-    const sortedCpuFinal = sortHandWithMeldsFirstv2(game.cpu, evalCpu.melds);
-    const evalPlayer    = evaluate(game.player);
-    const sortedPlayerFinal = sortHandWithMeldsFirstv2(game.player, evalPlayer.melds);
+    const evalCpu            = evaluate(game.cpu);
+    const sortedCpuFinal     = sortHandWithMeldsFirstv2(game.cpu, evalCpu.melds);
+    const meldCpuResults     = formatAllResults(allMeldResults);
+
+    const evalPlayer         = evaluate(game.player);
+    const sortedPlayerFinal  = sortHandWithMeldsFirstv2(game.player, evalPlayer.melds);
+    const meldPlayerResults  = formatAllResults(allMeldResults);
 
     const playerHand =
 	  sortedPlayerFinal
@@ -178,11 +181,12 @@ function showGameStats() {
 	  .slice()
 	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
 	  .join("  ");
-    
+
+
     // results of meld and deadwood tes
     //    solveHand(playerHand);
-    console.log("in status: ", allResultsPlayer);
-    const meldsPlayerResult = formatAllPatternResults(allResultsPlayer);
+
+//    console.log("in status: ", allResultsPlayer);
 
     const stats =
 	  `*** Game Statistics ***\n` +
@@ -196,24 +200,36 @@ function showGameStats() {
 		`GameBoard is ${w} wide and ${h} high\n` +
 		`\n\n` +
 	  `GameBoard viewable at ${iw} wide and ${ih} high\n\n` +
-	  "Player Hand: : " + playerHand + "\n" +
-	  "Meld Results: " + meldsPlayerResult + "\n" + "\n" +
-	  "CPU Hand: : " + cpuHand + "\n" +
+	  "Player Hand: : "  + playerHand + "\n" +
+	   meldPlayerResults + "\n" + "\n" +
+	  "CPU Hand: : "     + cpuHand + "\n" +
+	   meldCpuResults    + "\n" + "\n" +
 	  `---`;
     
 
     showMessage(stats);
-    
-}
+
+    // **** experimenting with changing the size of a hand
+//    const cpu = document.getElementById("cpu-hand");
+//    const rect = cpu.getBoundingClientRect();  
+//    const originalX = rect.left;
+//    const originalY = rect.top;
+//    console.log(originalX + "X  Y=" + originalX);
+//    cpu.style.transformOrigin = "top left";
+//    cpu.style.transform = "scale(0.7)";
+//    const originalX = 800;
+//    const originalY = 100;
+//    cpu.style.transform = `translate(${originalX}px, ${originalY}px) scale(0.7)`;
 
 
-function formatAllPatternResults(results) {
-  return results
-    .map(r =>
-      `Pattern ${r.pattern} | DW=${r.deadwoodValue}\n` +
-      `  Melds: ${JSON.stringify(r.melds.map(m => m.map(c => c.id)))}\n` +
-      `  Deadwood: ${r.deadwood.map(c => `${c.rank}${c.suit}`).join(", ")}\n`
-    )
-    .join("\n");
 }
+
+function formatAllResults(results) {
+  return results.map(r =>
+      `${r.pattern}, DW=${r.dwValue}, ` +
+	  `Melds: ${JSON.stringify(r.melds.map(m => m.map(c => c.id)))}, ` +
+    `DW Cards: ${r.dw.map(c => `${c.rank}${c.suit}`).join(" ")}`
+  ).join("\n");
+}
+
 

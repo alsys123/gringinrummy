@@ -37,8 +37,7 @@
     scoreboard: document.getElementById("scoreboard")
   };
 
-const allResultsCpu    = [];
-const allResultsPlayer = [];
+const allMeldResults = [];
 
 function createDeck() {
   const d = [];
@@ -840,3 +839,6 @@ function layoutButtonGin() {
 
 window.addEventListener("load", layoutButtonGin);
 window.addEventListener("resize", layoutButtonGin);
+
+
+//window.allResultsPlayer = [];
