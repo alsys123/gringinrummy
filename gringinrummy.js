@@ -20,6 +20,58 @@
     target: 100
   };
 
+const detailedMatchScore = {
+  games: []
+};
+
+/* example for detailedMatchScore
+    games: [
+    {
+      gameNumber: 1,
+      winner: "player",        // "player" or "cpu"
+
+      deadwood: {
+        player: 7,
+        cpu: 23
+      },
+
+      bonus: {
+        player: {
+          points: 25,
+          reason: "Gin"        // "Gin", "Undercut", "Big Gin", etc.
+        },
+        cpu: {
+          points: 0,
+          reason: null
+        }
+      },
+
+      movedDeadwood: {
+        player: 0,             // points gained by laying off CPU deadwood
+        cpu: 6                 // points gained by laying off player deadwood
+      },
+
+      totalOriginalPoints: {
+        player: 7 + 25,        // deadwood + bonus
+        cpu: 23
+      },
+
+      finalPoints: {
+        player: 32,            // after movedDeadwood adjustments
+        cpu: 29
+      },
+
+      accumulated: {
+        player: 32,
+        cpu: 29
+      }
+    },
+
+    // game 2, game 3, etc...
+  ]
+};
+*/
+    
   const el = {
     msg: document.getElementById("message"),
     cpu: document.getElementById("cpu-hand"),
@@ -126,39 +178,110 @@ function createDeck() {
      Scoring + Tally
   ------------------------------ */
 
-  function applyScoring(result) {
+function applyScoring(result) {
     if (result.winner === "tie") {
-      result.points = 0;
-      updateScoreboard();
-      return result;
+	result.points = 0;
+	updateScoreboard();
+	return result;
     }
-
+    
     let points = 0;
-
+    
     if (result.type === "gin") {
-      points = 25 + (result.winner === "player" ? result.cDW : result.pDW);
+	points = 25 + (result.winner === "player" ? result.cDW : result.pDW);
     } else if (result.type === "knock") {
-      const diff = Math.abs(result.pDW - result.cDW);
-      if (result.winner === "player") points = diff;
-//      else points = 10 + diff;  .. no reason
-      else points = diff;
+	const diff = Math.abs(result.pDW - result.cDW);
+	if (result.winner === "player") points = diff;
+	//      else points = 10 + diff;  .. no reason
+	else points = diff;
     } else if (result.type === "stock") {
-      points = Math.abs(result.pDW - result.cDW);
+	points = Math.abs(result.pDW - result.cDW);
     }
-
+    
     matchScore[result.winner] += points;
     updateScoreboard();
-
+    
+    addGameToDetailsScore(result.winner,result.type,result.pDW,result.cDW);
+    
     result.points = points;
     return result;
+} //applyScoring
+
+function addGameToDetailsScore(winner, type, pDW, cDW) {
+  // Determine bonus points
+  let playerBonus = 0;
+  let cpuBonus = 0;
+
+  if (type === "Gin") {
+    if (winner === "player") playerBonus = 25;
+    if (winner === "cpu") cpuBonus = 25;
   }
+
+  if (type === "Undercut") {
+    if (winner === "player") playerBonus = 10;
+    if (winner === "cpu") cpuBonus = 10;
+  }
+
+  // Deadwood movement (layoff)
+  // You can adjust this logic later
+  const movedDeadwood = {
+//    player: Math.max(0, cDW - pDW),
+//    cpu: Math.max(0, pDW - cDW)
+      player: 0,
+      cpu: 0
+  };
+
+  // Total original points (deadwood + bonus)
+  const totalOriginalPoints = {
+    player: pDW + playerBonus,
+    cpu: cDW + cpuBonus
+  };
+
+  // Final points after layoff adjustments
+  const finalPoints = {
+    player: totalOriginalPoints.player + movedDeadwood.player,
+    cpu: totalOriginalPoints.cpu + movedDeadwood.cpu
+  };
+
+  // Accumulated totals
+  const last = detailedMatchScore.games.at(-1);
+  const prevPlayer = last ? last.accumulated.player : 0;
+  const prevCpu = last ? last.accumulated.cpu : 0;
+
+  const accumulated = {
+    player: prevPlayer + finalPoints.player,
+    cpu: prevCpu + finalPoints.cpu
+  };
+
+  // Build the game entry
+  const gameData = {
+    gameNumber: detailedMatchScore.games.length + 1,
+    winner,
+    deadwood: {
+      player: pDW,
+      cpu: cDW
+    },
+    bonus: {
+      player: { points: playerBonus, reason: playerBonus ? type : null },
+      cpu: { points: cpuBonus, reason: cpuBonus ? type : null }
+    },
+    movedDeadwood,
+    totalOriginalPoints,
+    finalPoints,
+    accumulated
+  };
+
+  // Store it
+  detailedMatchScore.games.push(gameData);
+}//addGameToDetailsScore
+
 
 //__ showHandTally
 // maybe here  ... game.revealCpu = "true"
 function showHandTally(result) {
-//    console.log("Result: ", result);
-//    const actor = result.who;
-
+    //    console.log("Result: ", result);
+    //    const actor = result.who;
+    
     const actionText = {
 	gin: {
 	    player: "You went Gin!",
@@ -842,3 +965,7 @@ window.addEventListener("resize", layoutButtonGin);
 
 
 //window.allResultsPlayer = [];
+// Click on scoreboard
+document.querySelector(".scoreboard").addEventListener("click", () => {
+  scoreBoardDetails(); 
+});

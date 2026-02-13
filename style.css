@@ -331,9 +331,16 @@ h1 {
   box-sizing: border-box;
 }
 
+  /*
 #modal-text {
     color: black;
     white-space: pre-wrap;
+}
+*/
+#modal-text {
+    color: black;
+  font-family: "Courier New", monospace;
+  white-space: pre; /* preserves alignment and newlines */
 }
 
 #player {
@@ -483,4 +490,14 @@ h1 {
   100% {
     transform: scale(1) rotate(0deg);
   }
+}
+
+/* Scoreboard is clickable */
+.scoreboard {
+  cursor: pointer;
+  user-select: none;
+}
+
+.scoreboard * {
+  pointer-events: none;
 }

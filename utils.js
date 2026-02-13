@@ -242,4 +242,38 @@ function formatAllResults(results) {
   ).join("\n");
 }
 
+// Scoreboard is clicked
+function scoreBoardDetails() {
+  if (detailedMatchScore.games.length === 0) {
+    showMessage("No games played yet.");
+    return;
+  }
+
+  let out = "";
+
+  detailedMatchScore.games.forEach(g => {
+    out += `\n=== Game ${g.gameNumber} — Winner: ${g.winner.toUpperCase()} ===\n`;
+    out += "Desc                 Player   CPU\n";
+    out += "----------------------------------\n";
+
+    out += formatRow("Deadwood", g.deadwood.player, g.deadwood.cpu);
+    out += formatRow(`Bonus (${g.bonus.player.reason || g.bonus.cpu.reason || "-"})`,
+                     g.bonus.player.points,
+                     g.bonus.cpu.points);
+    out += formatRow("Moved Deadwood", g.movedDeadwood.player, g.movedDeadwood.cpu);
+    out += formatRow("SubTotal", g.totalOriginalPoints.player, g.totalOriginalPoints.cpu);
+    out += formatRow("Final Points", g.finalPoints.player, g.finalPoints.cpu);
+    out += formatRow("Accumulated", g.accumulated.player, g.accumulated.cpu);
+    out += "\n";
+  });
+
+  showMessage(out);
+}
+
+function formatRow(desc, player, cpu) {
+  const col1 = desc.padEnd(20, " ");
+  const col2 = String(player).padStart(7, " ");
+  const col3 = String(cpu).padStart(7, " ");
+  return `${col1}${col2}${col3}\n`;
+}
 
