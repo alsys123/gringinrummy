@@ -169,13 +169,23 @@ function showGameStats() {
     const evalPlayer         = evaluate(game.player);
     const sortedPlayerFinal  = sortHandWithMeldsFirstv2(game.player, evalPlayer.melds);
     const meldPlayerResults  = formatAllResults(allMeldResults);
-
+/*
     const playerHand =
 	  sortedPlayerFinal
 	  .slice()
 //	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
 	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`)
 	  .join(", ");
+	  */
+const cards = sortedPlayerFinal
+  .slice()
+  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`);
+
+let playerHand = "";
+for (let i = 0; i < cards.length; i++) {
+  if (i > 0 && i % 5 === 0) playerHand += "\n";  // new line every 5 cards
+  playerHand += cards[i] + ", ";
+}
 
     const cpuHand =
 	  sortedCpuFinal
