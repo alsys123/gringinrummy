@@ -249,14 +249,25 @@ function scoreBoardDetails() {
     return;
   }
 
-  let out = "";
-
+    let out = "";
+    let deadwoodThisGame;
+    
   detailedMatchScore.games.forEach(g => {
-    out += `\n=== Game ${g.gameNumber} — Winner: ${g.winner.toUpperCase()} ===\n`;
+
+      if (g.winner === "player") {
+	deadwoodThisGame = g.deadwood.cpu - g.deadwood.player;
+    } else {
+	deadwoodThisGame = g.deadwood.player - g.deadwood.cpu
+    }
+
+      out += `\n=== Game ${g.gameNumber} — Winner: ${g.winner.toUpperCase()} ===\n`;
+      
     out += "Desc                 Player   CPU\n";
     out += "----------------------------------\n";
-
-    out += formatRow("Deadwood", g.deadwood.player, g.deadwood.cpu);
+      
+      out += `${g.deadwood.player}        [ ${deadwoodThisGame} ]          ${g.deadwood.cpu}\n`;
+      //    out += formatRow("Deadwood", g.deadwood.player, g.deadwood.cpu);
+      
     out += formatRow(`Bonus (${g.bonus.player.reason || g.bonus.cpu.reason || "-"})`,
                      g.bonus.player.points,
                      g.bonus.cpu.points);
