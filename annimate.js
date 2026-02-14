@@ -116,14 +116,27 @@ function cpuDiscard(card) {
 
     // Position it above the discard pile
     const rect = pile.getBoundingClientRect();
-    hover.style.left = rect.left + "px";
+//    hover.style.left = rect.left + "px";
+    hover.style.left = (rect.left + 40) + "px";
     hover.style.top = (rect.top - 40) + "px"; // hover 40px above
 
     document.body.appendChild(hover);
 
+    
     // Wait 3 seconds, then finalize discard
     setTimeout(() => {
-        hover.remove();
+	hover.style.transition = "opacity 0.4s ease, top 0.4s ease";
+//	hover.style.transition = "opacity 1s ease";
+	hover.style.opacity = "0";
+	hover.style.top = (rect.top + 10) + "px"; // drop 10px
+	hover.style.left = (rect.left - 1) + "px";
+
+//	hover.style.transition = "opacity 0.4s ease";
+//	hover.style.opacity = "0";
+	// Remove after fade
+	setTimeout(() => hover.remove(), 1000); 
+
+//        hover.remove();
 
         // Remove from CPU hand data
 //        const idx = game.cpuCards.findIndex(c => c.id === card.id);
@@ -134,9 +147,9 @@ function cpuDiscard(card) {
 
         // Re-render CPU hand and discard pile
 //        renderCPU(game.cpuCards, null, game.cpuMeldIds, elements);
-//        renderDiscardPile();
+        render();
 
-    }, 3000);
+    }, 2000);
 }
 
 

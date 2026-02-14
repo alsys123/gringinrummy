@@ -135,6 +135,9 @@ function applyScoring(result) {
     if (result.winner === "tie") {
 	result.points = 0;
 	updateScoreboard();
+
+	addGameToDetailsScore(result.winner,result.type,result.who,result.pDW,result.cDW);
+
 	return result;
     }
     
@@ -174,8 +177,8 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW) {
     const prevCpuPoints    = last ? last.accumulated.cpu : 0;
 
     // bonus calc
-    if (type === "Gin")      bonus = 25;
-    if (type === "Undercut") bonus = 10;
+    if (type === "gin")      bonus = 25;
+    if (type === "undercut") bonus = 10;
 
     // deadwood calc
     if (winner === "player") dDW = cDW - pDW;
@@ -648,11 +651,15 @@ function playerGin() {
 
 //      animateCpuToDiscard(d);
 
-//????      cpuDiscard(d);  //... not quite right but the right idea
+//      console.log("CPU discarded 1 - " + prettyCard(d) + ".");
+//      showMessage("CPU discarded 1 - " + prettyCard(d) + ".");
+
+//     cpuDiscard(d);  //... not quite right but the right idea ???
       
       game.discard.push(d);
 
-//      showMessage("CPU discarded " + prettyCard(d) + ".");
+//      console.log("CPU discarded 2 - " + prettyCard(d) + ".");
+//      showMessage("CPU discarded 2 - " + prettyCard(d) + ".");
 
       log("CPU discarded " + prettyCard(d) + ".");
       game.turn = "player";
