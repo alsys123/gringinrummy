@@ -149,6 +149,7 @@ document.getElementById("btn-backDoor-showStats").onclick = () => {
 // another day ... grab ...     el.cpu.innerHTML = ""; 
 /// then use logCpuFanBounds  to see where the cpu cards are placed.
 
+//__showGameStats
 function showGameStats() {
 
 //    const winnerLine = result.winner
@@ -232,8 +233,9 @@ for (let i = 0; i < cards.length; i++) {
 //    cpu.style.transform = `translate(${originalX}px, ${originalY}px) scale(0.7)`;
 
 
-}
+} //showGameStats
 
+//__formatAllResults
 function formatAllResults(results) {
   return results.map(r =>
       `${r.pattern}, DW=${r.dwValue}, ` +
@@ -242,6 +244,19 @@ function formatAllResults(results) {
   ).join("\n");
 }
 
+
+    /* datastructure
+    const gameData = {
+	gameNumber: detailedMatchScore.games.length + 1,
+	winner, type, who,
+	deadwood: {player: pDW, cpu: cDW, diff: dDW },
+	bonus: { bonus, type },
+	layoff: {player: 0, cpu: 0 },
+	pointsThisGame,
+	accumulated: {player: pPoints, cpu: cPoints}
+    };
+
+     */
 // Scoreboard is clicked
 function scoreBoardDetails() {
   if (detailedMatchScore.games.length === 0) {
@@ -249,42 +264,59 @@ function scoreBoardDetails() {
     return;
   }
 
-    let out = "";
-    let deadwoodThisGame;
+    let out = "Detailed Score Board" + "\n" + "\n";
     
-  detailedMatchScore.games.forEach(g => {
 
-      if (g.winner === "player") {
-	deadwoodThisGame = g.deadwood.cpu - g.deadwood.player;
-    } else {
-	deadwoodThisGame = g.deadwood.player - g.deadwood.cpu
-    }
+    let deadwoodThisGame;
+    let bonusLine = "";
 
-      out += `\n=== Game ${g.gameNumber} — Winner: ${g.winner.toUpperCase()} ===\n`;
-      
-    out += "Desc                 Player   CPU\n";
-    out += "----------------------------------\n";
-      
-      out += `${g.deadwood.player}        [ ${deadwoodThisGame} ]          ${g.deadwood.cpu}\n`;
-      //    out += formatRow("Deadwood", g.deadwood.player, g.deadwood.cpu);
-      
-    out += formatRow(`Bonus (${g.bonus.player.reason || g.bonus.cpu.reason || "-"})`,
-                     g.bonus.player.points,
-                     g.bonus.cpu.points);
-    out += formatRow("Moved Deadwood", g.movedDeadwood.player, g.movedDeadwood.cpu);
-    out += formatRow("SubTotal", g.totalOriginalPoints.player, g.totalOriginalPoints.cpu);
-    out += formatRow("Final Points", g.finalPoints.player, g.finalPoints.cpu);
-    out += formatRow("Accumulated", g.accumulated.player, g.accumulated.cpu);
-    out += "\n";
-  });
+    let lastPlayer = 0;
+    let lastCpu    = 0;
+    let runningLine = "";
+    
+    detailedMatchScore.games.forEach(g => {
+	
+	if (g.bonus.bonus === 0 && g.layoff.player === 0 && g.layoff.cpu === 0) {
+	    bonusLine = "";
+	} else {
+	    bonusLine = `Bonus: ${g.bonus.bonus} ${g.bonus.type}   ` +
+		`Layoffs: ${g.layoff.player} ${g.layoff.cpu}` + "\n";
+	}
+	
+	if (g.winner === "player") {
+	    runningLine = `Running: ${g.accumulated.player} (${lastPlayer} + ${g.pointsThisGame})  vs  ${g.accumulated.cpu}`;
+	} else {
+	    runningLine = `Running: ${g.accumulated.player}  vs  ${g.accumulated.cpu} (${lastCpu} + ${g.pointsThisGame})`;
+	}
+				     
+	out += "____" + "\n";
+	out += `Game ${g.gameNumber}: ${g.winner.toUpperCase()} wins! ` +
+	    `( ${g.type} by ${g.who} )` + "\n";
+	
+	out += `${g.deadwood.player} vs ${g.deadwood.cpu} ➜ ${g.deadwood.diff}` + "\n" ;
+	
+	out += bonusLine;
+	
+	out += `${g.winner} gets ${g.pointsThisGame} points` + "\n";
 
-  showMessage(out);
+	out += runningLine + "\n";
+//	out += `Running: ${g.accumulated.player}  vs  ${g.accumulated.cpu}`;
+	
+	out += "\n";
+
+	lastPlayer = g.accumulated.player;
+	lastCpu    = g.accumulated.cpu;
+	
+    }); // for each
+    
+    showMessage(out);
 }
 
+// do not really use this anymore
 function formatRow(desc, player, cpu) {
-  const col1 = desc.padEnd(20, " ");
-  const col2 = String(player).padStart(7, " ");
-  const col3 = String(cpu).padStart(7, " ");
-  return `${col1}${col2}${col3}\n`;
+    const col1 = desc.padEnd(20, " ");
+    const col2 = String(player).padStart(7, " ");
+    const col3 = String(cpu).padStart(7, " ");
+    return `${col1}${col2}${col3}\n`;
 }
 

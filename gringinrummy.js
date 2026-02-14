@@ -24,53 +24,6 @@ const detailedMatchScore = {
   games: []
 };
 
-/* example for detailedMatchScore
-    games: [
-    {
-      gameNumber: 1,
-      winner: "player",        // "player" or "cpu"
-
-      deadwood: {
-        player: 7,
-        cpu: 23
-      },
-
-      bonus: {
-        player: {
-          points: 25,
-          reason: "Gin"        // "Gin", "Undercut", "Big Gin", etc.
-        },
-        cpu: {
-          points: 0,
-          reason: null
-        }
-      },
-
-      movedDeadwood: {
-        player: 0,             // points gained by laying off CPU deadwood
-        cpu: 6                 // points gained by laying off player deadwood
-      },
-
-      totalOriginalPoints: {
-        player: 7 + 25,        // deadwood + bonus
-        cpu: 23
-      },
-
-      finalPoints: {
-        player: 32,            // after movedDeadwood adjustments
-        cpu: 29
-      },
-
-      accumulated: {
-        player: 32,
-        cpu: 29
-      }
-    },
-
-    // game 2, game 3, etc...
-  ]
-};
-*/
     
   const el = {
     msg: document.getElementById("message"),
@@ -201,78 +154,64 @@ function applyScoring(result) {
     matchScore[result.winner] += points;
     updateScoreboard();
     
-    addGameToDetailsScore(result.winner,result.type,result.pDW,result.cDW);
+    addGameToDetailsScore(result.winner,result.type,result.who,result.pDW,result.cDW);
     
     result.points = points;
+
+    
     return result;
 } //applyScoring
 
-function addGameToDetailsScore(winner, type, pDW, cDW) {
-  // Determine bonus points
-  let playerBonus = 0;
-  let cpuBonus = 0;
+//__addGameToDetailsScore
+function addGameToDetailsScore(winner, type, who, pDW, cDW) {
+    // Determine bonus points
+    let bonus = 0;
+    let pointsThisGame = 0;
 
-  if (type === "Gin") {
-    if (winner === "player") playerBonus = 25;
-    if (winner === "cpu") cpuBonus = 25;
-  }
+    // Accumulated totals
+    const last = detailedMatchScore.games.at(-1);
+    const prevPlayerPoints = last ? last.accumulated.player : 0;
+    const prevCpuPoints    = last ? last.accumulated.cpu : 0;
 
-  if (type === "Undercut") {
-    if (winner === "player") playerBonus = 10;
-    if (winner === "cpu") cpuBonus = 10;
-  }
+    // bonus calc
+    if (type === "Gin")      bonus = 25;
+    if (type === "Undercut") bonus = 10;
 
-  // Deadwood movement (layoff)
-  // You can adjust this logic later
-  const movedDeadwood = {
-//    player: Math.max(0, cDW - pDW),
-//    cpu: Math.max(0, pDW - cDW)
-      player: 0,
-      cpu: 0
-  };
-
+    // deadwood calc
+    if (winner === "player") dDW = cDW - pDW;
+    if (winner === "cpu")    dDW = pDW - cDW;
+    
   // Total original points (deadwood + bonus)
-  const totalOriginalPoints = {
-    player: pDW + playerBonus,
-    cpu: cDW + cpuBonus
-  };
+    pointsThisGame = dDW + bonus;
 
-  // Final points after layoff adjustments
-  const finalPoints = {
-    player: totalOriginalPoints.player + movedDeadwood.player,
-    cpu: totalOriginalPoints.cpu + movedDeadwood.cpu
-  };
+    if (winner === "player") {
+	pPoints = prevPlayerPoints + pointsThisGame;
+	cPoints = prevCpuPoints;
+    }
+    if (winner === "cpu")    {
+	cPoints = prevCpuPoints + pointsThisGame;
+	pPoints = prevPlayerPoints;
+    }
+    
 
-  // Accumulated totals
-  const last = detailedMatchScore.games.at(-1);
-  const prevPlayer = last ? last.accumulated.player : 0;
-  const prevCpu = last ? last.accumulated.cpu : 0;
-
-  const accumulated = {
-    player: prevPlayer + finalPoints.player,
-    cpu: prevCpu + finalPoints.cpu
-  };
-
-  // Build the game entry
-  const gameData = {
-    gameNumber: detailedMatchScore.games.length + 1,
-    winner,
-    deadwood: {
-      player: pDW,
-      cpu: cDW
-    },
-    bonus: {
-      player: { points: playerBonus, reason: playerBonus ? type : null },
-      cpu: { points: cpuBonus, reason: cpuBonus ? type : null }
-    },
-    movedDeadwood,
-    totalOriginalPoints,
-    finalPoints,
-    accumulated
-  };
-
-  // Store it
-  detailedMatchScore.games.push(gameData);
+//  const accumulated = {
+//    player: prevPlayer + finalPoints.player,
+//    cpu: prevCpu + finalPoints.cpu
+//  };
+    
+    // Build the game entry
+    const gameData = {
+	gameNumber: detailedMatchScore.games.length + 1,
+	winner, type, who,
+	deadwood: {player: pDW, cpu: cDW, diff: dDW },
+	bonus: { bonus, type },
+	layoff: {player: 0, cpu: 0 },
+	pointsThisGame,
+	accumulated: {player: pPoints, cpu: cPoints}
+    };
+    
+    // Store it
+    detailedMatchScore.games.push(gameData);
 }//addGameToDetailsScore
 
 
@@ -475,7 +414,14 @@ function showHandTally(result) {
 
 //      checkMatchEnd();
       
- //   log("New hand started.");
+      //   log("New hand started.");
+
+    // test data
+//      addGameToDetailsScore("player","knock", "player",  8,  35);
+//      addGameToDetailsScore("cpu",   "knock", "cpu",    15,   9);
+//      addGameToDetailsScore("cpu",   "knock", "cpu",    15,   9);
+//      addGameToDetailsScore("cpu",   "Gin", "cpu",    45,   0);
+      
     render();
   }
 
@@ -509,20 +455,20 @@ function showHandTally(result) {
 	render();
   }
     
-    function playerDiscard(id) {
+function playerDiscard(id) {
     if (game.turn!=="player" || game.phase!=="await-discard") return;
     const i = game.player.findIndex(c=>c.id===id);
     if (i<0) return;
     const [c] = game.player.splice(i,1);
     game.discard.push(c);
-      log("You discarded " + prettyCard(c) + ".");
-
-      game.drawn = c.id;
-
+    log("You discarded " + prettyCard(c) + ".");
+    
+    game.drawn = c.id;
+    
     game.drawn = null;
-
+    
     endPlayerTurn();
-  }
+}
 
   function endPlayerTurn() {
     if (game.stock.length <= 2) {
@@ -701,8 +647,13 @@ function playerGin() {
     const [d] = game.cpu.splice(idx,1);
 
 //      animateCpuToDiscard(d);
+
+//????      cpuDiscard(d);  //... not quite right but the right idea
       
       game.discard.push(d);
+
+//      showMessage("CPU discarded " + prettyCard(d) + ".");
+
       log("CPU discarded " + prettyCard(d) + ".");
       game.turn = "player";
       game.phase = "await-draw";

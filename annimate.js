@@ -92,3 +92,53 @@ function animateCpuToDiscard( card ) {
     }, { });
     
 } //animateCpuToDiscard
+
+function cpuDiscard(card) {
+
+    const pile = document.getElementById("discard-top");
+
+    if (!pile) {
+        console.warn("discard-top not found");
+        return;
+    }
+
+    // Create a temporary hover card
+    const hover = document.createElement("div");
+    hover.className = "card";   // face-up card
+    hover.style.position = "absolute";
+
+    // Insert the face image
+    const face = cardFace(card);
+    face.style.position = "absolute";
+    face.style.left = "0px";
+    face.style.top = "0px";
+    hover.appendChild(face);
+
+    // Position it above the discard pile
+    const rect = pile.getBoundingClientRect();
+    hover.style.left = rect.left + "px";
+    hover.style.top = (rect.top - 40) + "px"; // hover 40px above
+
+    document.body.appendChild(hover);
+
+    // Wait 3 seconds, then finalize discard
+    setTimeout(() => {
+        hover.remove();
+
+        // Remove from CPU hand data
+//        const idx = game.cpuCards.findIndex(c => c.id === card.id);
+//        if (idx !== -1) game.cpuCards.splice(idx, 1);
+
+        // Add to discard pile
+        game.discard.push(card);
+
+        // Re-render CPU hand and discard pile
+//        renderCPU(game.cpuCards, null, game.cpuMeldIds, elements);
+//        renderDiscardPile();
+
+    }, 3000);
+}
+
+
+
+

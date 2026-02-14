@@ -339,7 +339,7 @@ h1 {
 */
 #modal-text {
     color: black;
-  font-family: "Courier New", monospace;
+/*  font-family: "Courier New", monospace;  */
   white-space: pre; /* preserves alignment and newlines */
 }
 
