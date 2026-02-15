@@ -144,7 +144,7 @@ function cardFace(c) {
     //
     // Add full card face graphic
     //    div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
-    div.style.backgroundImage = `url('images/cards-svg/${rankCode}${suitCode}.svg')`;
+    div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
 
 
 
