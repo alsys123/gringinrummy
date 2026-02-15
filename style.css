@@ -3,8 +3,8 @@
     --card-bg: #fff;
     --card-border: #222;
     --card-radius: 8px;
-    --card-width: 110px;
-    --card-height: 150px;
+    --card-width: 120px;
+    --card-height: 140px;
     --accent: #ffcc00;
   }
 
@@ -273,8 +273,16 @@ h1 {
     transform: rotate(180deg);
   }
 
-  .rank { font-size: 20px; font-weight: 700; }
-  .suit { font-size: 20px; }
+  .corner .rank {
+  font-size: calc(var(--card-width) * 0.18);
+}
+
+.corner .suit {
+  font-size: calc(var(--card-width) * 0.20);
+}
+
+  .rank { font-size: 22px; font-weight: 700; }
+  .suit { font-size: 24px; }
 
   .red { color: #d11f3a; }
   .black { color: #111; }

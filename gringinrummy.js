@@ -79,11 +79,33 @@ function createDeck() {
     return r + c.suit;
   }
 
-  function cardFace(c) {
+
+function asciiSuit(suit) {
+    return {
+        "♠": "S",
+        "♥": "H",
+        "♦": "D",
+        "♣": "C"
+    }[suit];
+}
+
+function asciiRank(rank) {
+    return {1:"A",11:"J",12:"Q",13:"K"}[rank] || rank;
+}
+/*
+function cardFace(c) {
     const div = document.createElement("div");
     div.className = "card player-card";
     div.dataset.id = c.id;
 
+    // ASCII-friendly filename
+    const suitCode = asciiSuit(c.suit);
+    const rankCode = asciiRank(c.rank);
+
+    // Only set the image — everything else comes from CSS
+    div.style.backgroundImage = `url('images/cards-svg/${rankCode}${suitCode}.svg')`;
+
+    // Corner indices (still optional if you want them)
     const r = {1:"A",11:"J",12:"Q",13:"K"}[c.rank] || c.rank;
     const color = (c.suit==="♦"||c.suit==="♥") ? "red" : "black";
 
@@ -96,10 +118,64 @@ function createDeck() {
 
     div.appendChild(tl);
     div.appendChild(br);
-    return div;
-  }
 
-  function log(t) {
+    return div;
+    }
+    */
+
+//__cardFace
+function cardFace(c) {
+
+    const suitCode = asciiSuit(c.suit);
+    const rankCode = asciiRank(c.rank);
+
+    
+    const div = document.createElement("div");
+
+    div.className = "card player-card";
+    div.dataset.id = c.id;
+
+    //
+    // Add full card face graphic
+div.style.backgroundImage = `url('images/cards-svg/${rankCode}${suitCode}.svg')`;
+
+    div.style.backgroundSize = "cover";
+//    div.style.backgroundPosition = "center";
+    div.style.borderRadius = "8px";
+//    div.style.border = "2px solid white";
+    div.style.boxShadow = "0px 3px 6px rgba(0,0,0,0.35)";
+    div.style.width = "100px"; div.style.height = "140px";
+    div.style.position = "relative"; div.style.overflow = "hidden";
+
+    // new ones to fit image better
+    div.style.backgroundSize = "contain";
+//    div.style.backgroundSize = "85% 85%";
+
+div.style.backgroundRepeat = "no-repeat";
+div.style.backgroundPosition = "center";
+div.style.padding = "10px";
+div.style.boxSizing = "border-box";
+
+    
+/*
+    const r = {1:"A",11:"J",12:"Q",13:"K"}[c.rank] || c.rank;
+    const color = (c.suit==="♦"||c.suit==="♥") ? "red" : "black";
+    
+    const tl = document.createElement("div");
+    tl.className = "corner";
+    tl.innerHTML = `<div class="rank ${color}">${r}</div><div class="suit ${color}">${c.suit}</div>`;
+    
+    const br = tl.cloneNode(true);
+    br.classList.add("bottom");
+    
+    div.appendChild(tl);
+    div.appendChild(br);
+    */
+    return div;
+}//cardFace
+
+
+function log(t) {
     const p = document.createElement("p");
     p.textContent = t;
     el.log.prepend(p);
