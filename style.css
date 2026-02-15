@@ -3,8 +3,8 @@
     --card-bg: #fff;
     --card-border: #222;
     --card-radius: 8px;
-    --card-width: 120px;
-    --card-height: 140px;
+    --card-width: 110px;
+    --card-height: 160px;
     --accent: #ffcc00;
   }
 
@@ -183,7 +183,7 @@ h1 {
     background: var(--card-bg);
     box-shadow: 0 4px 0 rgba(0, 0, 0, 0.5);
     position: relative;
-    padding: 4px;
+    padding: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -424,12 +424,17 @@ h1 {
 }
 */
 .scoreboard {
-  display: flex;
+    display: flex;
+/*     display: inline-flex;*/ /* or inline-block */
   justify-content: center;
   align-items: center;
   gap: 22px;
   margin: 12px 0 20px;
   font-family: "Segoe UI", sans-serif;
+  margin: 12px auto 20px; /* centers it */
+  margin-left: auto;
+  margin-right: auto;
+   width: fit-content;
 }
 
 .score-block {

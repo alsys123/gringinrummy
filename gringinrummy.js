@@ -79,7 +79,6 @@ function createDeck() {
     return r + c.suit;
   }
 
-
 function asciiSuit(suit) {
     return {
         "♠": "S",
@@ -88,11 +87,16 @@ function asciiSuit(suit) {
         "♣": "C"
     }[suit];
 }
+function asciiRankUpper(rank) {
+    return {1:"A",11:"J",12:"Q",13:"K"}[rank] || rank;
+    }
 
 function asciiRank(rank) {
-    return {1:"A",11:"J",12:"Q",13:"K"}[rank] || rank;
+    return {1:"a",11:"j",12:"q",13:"k"}[rank] || rank;
 }
+
 /*
+  // ORIGINAL --- no images ---
 function cardFace(c) {
     const div = document.createElement("div");
     div.className = "card player-card";
@@ -128,6 +132,7 @@ function cardFace(c) {
 
     const suitCode = asciiSuit(c.suit);
     const rankCode = asciiRank(c.rank);
+    const rankCodeUpper = asciiRankUpper(c.rank);
 
     
     const div = document.createElement("div");
@@ -137,25 +142,16 @@ function cardFace(c) {
 
     //
     // Add full card face graphic
-div.style.backgroundImage = `url('images/cards-svg/${rankCode}${suitCode}.svg')`;
+    //    div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
+    div.style.backgroundImage = `url('images/cards-svg/${rankCode}${suitCode}.svg')`;
 
-    div.style.backgroundSize = "cover";
-//    div.style.backgroundPosition = "center";
-    div.style.borderRadius = "8px";
-//    div.style.border = "2px solid white";
-    div.style.boxShadow = "0px 3px 6px rgba(0,0,0,0.35)";
-    div.style.width = "100px"; div.style.height = "140px";
-    div.style.position = "relative"; div.style.overflow = "hidden";
 
-    // new ones to fit image better
+
+
     div.style.backgroundSize = "contain";
-//    div.style.backgroundSize = "85% 85%";
-
-div.style.backgroundRepeat = "no-repeat";
-div.style.backgroundPosition = "center";
-div.style.padding = "10px";
-div.style.boxSizing = "border-box";
-
+    div.style.backgroundRepeat = "no-repeat";
+    div.style.backgroundPosition = "center";
+    
     
 /*
     const r = {1:"A",11:"J",12:"Q",13:"K"}[c.rank] || c.rank;
