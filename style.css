@@ -273,8 +273,8 @@ h1 {
     transform: rotate(180deg);
   }
 
-  .rank { font-size: 18px; font-weight: 700; }
-  .suit { font-size: 18px; }
+  .rank { font-size: 20px; font-weight: 700; }
+  .suit { font-size: 20px; }
 
   .red { color: #d11f3a; }
   .black { color: #111; }
