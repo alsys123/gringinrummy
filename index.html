@@ -32,15 +32,17 @@
 	
       </div>
       
-	  <div id="back-door" hidden>
-	    <button id="btn-backDoor-save">Save State</button>
-	    <button id="btn-backDoor-restore">Restore State</button>
-	    <button id="btn-backDoor-showCpuCards">Show CPU Cards</button>   
-	    <button id="btn-backDoor-testMelds">Test Melds</button>   
-	    <button id="btn-backDoor-showStats">Show Stats</button>   
-	  </div>
+      <div id="back-door" hidden>
+	<button id="btn-backDoor-save">Save State</button>
+	<button id="btn-backDoor-restore">Restore State</button>
+	<button id="btn-backDoor-showCpuCards">Show CPU Cards</button>   
+	<button id="btn-backDoor-testMelds">Test Melds</button>   
+	<button id="btn-backDoor-showStats">Show Stats</button>   
+	<button id="btn-backDoor-pickCardDeck">Pick Card Deck</button>   
 
-	  
+      </div>
+      
+      
 	  <div id="table">
 
 	    <!--  see if this works
@@ -78,6 +80,10 @@
 	  <div id="modal" class="modal">
 	    <div class="modal-content">
 	      <span id="modal-text"></span>
+
+	      <!-- Dynamic content goes here -->
+	      <div id="modal-extra"></div> 
+
 	      <button onclick="closeModal()">OK</button>
 	    </div>
 	  </div>

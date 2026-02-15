@@ -137,6 +137,13 @@ document.getElementById("btn-backDoor-showCpuCards").onclick = () => {
     render();
 //    console.log("Game object: ", game)
 }
+  /* ------------------------------
+     Let us pick a card deck
+  ------------------------------ */
+
+document.getElementById("btn-backDoor-pickCardDeck").onclick = () => {
+    showDeckSelector();
+}
 
   /* ------------------------------
      Show game statistics
@@ -320,3 +327,47 @@ function formatRow(desc, player, cpu) {
     return `${col1}${col2}${col3}\n`;
 }
 
+//__showDeckSelector
+// select a card deck to use...
+function showDeckSelector() {
+    const extra = document.getElementById("modal-extra");
+    extra.innerHTML = ""; // clear previous content
+
+    const label = document.createElement("label");
+    label.textContent = "Choose a card deck:";
+    label.style.display = "block";
+    label.style.marginBottom = "6px";
+
+    const select = document.createElement("select");
+    select.id = "deck-select";
+    select.style.width = "100%";
+    select.style.padding = "6px";
+    select.style.marginBottom = "12px";
+
+    // Add your deck options here
+    const decks = [
+        { value: "classic", label: "Classic Deck" },
+        { value: "modern", label: "Modern Deck" },
+        { value: "minimal", label: "Minimalist Deck" },
+        { value: "casino", label: "Casino Deck" }
+    ];
+
+    decks.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d.value;
+        opt.textContent = d.label;
+        select.appendChild(opt);
+    });
+
+    extra.appendChild(label);
+    extra.appendChild(select);
+
+    showMessage("Select a card deck");
+
+    document.getElementById("deck-select").addEventListener("change", (e) => {
+	gCardDeck = e.target.value;
+//	console.log("Changed to:", e.target.value);
+
+    });
+
+}//showDeckSelector

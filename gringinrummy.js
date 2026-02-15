@@ -24,6 +24,7 @@ const detailedMatchScore = {
   games: []
 };
 
+let gCardDeck = "";
     
   const el = {
     msg: document.getElementById("message"),
@@ -877,7 +878,9 @@ render();
 
    function closeModal() {
 //	console.log("in close");
-	document.getElementById("modal").style.display = "none";
+       document.getElementById("modal").style.display = "none";
+       // Remove temporary content
+       document.getElementById("modal-extra").innerHTML = "";
     }
 
 function layoutStars() {
