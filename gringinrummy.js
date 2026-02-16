@@ -154,8 +154,8 @@ function cardFace(c) {
 
     if (gCardDeck === 'jumbo') {
 	div.style.backgroundImage = `url('images/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
-	document.documentElement.style.setProperty("--card-height", "140px");  //was 140 . 125
-	document.documentElement.style.setProperty("--card-width", "110px");  // was 110
+	document.documentElement.style.setProperty("--card-height", "154px");
+	document.documentElement.style.setProperty("--card-width", "110px"); 
 	
     }
 
