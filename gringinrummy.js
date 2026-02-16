@@ -143,18 +143,21 @@ function cardFace(c) {
 
     // set the default style to start
     div.style.backgroundImage = `url('images/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
+    document.documentElement.style.setProperty("--card-height", "140px");
 
     //
     // Add full card face graphic
     //    div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
     if (gCardDeck === 'classic') {
 	div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
+	document.documentElement.style.setProperty("--card-height", "160px");
+
     }
 
     if (gCardDeck === 'jumbo') {
 	div.style.backgroundImage = `url('images/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
-//	div.style.height = "140px"; // ... not working
-
+	document.documentElement.style.setProperty("--card-height", "140px");
+	
     }
 
     div.style.backgroundSize = "contain";
@@ -461,12 +464,12 @@ function showHandTally(result) {
      Game Flow
   ------------------------------ */
 
-  function start() {
+function start() {
     game.deck = createDeck();
-      shuffle(game.deck);
-
-//      rigDeckForTesting(game.deck);
-      
+    shuffle(game.deck);
+    
+    //      rigDeckForTesting(game.deck);
+    
     game.player = [];
     game.cpu = [];
     game.stock = [];
@@ -506,7 +509,7 @@ function showHandTally(result) {
 //      addGameToDetailsScore("cpu",   "Gin", "cpu",    45,   0);
       
     render();
-  }
+}//start
 
     //__ drawStock
     function drawStock() {

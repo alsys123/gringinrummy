@@ -347,7 +347,7 @@ function showDeckSelector() {
     // Add your deck options here
     const decks = [
         { value: "classic", label: "Classic Deck" },
-        { value: "jumbo", label: "Jumbo Deck" }
+        { value: "jumbo",   label: "Jumbo Deck" }
 //        { value: "minimal", label: "Minimalist Deck" },
 //        { value: "casino", label: "Casino Deck" }
     ];

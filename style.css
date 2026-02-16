@@ -4,8 +4,8 @@
     --card-border: #222;
     --card-radius: 8px;
     --card-width: 110px;
-/*    --card-height: 160px; */  /* for classic */
-    --card-height: 140px;  /* for jumbo */
+/*    --card-height: 160px;  */ /* for classic */
+    --card-height: 140px;   /* for jumbo */
     --accent: #ffcc00;
   }
 
