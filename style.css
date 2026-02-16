@@ -73,8 +73,16 @@ h1 {
   position: absolute;
   margin: 0;
   padding: 0;
-  pointer-events: none; /* optional: title shouldn't block clicks */
+  /*  pointer-events: none; */ /* optional: title shouldn't block clicks */
+
+  /* new so it it clickable */
+  cursor: pointer;
+  user-select: none;
+  z-index: 9999; /* ensures it's on top */
+
 }
+
+#title:hover { opacity: 0.85; }
 
 
   #status-bar {
@@ -338,6 +346,8 @@ h1 {
   max-height: 80vh;      
   overflow-y: auto;      
   box-sizing: border-box;
+  resize: both;
+
 }
 
   /*

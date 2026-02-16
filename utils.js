@@ -73,7 +73,7 @@ document.getElementById("btn-backDoor-testMelds").onclick = () => {
 
 
 function saveGameToFile() {
-  const data = JSON.stringify({game,matchScore}, null, 2); // pretty JSON
+    const data = JSON.stringify({game,matchScore,detailedMatchScore}, null, 2); // pretty JSON
 
   const blob = new Blob([data], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -97,6 +97,14 @@ function loadGameFromFile(file) {
 	    // Restore all fields into the existing game object
 	    Object.assign(game, obj.game);
 	    Object.assign(matchScore, obj.matchScore);
+
+	    // Restore optional field (newer saves)
+	    if (obj.detailedMatchScore) {
+		Object.assign(detailedMatchScore, obj.detailedMatchScore);
+	    } else {
+		// If missing, initialize it safely
+		detailedMatchScore.games = [];
+	    }
 
 	    // one time cleanup
 //	    delete game.game;    
@@ -185,29 +193,41 @@ function showGameStats() {
 	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`)
 	  .join(", ");
 	  */
-const cards = sortedPlayerFinal
-  .slice()
-  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`);
 
-let playerHand = "";
-for (let i = 0; i < cards.length; i++) {
-  if (i > 0 && i % 5 === 0) playerHand += "\n";  // new line every 5 cards
-  playerHand += cards[i] + ", ";
-}
+    const cardsPlayer = sortedPlayerFinal
+	  .slice()
+	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`);
 
+    const cardsCpu = sortedCpuFinal
+	  .slice()
+	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`);
+    
+    let playerHand = "";
+    for (let i = 0; i < cardsPlayer.length; i++) {
+	if (i > 0 && i % 5 === 0) playerHand += "\n";  // new line every 5 cards
+	playerHand += cardsPlayer[i] + ", ";
+    }
+
+    let cpuHand = "";
+    for (let i = 0; i < cardsCpu.length; i++) {
+	if (i > 0 && i % 5 === 0) cpuHand += "\n";  // new line every 5 cards
+	cpuHand += cardsCpu[i] + ", ";
+    }
+
+/*    
     const cpuHand =
 	  sortedCpuFinal
 	  .slice()
-//	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
+    //	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
 	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`)
 	  .join(", ");
-
-
+  */  
+    
     // results of meld and deadwood tes
     //    solveHand(playerHand);
-
-//    console.log("in status: ", allResultsPlayer);
-
+    
+    //    console.log("in status: ", allResultsPlayer);
+    
     const stats =
 	  `*** Game Statistics ***` + "\n" +
 	  `Game Turn: ${game.turn}   Game Phase: ${game.phase}` + "\n" +
@@ -346,6 +366,7 @@ function showDeckSelector() {
 
     // Add your deck options here
     const decks = [
+        { value: "na",      label: "--- No Change ---" },
         { value: "classic", label: "Classic Deck" },
         { value: "jumbo",   label: "Jumbo Deck" }
 //        { value: "minimal", label: "Minimalist Deck" },
@@ -365,10 +386,13 @@ function showDeckSelector() {
     showMessage("Select a card deck");
 
     document.getElementById("deck-select").addEventListener("change", (e) => {
+
+	if (e.target.value === "na") return;
+	
 	gCardDeck = e.target.value;
 //	console.log("Changed to:", e.target.value);
-	start();
-
+//	start();
+	render();
     });
 
 }//showDeckSelector

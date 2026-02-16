@@ -20,11 +20,9 @@
     target: 100
   };
 
-const detailedMatchScore = {
-  games: []
-};
+const detailedMatchScore = { games: [] };
 
-let gCardDeck = "";
+let gCardDeck = "jumbo";
     
   const el = {
     msg: document.getElementById("message"),
@@ -142,8 +140,8 @@ function cardFace(c) {
     div.dataset.id = c.id;
 
     // set the default style to start
-    div.style.backgroundImage = `url('images/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
-    document.documentElement.style.setProperty("--card-height", "140px");
+//    div.style.backgroundImage = `url('images/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
+//    document.documentElement.style.setProperty("--card-height", "140px");
 
     //
     // Add full card face graphic
@@ -156,7 +154,8 @@ function cardFace(c) {
 
     if (gCardDeck === 'jumbo') {
 	div.style.backgroundImage = `url('images/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
-	document.documentElement.style.setProperty("--card-height", "140px");
+	document.documentElement.style.setProperty("--card-height", "140px");  //was 140 . 125
+	document.documentElement.style.setProperty("--card-width", "110px");  // was 110
 	
     }
 
@@ -383,10 +382,11 @@ function showHandTally(result) {
     } //checkMatchEnd
     
   function resetMatch() {
-    matchScore.player = 0;
-    matchScore.cpu = 0;
-      updateScoreboard();
+      matchScore.player = 0;
+      matchScore.cpu = 0;
 
+      updateScoreboard();
+      
   }
 
   /* ------------------------------
@@ -474,6 +474,9 @@ function start() {
     game.cpu = [];
     game.stock = [];
     game.discard = [];
+
+    detailedMatchScore.games = []; // now reset previous scoreboard
+
     game.turn = "player";
     game.phase = "await-draw";
       game.drawn = null;
@@ -910,7 +913,7 @@ const w = window.innerWidth;
   const ml = document.getElementById("star-midleft");
 
   // Top-left
-  tl.style.left = (w * margin) + "px";
+    tl.style.left = (w * margin)-20 + "px";
   tl.style.top  = (h * margin) + "px";
 
   // Top-right
@@ -942,10 +945,12 @@ function layoutTitle() {
     
 //  title.style.position = "absolute";
   title.style.left = (w * margin) + "px";
-  title.style.top = (h * 0.02) + "px";
+    title.style.top = (h * 0.02) + "px";
+    
 }//layoutTitle
 
-window.addEventListener("load", layoutTitle);
+
+window.addEventListener("load",   layoutTitle);
 window.addEventListener("resize", layoutTitle);
 
 //__ layoutButton
@@ -988,7 +993,7 @@ window.addEventListener("load", layoutButtonKnock);
 window.addEventListener("resize", layoutButtonKnock);
 
 //gin
-//__ layoutButton
+//__ layoutButtonGin
 function layoutButtonGin() {
     const btn = document.getElementById("btn-gin");
     const w = window.innerWidth;
@@ -1002,7 +1007,7 @@ function layoutButtonGin() {
     btn.style.left = (w * (1 - margin) - bw - extraOffset) + "px";
     btn.style.top = (h * 0.5 - bh / 2) + "px";
     
-}//layoutButton
+}//layoutButtonGin
 
 window.addEventListener("load", layoutButtonGin);
 window.addEventListener("resize", layoutButtonGin);
@@ -1012,4 +1017,16 @@ window.addEventListener("resize", layoutButtonGin);
 // Click on scoreboard
 document.querySelector(".scoreboard").addEventListener("click", () => {
   scoreBoardDetails(); 
+});
+
+document.getElementById("title").addEventListener("click", () => {
+//    window.open("gameRules.pdf", "_blank");
+    document.getElementById("title").addEventListener("click", () => {
+	const extra = document.getElementById("modal-extra");
+	extra.innerHTML = `
+        <iframe src="gameRules.pdf" style="width:100%; height:70vh; border:none;"></iframe>
+    `;
+	showMessage("Game Rules");
+    });
+    
 });
