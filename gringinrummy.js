@@ -894,6 +894,7 @@ render();
     }
 
 function layoutStars() {
+	// 🥹
 //  const game = document.getElementById("game");
 //  const w = game.clientWidth;
 //  const h = game.clientHeight;
