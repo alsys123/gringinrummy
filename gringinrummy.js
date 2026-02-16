@@ -141,19 +141,26 @@ function cardFace(c) {
     div.className = "card player-card";
     div.dataset.id = c.id;
 
+    // set the default style to start
+    div.style.backgroundImage = `url('images/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
+
     //
     // Add full card face graphic
     //    div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
-    div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
+    if (gCardDeck === 'classic') {
+	div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
+    }
 
+    if (gCardDeck === 'jumbo') {
+	div.style.backgroundImage = `url('images/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
+//	div.style.height = "140px"; // ... not working
 
-
+    }
 
     div.style.backgroundSize = "contain";
     div.style.backgroundRepeat = "no-repeat";
     div.style.backgroundPosition = "center";
-    
-    
+        
 /*
     const r = {1:"A",11:"J",12:"Q",13:"K"}[c.rank] || c.rank;
     const color = (c.suit==="♦"||c.suit==="♥") ? "red" : "black";

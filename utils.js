@@ -347,9 +347,9 @@ function showDeckSelector() {
     // Add your deck options here
     const decks = [
         { value: "classic", label: "Classic Deck" },
-        { value: "modern", label: "Modern Deck" },
-        { value: "minimal", label: "Minimalist Deck" },
-        { value: "casino", label: "Casino Deck" }
+        { value: "jumbo", label: "Jumbo Deck" }
+//        { value: "minimal", label: "Minimalist Deck" },
+//        { value: "casino", label: "Casino Deck" }
     ];
 
     decks.forEach(d => {
@@ -367,6 +367,7 @@ function showDeckSelector() {
     document.getElementById("deck-select").addEventListener("change", (e) => {
 	gCardDeck = e.target.value;
 //	console.log("Changed to:", e.target.value);
+	start();
 
     });
 
