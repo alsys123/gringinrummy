@@ -22,7 +22,7 @@
 
 const detailedMatchScore = { games: [] };
 
-let gCardDeck = "jumbo";
+let gCardDeck = "simple";
     
   const el = {
     msg: document.getElementById("message"),
@@ -147,13 +147,18 @@ function cardFace(c) {
     // Add full card face graphic
     //    div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
     if (gCardDeck === 'classic') {
-	div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
+	div.style.backgroundImage = `url('images/cards/Classic/${rankCodeUpper}${suitCode}.svg')`;
+	document.documentElement.style.setProperty("--card-height", "160px");
+
+    }
+    if (gCardDeck === 'simple') {
+	div.style.backgroundImage = `url('images/cards/Simple/${c.suit}${rankCodeUpper}.png')`;
 	document.documentElement.style.setProperty("--card-height", "160px");
 
     }
 
     if (gCardDeck === 'jumbo') {
-	div.style.backgroundImage = `url('images/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
+	div.style.backgroundImage = `url('images/cards/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
 	document.documentElement.style.setProperty("--card-height", "154px");
 	document.documentElement.style.setProperty("--card-width", "110px"); 
 	
@@ -820,6 +825,21 @@ function playerGin() {
 
       game.revealCpu = true;
 
+      //??? here .. can any of these deadwood add to the cpuMeld cards
+//???      pEval.deadwoodCards .. these are players deadwood...
+      /// something like:
+/*
+    const evalCpu    = evaluate(game.cpu);
+    const cpuMeldCardIds = evalCpu.melds
+	  .flat()
+	  .map(i => game.cpu[i].id);
+    const cpuMeldIds = new Set(cpuMeldCardIds);
+    
+    const sortedCpuFinal = sortHandWithMeldsFirstv2(game.cpu, evalCpu.melds);
+*/
+      //
+
+      
     let winner = "tie";
     if (cDW < pDW) winner = "cpu";
     else if (cDW > pDW) winner = "player";

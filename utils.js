@@ -198,7 +198,15 @@ function showGameStats() {
 	  .slice()
 	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`);
 
+    const deadwoodCardsPlayer = evalPlayer.deadwoodCards
+	  .slice()
+	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`);
+
     const cardsCpu = sortedCpuFinal
+	  .slice()
+	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`);
+
+    const deadwoodCardsCpu = evalCpu.deadwoodCards
 	  .slice()
 	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`);
     
@@ -239,10 +247,16 @@ function showGameStats() {
 	  `GameBoard is ${w} wide and ${h} high` + "\n" + "\n" +
 	  `GameBoard viewable at ${iw} wide and ${ih}` + "\n" + "\n" +
 	  "rank-suite(runvalue, deadwoodValue, id)" + "\n" +
-	  "Player Hand: "  + playerHand + "\n" +
-	   meldPlayerResults + "\n" + "\n" +
-	  "CPU Hand   : "  + cpuHand + "\n" +
-	   meldCpuResults    + "\n" + "\n" +
+	  // Player
+	  "Player Hand: " + "\n" +
+	  playerHand + "\n" +
+	  meldPlayerResults + "\n" + 
+	  "Player Deadwood: " + deadwoodCardsPlayer + "\n" + "\n" +
+	  // CPU
+	  "CPU Hand: " + "\n"  +
+	  cpuHand + "\n" +
+	  meldCpuResults    + "\n" +
+	  "CPU Deadwood: " + deadwoodCardsCpu + "\n" + "\n" +
 	  `---`;
     
     showMessage(stats);
@@ -364,11 +378,13 @@ function showDeckSelector() {
     select.style.padding = "6px";
     select.style.marginBottom = "12px";
 
-    // Add your deck options here
+    // Add your deck options here .. picking carddeck
     const decks = [
         { value: "na",      label: "--- No Change ---" },
         { value: "classic", label: "Classic Deck" },
-        { value: "jumbo",   label: "Jumbo Deck" }
+        { value: "jumbo",   label: "Jumbo Deck" },
+        { value: "simple",   label: "Simple Deck" }
+	
 //        { value: "minimal", label: "Minimalist Deck" },
 //        { value: "casino", label: "Casino Deck" }
     ];

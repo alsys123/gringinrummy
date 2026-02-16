@@ -103,9 +103,22 @@ function evaluate(hand) {
     }
 
 //      console.log("Evaluate: best Deadwood = ", bestDW, "  Best Melds = ", bestPattern);
-      
-    return {deadwood: bestDW, melds: bestPattern};
-  }
+
+    // returning the set of deadwood cards
+// Build a set of all indexes used in melds
+const used = new Set();
+for (const meld of bestPattern) {
+  for (const idx of meld) used.add(idx);
+}
+
+// Extract the actual deadwood card objects
+const deadwoodCards = hand.filter((_, i) => !used.has(i));
+
+    return {  deadwood: bestDW,   melds: bestPattern,  deadwoodCards: deadwoodCards };
+
+    //
+// orig    return {deadwood: bestDW, melds: bestPattern};
+} // evaluate
 
     //_ meldCardIds
 function meldCardIds(hand, evalInfo) {
@@ -130,7 +143,7 @@ function meldCardIds(hand, evalInfo) {
 //    console.log("=> MeldCardIds array:", Array.from(ids));
 
     return ids;
-  } //meldCardIds
+} //meldCardIds
 
 
 // --- new sort by melts first routines
