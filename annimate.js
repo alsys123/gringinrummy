@@ -152,6 +152,25 @@ function cpuDiscard(card) {
     }, 2000);
 }
 
-
-
+// move the player card up a little to show it was used in a layoff
+function markPlayerLayoffCards(layoffCards) {
+    const layoffIds = new Set(layoffCards.map(c => c.id));
+    
+    const playerHandDiv = document.getElementById("player-hand");
+    const cardDivs      = playerHandDiv.querySelectorAll(".player-card");
+    
+    for (const div of cardDivs) {
+	const cardId = div.dataset.id;
+	//    console.log("Checking card:", cardId, "Layoff?", layoffIds.has(cardId));
+	
+	if (layoffIds.has(cardId)) {
+	    //      console.log("ADDING CLASS to", cardId);
+	    div.classList.add("layoff-used");
+	    
+	    console.log("Computed transform:", getComputedStyle(div).transform);
+	    
+	}
+    }
+    
+} //markPlayerLayoffCards
 

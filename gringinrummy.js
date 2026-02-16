@@ -330,9 +330,9 @@ function showHandTally(result) {
 	tie: "Deadwood tie."
     };
     
-    const actor = result.who;      // player, cpu, or na
+    const actor  = result.who;      // player, cpu, or na
     const winner = result.winner;  // player, cpu, tie
-    const type = result.type;      // gin, knock, stock
+    const type   = result.type;      // gin, knock, stock
     
     let title = actionText[type][actor];
     
@@ -341,23 +341,29 @@ function showHandTally(result) {
 	title += " " + resultText[winner];
     }
     
-    /*    
-	  let title = "";
-    if (result.type === "gin") {
-    title = result.winner === "player" ? "You went Gin!" : "CPU went Gin!";
-    } else if (result.type === "knock") {
-    if (result.winner === "player") title = "You won by knocking!";
-    else if (result.winner === "cpu") title = "CPU won by knocking!";
-    else title = "Knock — deadwood tie.";
-    } else if (result.type === "stock") {
-    title = "Stock depleted";
-    }
-    */
+    
+//    layoff: layoffTotal,
+//	  OriginalPDW: origPDW
+
+    yourDeadwoodLine = `Your deadwood: ${result.pDW}`;
+    cpuDeadwoodLine  = `CPU deadwood: ${result.cDW}`;
+
+//    console.log("show it: ", actor, result.layoff, type);
+    
+    if (actor === "cpu" && result.layoff > 0 && type === "knock") {
+	yourDeadwoodLine = `Your deadwood: ${result.pDW}` +
+	    ` (${result.OriginalDW} - ${result.layoff})`;
+    } 
+    if (actor === "player" && result.layoff > 0 && type === "knock") {
+	cpuDeadwoodLine  = `CPU deadwood: ${result.cDW}`;
+	    ` (${result.OriginalDW} - ${result.layoff})`;
+    } 
     
     const tally =
 	  `${title}\n\n` +
-	  `Your deadwood: ${result.pDW}\n` +
-	  `CPU deadwood: ${result.cDW}\n\n` +
+	  yourDeadwoodLine + "\n" +
+	  cpuDeadwoodLine  + "\n" +
+	  "\n" +
 	  `Points this hand: ${result.points}\n\n` +
 	  `Match Score:\n` +
 	  `You: ${matchScore.player}\n` +
@@ -817,42 +823,55 @@ function playerGin() {
   } //cpuGin
 
     //__ cpuKnock
-  function cpuKnock() {
+function cpuKnock() {
     const cEval = evaluate(game.cpu);
     const pEval = evaluate(game.player);
     const cDW = cEval.deadwood;
-    const pDW = pEval.deadwood;
-
-      game.revealCpu = true;
-
-      //??? here .. can any of these deadwood add to the cpuMeld cards
-//???      pEval.deadwoodCards .. these are players deadwood...
-      /// something like:
-/*
-    const evalCpu    = evaluate(game.cpu);
-    const cpuMeldCardIds = evalCpu.melds
-	  .flat()
-	  .map(i => game.cpu[i].id);
-    const cpuMeldIds = new Set(cpuMeldCardIds);
     
-    const sortedCpuFinal = sortHandWithMeldsFirstv2(game.cpu, evalCpu.melds);
-*/
-      //
+    let   pDW = pEval.deadwood;
+    const origPDW = pDW;
+    
+    game.revealCpu = true;
 
+
+      /*
+      // for the layoff calculation  ?? here i am
+      const cpuMeldCardIds = cEval.melds
+	    .flat()
+	    .map(i => game.cpu[i].id);
+      const cpuMeldIds = new Set(cpuMeldCardIds);
       
-    let winner = "tie";
-    if (cDW < pDW) winner = "cpu";
-    else if (cDW > pDW) winner = "player";
+      console.log("CPU Meld cards: ",cpuMeldIds,
+		  ". Deadwood cards: ", pEval.deadwoodCards);
+      */
+      const cpuMeldCards   = expandMelds(game.cpu, cEval.melds);
+      const playerDeadwood = pEval.deadwoodCards;
+      
+      const layoffCards = getLayoffs(playerDeadwood, cpuMeldCards);
+      const layoffTotal = layoffValue(layoffCards);
+      
+//      console.log("Player layoff cards:", layoffCards);
+//      console.log("Layoff total:", layoffTotal);
 
-    const scored = applyScoring({
-      winner,
-      type: "knock",
-      pDW,
-	cDW,
-	who: "cpu"
-    });
-
-    let msg;
+    markPlayerLayoffCards(layoffCards);  // pop the cards up to show a layoff
+	
+      pDW = pDW - layoffTotal;
+      
+      let winner = "tie";
+      if (cDW < pDW) winner = "cpu";
+      else if (cDW > pDW) winner = "player";
+      
+      const scored = applyScoring({
+	  winner,
+	  type: "knock",
+	  pDW,
+	  cDW,
+	  who: "cpu",
+	  layoff: layoffTotal,
+	  OriginalDW: origPDW
+      });
+      
+      let msg;
     if (cDW < pDW) {
       msg = "CPU knocked and wins.\nCPU: " + cDW + " | You: " + pDW;
     } else if (cDW > pDW) {
@@ -869,7 +888,77 @@ function playerGin() {
     render();
   } //cpuKnock
 
-    
+/*  ****
+    Layoff functions
+*/
+function expandMelds(hand, melds) {
+  return melds.map(meld => meld.map(i => hand[i]));
+}
+
+//__ getLayoffs
+function getLayoffs(playerORCpuDeadwood, cpuORPlayerMelds) {
+  const layoffs = [];
+
+  for (const card of playerORCpuDeadwood) {
+    for (const meld of cpuORPlayerMelds) {
+
+      // --- SET MELD ---
+      if (isSetMeld(meld)) {
+        if (card.rank === meld[0].rank) {
+          layoffs.push(card);
+          break;
+        }
+      } //if set
+
+      // --- RUN MELD ---
+      if (isRunMeld(meld)) {
+        if (card.suit !== meld[0].suit) continue;
+
+        const ranks = meld.map(c => c.rank).sort((a,b)=>a-b);
+        const low = ranks[0];
+        const high = ranks[ranks.length-1];
+
+        if (card.rank === low - 1 || card.rank === high + 1) {
+          layoffs.push(card);
+          break;
+        }
+
+      }// if meld
+	
+    } // for melds
+      
+  } // for deadwood
+
+  return layoffs;
+}
+
+function isSetMeld(meld) {
+  return meld.length >= 3 &&
+         meld.every(c => c.rank === meld[0].rank);
+}
+
+function isRunMeld(meld) {
+  if (meld.length < 3) return false;
+  const suit = meld[0].suit;
+  if (!meld.every(c => c.suit === suit)) return false;
+
+  const ranks = meld.map(c => c.rank).sort((a,b)=>a-b);
+  for (let i=1;i<ranks.length;i++) {
+    if (ranks[i] !== ranks[i-1] + 1) return false;
+  }
+  return true;
+}
+
+function layoffValue(cards) {
+  return cards.reduce((sum, c) => sum + cardValue(c.rank), 0);
+}
+
+/* ****
+
+   Utils
+   
+ */
+
 function showMessage(msg) {
 	const padded = msg + "\n\n"; // always add two newlines
 	document.getElementById("modal-text").textContent = padded;

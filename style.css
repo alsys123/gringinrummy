@@ -196,6 +196,33 @@ h1 {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+  }
+
+
+  .player-card.layoff-used {
+  top: 375px !important;   /* 25px higher than 400px */
+  transition: top 0.2s ease;
+  z-index: 999;
+}
+
+#player.normal .card {
+  width: var(--card-width);
+  height: var(--card-height);
+}
+
+#player.small .card {
+  width: calc(var(--card-width) * 0.8);
+  height: calc(var(--card-height) * 0.8);
+}
+
+#player.smaller .card {
+  width: calc(var(--card-width) * 0.65);
+  height: calc(var(--card-height) * 0.65);
+}
+
+#player.tiny .card {
+  width: calc(var(--card-width) * 0.5);
+  height: calc(var(--card-height) * 0.5);
 }
 
   /*
@@ -397,71 +424,6 @@ h1 {
 }
 
 
-#player.normal .card {
-  transform: scale(1);
-  transform-origin: top left;
-}
-
-#table {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-/*
-  #table {
-    border-radius: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.18);
-    background: radial-gradient(circle at top, #1c7c4b 0, #06402a 50%, #02150e 100%);
-    padding: 14px;
-  }
-*/
-/*
-.scoreboard {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 22px;
-  margin: 12px 0 20px;
-  font-family: "Segoe UI", sans-serif;
-}
-
-.score-block {
-  background: blue;
-  padding: 8px 18px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  text-align: center;
-  min-width: 80px;
-  transition: transform 0.2s ease;
-}
-
-.score-block .label {
-  font-size: 14px;
-  opacity: 0.6;
-}
-
-.score-block .value {
-  font-size: 28px;
-  font-weight: 700;
-  margin-top: 2px;
-}
-
-.divider {
-  font-size: 20px;
-  opacity: 0.5;
-}
-
-
-.score-bump {
-  animation: bump 0.3s ease;
-}
-
-@keyframes bump {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.25); }
-  100% { transform: scale(1); }
-}
-*/
 .scoreboard {
     display: flex;
 /*     display: inline-flex;*/ /* or inline-block */
