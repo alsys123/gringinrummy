@@ -167,10 +167,55 @@ function markPlayerLayoffCards(layoffCards) {
 	    //      console.log("ADDING CLASS to", cardId);
 	    div.classList.add("layoff-used");
 	    
-	    console.log("Computed transform:", getComputedStyle(div).transform);
+//	    console.log("Computed transform:", getComputedStyle(div).transform);
 	    
 	}
     }
     
 } //markPlayerLayoffCards
 
+/*
+//markCPULayoffCards
+function markCPULayoffCards(layoffCards) {
+    console.log("in mark: ", layoffCards);
+    
+    const layoffIds = new Set(layoffCards.map(c => c.id));
+
+    const cpuHandDiv = document.getElementById("cpu-hand");
+    const cardDivs   = cpuHandDiv.querySelectorAll(".cpu-card");
+
+    for (const div of cardDivs) {
+        const cardId = div.dataset.id;
+
+        if (layoffIds.has(cardId)) {
+            div.classList.add("layoff-used-cpu");
+
+            console.log(
+                "CPU card transform:",
+                getComputedStyle(div).transform
+
+            );
+        }
+    }
+    } //markCPULayoffCards
+*/
+
+function markCPULayoffCards(layoffCards) {
+    const layoffIds = new Set(layoffCards.map(c => c.id));
+
+    const cpuHandDiv = document.getElementById("cpu-hand");
+    const outerCards = cpuHandDiv.querySelectorAll(".card");
+
+    for (const outer of outerCards) {
+        const face = outer.querySelector(".player-card"); // inner cardFace
+        if (!face) continue;
+
+        const cardId = face.dataset.id;
+
+        if (layoffIds.has(cardId)) {
+            // Store original top so we can offset from it
+            outer.style.setProperty("--cpu-card-top", outer.style.top);
+            outer.classList.add("layoff-used-cpu");
+        }
+    }
+}

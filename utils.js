@@ -305,7 +305,7 @@ function scoreBoardDetails() {
     return;
   }
 
-    let out = "Detailed Score Board" + "\n" + "\n";
+    let out = "--- Detailed Score Board ---" + "\n" + "\n";
     
 
     let deadwoodThisGame;
@@ -316,13 +316,27 @@ function scoreBoardDetails() {
     let runningLine = "";
     
     detailedMatchScore.games.forEach(g => {
+	bonusLine = "";  // initialize it
+
+	// ??? conditions need to be finished.. like for bonus
+
 	
-	if (g.bonus.bonus === 0 && g.layoff.player === 0 && g.layoff.cpu === 0) {
-	    bonusLine = "";
-	} else {
-	    bonusLine = `Bonus: ${g.bonus.bonus} ${g.bonus.type}   ` +
-		`Layoffs: ${g.layoff.player} ${g.layoff.cpu}` + "\n";
+	if (g.layoff > 0 && g.who === "player" && g.winner === "player" && g.type == "knock") {
+	    bonusLine = `CPU Deadwood is ${g.deadwood.cpu} = ` +
+		`${g.originalDeadwood} - ${g.layoff} layoff` + "\n";
 	}
+	if (g.layoff > 0 && g.who === "cpu" && g.winner === "cpu" && g.type == "knock") {
+	    bonusLine = `Player Deadwood is ${g.deadwood.player} = ` +
+		`${g.originalDeadwood} - ${g.layoff} layoff` + "\n";
+	}
+	
+	    
+//	if (g.bonus.bonus === 0 && g.layoff === 0 ) {
+//	    bonusLine = "";
+//	} else {
+//	    bonusLine = `Bonus: ${g.bonus.bonus} ${g.bonus.type}   ` +
+//		`Layoffs: ${g.layoff} ` + "\n";
+//	}
 	
 	if (g.winner === "player") {
 	    runningLine = `Running: ${g.accumulated.player} (${lastPlayer} + ${g.pointsThisGame})  vs  ${g.accumulated.cpu}`;

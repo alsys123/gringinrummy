@@ -346,6 +346,9 @@ function placeCpuItem(type, card, slot, container) {
             face.style.position = "absolute";
             face.style.left = "0px";
             face.style.top = "0px";
+
+	    face.classList.add("cpu-card"); // new to show layoff
+	    
             div.appendChild(face);
         }
     }

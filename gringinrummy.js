@@ -223,7 +223,8 @@ function applyScoring(result) {
 	result.points = 0;
 	updateScoreboard();
 
-	addGameToDetailsScore(result.winner,result.type,result.who,result.pDW,result.cDW);
+	addGameToDetailsScore(result.winner, result.type, result.who,
+			      result.pDW,result.cDW, result.layoff, result.OriginalDW);
 
 	return result;
     }
@@ -244,7 +245,8 @@ function applyScoring(result) {
     matchScore[result.winner] += points;
     updateScoreboard();
     
-    addGameToDetailsScore(result.winner,result.type,result.who,result.pDW,result.cDW);
+    addGameToDetailsScore(result.winner, result.type, result.who,
+			  result.pDW, result.cDW, result.layoff, result.OriginalDW);
     
     result.points = points;
 
@@ -253,7 +255,7 @@ function applyScoring(result) {
 } //applyScoring
 
 //__addGameToDetailsScore
-function addGameToDetailsScore(winner, type, who, pDW, cDW) {
+function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, OriginalDW) {
     // Determine bonus points
     let bonus = 0;
     let pointsThisGame = 0;
@@ -295,9 +297,10 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW) {
 	winner, type, who,
 	deadwood: {player: pDW, cpu: cDW, diff: dDW },
 	bonus: { bonus, type },
-	layoff: {player: 0, cpu: 0 },
+	layoff: newLayoff,
 	pointsThisGame,
-	accumulated: {player: pPoints, cpu: cPoints}
+	accumulated: {player: pPoints, cpu: cPoints},
+	originalDeadwood: OriginalDW
     };
     
     // Store it
@@ -309,6 +312,7 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW) {
 // maybe here  ... game.revealCpu = "true"
 function showHandTally(result) {
 
+    pointsThisHandCalc = "";
 //    console.log("Result: ", result);
     //    const actor = result.who;
     
@@ -350,17 +354,31 @@ function showHandTally(result) {
     cpuDeadwoodLine  = `CPU deadwood: ${result.cDW}`;
 
 //    console.log("show it: ", actor, result.layoff, type);
-    
+
+    // about player layoffs
     if (actor === "cpu" && result.layoff > 0 && type === "knock") {
 	yourDeadwoodLine = `Your deadwood: ${result.pDW}` +
 	    ` (${result.OriginalDW} - ${result.layoff} layoffs)`;
     }
     
-    
+    if (actor === "cpu" && type === "knock" &&
+	result.winner === "cpu") {
+	pointsThisHandCalc =
+	    " = ( " + `${result.pDW} - ${result.cDW}` + " )";
+    }
+
+    // about CPU layoffs
     if (actor === "player" && result.layoff > 0 && type === "knock") {
 	cpuDeadwoodLine  = `CPU deadwood: ${result.cDW}` +
 	    ` (${result.OriginalDW} - ${result.layoff} layoffs)`;
+	pointsThisHandCalc =
+	    " = ( " + `${result.cDW} - ${result.pDW}` + " )";
+    } 
 
+    if (actor === "player" && type === "knock" &&
+	result.winner === "player") {
+	pointsThisHandCalc =
+	    " = ( " + `${result.cDW} - ${result.pDW}` + " )";
     } 
     
     const tally =
@@ -368,7 +386,8 @@ function showHandTally(result) {
 	  yourDeadwoodLine + "\n" +
 	  cpuDeadwoodLine  + "\n" +
 	  "\n" +
-	  `Points this hand: ${result.points}\n\n` +
+	  `Points this hand: ${result.points} ` +
+	  pointsThisHandCalc + "\n\n" +
 	  `Match Score:\n` +
 	  `You: ${matchScore.player}\n` +
 	  `CPU: ${matchScore.cpu}`;
@@ -376,6 +395,7 @@ function showHandTally(result) {
     //     alert(tally);
     showMessage(tally);
     //      showMessage("We have a tally");
+
     
 } //showHandTally
 
@@ -521,10 +541,10 @@ function start() {
       //   log("New hand started.");
 
     // test data
-//      addGameToDetailsScore("player","knock", "player",  8,  35);
-//      addGameToDetailsScore("cpu",   "knock", "cpu",    15,   9);
-//      addGameToDetailsScore("cpu",   "knock", "cpu",    15,   9);
-//      addGameToDetailsScore("cpu",   "Gin", "cpu",    45,   0);
+//    addGameToDetailsScore("player","knock", "player",  8,  35,  3, 38);
+//    addGameToDetailsScore("cpu",   "knock", "cpu",    15,   9,  0, 9);
+//    addGameToDetailsScore("cpu",   "knock", "cpu",    0,   9,  6, 15);
+//    addGameToDetailsScore("cpu",   "Gin",   "cpu",    45,   0,  0, 0);
       
     render();
 }//start
@@ -645,9 +665,9 @@ function playerKnock() {
     const layoffCards     = getLayoffs(CpuDeadwood, playerMeldCards);
     const layoffTotal     = layoffValue(layoffCards);
 
-//    console.log( playerMeldCards,CpuDeadwood,layoffCards,layoffTotal)'
+//    console.log( playerMeldCards, CpuDeadwood, layoffCards, layoffTotal)
 
-//    markCPULayoffCards(layoffCards);  // pop the cards up to show a layoff
+    markCPULayoffCards(layoffCards);  // pop the cards up to show a layoff
      
     cDW = cDW - layoffTotal;
    
@@ -668,7 +688,7 @@ function playerKnock() {
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
-	setMsg("Hand over. Click New Hand to play again.");
+    setMsg("Hand over. Click New Hand to play again.");
 
 //    render();  out for now
   } // playerKnock

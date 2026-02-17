@@ -323,6 +323,12 @@ h1 {
       padding-left: 600px;
   }
 
+.card.layoff-used-cpu {
+    top: calc(var(--cpu-card-top, 0px) + 40px) !important;
+    transition: top 0.2s ease;
+    z-index: 999;
+}
+
   .corner {
     position: absolute;
     top: 4px;
