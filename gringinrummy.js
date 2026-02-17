@@ -429,14 +429,17 @@ function showHandTally(result) {
   ------------------------------ */
 
 
-    //__ updateButtons
-    function updateButtons() {
-	
+//__ updateButtons
+function updateButtons() {
+
+    
 //	console.log("updateButtons game.turn = ",game.turn );
 	
 	const t = game.turn === "player";
 	const p = game.phase;
-	
+
+//    showMessage(`${t} and phase ${p} .. in updateButtons`);
+    
 //	el.btnKnock.disabled = true;
 	//	el.btnGin.disabled   = true;
 	//hide
@@ -633,7 +636,7 @@ function playerDiscard(id) {
       setMsg("Hand over. Click New Hand to play again.");
 
     render();
-  }
+  } //stockDepletionResolution
 
   /* ------------------------------
      Knock + Gin
@@ -647,7 +650,6 @@ function playerKnock() {
     let cDW = cEval.deadwood;
     
     const pDW = pEval.deadwood; 
-    
     const origCDW = cDW;
 
     game.revealCpu = true;
@@ -685,12 +687,17 @@ function playerKnock() {
 	OriginalDW: origCDW
     });
 
+    let msg;
+    log(msg);
+    
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
     setMsg("Hand over. Click New Hand to play again.");
 
-//    render();  out for now
+    updateButtons();
+    
+//    render(); // out for now
   } // playerKnock
 
 function playerGin() {
@@ -1144,13 +1151,13 @@ document.querySelector(".scoreboard").addEventListener("click", () => {
 });
 
 document.getElementById("title").addEventListener("click", () => {
-//    window.open("gameRules.pdf", "_blank");
     document.getElementById("title").addEventListener("click", () => {
-	const extra = document.getElementById("modal-extra");
-	extra.innerHTML = `
-        <iframe src="gameRules.pdf" style="width:100%; height:70vh; border:none;"></iframe>
-    `;
-	showMessage("Game Rules");
+//	const extra = document.getElementById("modal-extra");
+//	extra.innerHTML = `
+//        <iframe src="gameRules.pdf" style="width:100%; height:70vh; border:none;"></iframe>
+//    `;
+	//	showMessage("Game Rules");
+	showRules();
     });
     
 });

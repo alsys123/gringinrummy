@@ -257,6 +257,8 @@ function render() {
       el.discard.innerHTML = "<span>EMPTY</span>";
     }
 
+//    showMessage("update buttons in render");
+    
      updateButtons();
   } // render
 
