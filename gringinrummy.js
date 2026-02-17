@@ -152,7 +152,7 @@ function cardFace(c) {
 
     }
     if (gCardDeck === 'simple') {
-	div.style.backgroundImage = `url('images/cards/Simple/${c.suit}${rankCodeUpper}.png')`;
+	div.style.backgroundImage = `url('images/cards/Simple/${c.suit}${rankCode}.png')`;
 	document.documentElement.style.setProperty("--card-height", "160px");
 
     }
