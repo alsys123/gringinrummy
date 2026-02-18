@@ -43,54 +43,34 @@
 
       </div>
       
+      <div id="modal" class="modal">
+	<div class="modal-content">
+	  <span id="modal-text"></span>
+	  
+	  <!-- Dynamic content goes here -->
+	  <div id="modal-extra"></div> 
+	  
+	  <center><button onclick="closeModal()">OK</button></center>
+	</div>
+      </div>
       
-	  <div id="table">
-
-	    <!--  see if this works
-	    <div class="row">
-	      <div id="cpu-hand" class="hand"></div>
-	    </div>
-	    -->
-	    
-	    <!--
-            <div style="text-align:center; margin-top:8px;">
-	      <button id="btn-knock" style="display:none">Knock</button>
-	      <button id="btn-gin"   style="display:none">Gin</button>
-	    </div>
--->	    
-	    <div id="deadwood-info">Deadwood: –</div>
-	    <div id="log" hidden></div>
-	    
-	    <div id="center-area">
-	      <div>
-		<div id="stock" class="card back"></div>
-		<div><span id="stock-count"></span></div>
-	      </div>
-	      <div>
-		<div id="discard-top" class="card back"><span>Discard EMPTY</span></div>
-		<div></div>
-	      </div>
-	    </div>
-	    
-	    <div class="row">
-<!--	      <div id="player-hand" class="hand"></div> -->
-	    </div>
-	    	    
-	  </div>
-
-	  <div id="modal" class="modal">
-	    <div class="modal-content">
-	      <span id="modal-text"></span>
-
-	      <!-- Dynamic content goes here -->
-	      <div id="modal-extra"></div> 
-
-	      <center><button onclick="closeModal()">OK</button></center>
-	    </div>
-	  </div>
-	  
-	  
-	  <div id="star-tl" class="star">🥹</div>
+      <div id="center-area">
+	<div>
+	  <div id="stock" class="card back"></div>
+	  <div><span id="stock-count"></span></div>
+	</div>
+	<div>
+	  <div id="discard-top" class="card back"><span>Discard EMPTY</span></div>
+	  <div></div>
+	</div>
+      </div>
+      
+      <div id="deadwood-info">Deadwood: –</div>
+      
+      <div id="log" hidden></div>
+      
+      
+      <div id="star-tl" class="star">🥹</div>
 	  <div id="star-tr" class="star">★</div>
 	  <div id="star-bl" class="star">★</div>
 	  <div id="star-br" class="star">★</div>

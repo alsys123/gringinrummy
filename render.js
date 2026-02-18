@@ -77,7 +77,7 @@ function render() {
 	  const total = sorted.length;
 	  const center = (total - 1) / 2;
 	  // Curve amount (vertical arc)
-	  const curveStrength = 18;   // higher = more curve
+	  const curveStrength = 30;   // higher = more curve
 	  // Rotation amount
 	  const maxAngle = 12;        // degrees at far edges
 	  // Compute relative index from center

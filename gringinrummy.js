@@ -382,13 +382,21 @@ function showHandTally(result) {
 	pointsThisHandCalc =
 	    " = ( " + `${result.cDW} - ${result.pDW}` + " )";
     } 
+
+    if (actor === "cpu" && result.type === "gin") {
+	pointsThisHandCalc = " = ( " + `${result.pDW} + 25 Bonus points for gin` + " )";
+    }
     
+    if (actor === "player" && result.type === "gin") {
+	pointsThisHandCalc = " = ( " + `${result.cDW} + 25 Bonus points for gin` + " )";
+    }
+
     const tally =
 	  `${title}\n\n` +
 	  yourDeadwoodLine + "\n" +
 	  cpuDeadwoodLine  + "\n" +
 	  "\n" +
-	  `Points this hand: ${result.points} ` +
+	  `Points this hand: ${result.points} ` + 
 	  pointsThisHandCalc + "\n\n" +
 	  `Match Score:\n` +
 	  `You: ${matchScore.player}\n` +
@@ -627,13 +635,13 @@ function playerDiscard(id) {
     if (pDW < cDW) winner = "player";
     else if (pDW > cDW) winner = "cpu";
 
-    const scored = applyScoring({
-      winner,
-      type: "stock",
-      pDW,
-	cDW,
+      const scored = applyScoring({
+	  winner,
+	  type: "stock",
+	  pDW,
+	  cDW,
 	who: "na"
-    });
+      });
 
 //      console.log("ehh ..show cpu prepre!",game.revealCpu);
 	 
@@ -842,14 +850,14 @@ function playerGin() {
     const pEval = evaluate(game.player);
     const pDW = pEval.deadwood;
 
-    const scored = applyScoring({
-      winner: "cpu",
-      type: "gin",
-      pDW,
-	cDW: 0,
-	who: "cpu"
-    });
-
+      const scored = applyScoring({
+	  winner: "cpu",
+	  type: "gin",
+	  pDW,
+	  cDW: 0,
+	  who: "cpu"
+      });
+      
       log("CPU went Gin.");
       game.revealCpu = true;
 
@@ -1091,20 +1099,23 @@ function layoutTitle() {
 window.addEventListener("load",   layoutTitle);
 window.addEventListener("resize", layoutTitle);
 
+// New Game
 //__ layoutButton
 function layoutButton() {
+    return;   // delete me soon!!!
+    /*
     const btn = document.getElementById("btn-new");
     const w = window.innerWidth;
     const h = window.innerHeight;
     const margin = 0.05; // 0.05 is 5% .. take into account button size
     
     const bw = btn.offsetWidth;
-     const bh = btn.offsetHeight;
+    const bh = btn.offsetHeight;
 
     //  title.style.position = "absolute";
     btn.style.left = (w * (1 - margin) - bw) + "px";
     btn.style.top = (h * 0.5 - bh / 2) + "px";
-    
+*/    
 }//layoutButton
 
 window.addEventListener("load", layoutButton);
@@ -1113,7 +1124,8 @@ window.addEventListener("resize", layoutButton);
 // knock
 //__ layoutButton
 function layoutButtonKnock() {
-    const btn = document.getElementById("btn-knock");
+    return;   // delete me soon!!!
+/*    const btn = document.getElementById("btn-knock");
     const w = window.innerWidth;
     const h = window.innerHeight;
     const margin = 0.05; // 0.05 is 5% .. take into account button size
@@ -1124,7 +1136,7 @@ function layoutButtonKnock() {
     //  title.style.position = "absolute";
     btn.style.left = (w * (1 - margin) - bw - extraOffset) + "px";
     btn.style.top = (h * 0.5 - bh / 2) + "px";
-    
+*/    
 }//layoutButton
 
 window.addEventListener("load", layoutButtonKnock);
@@ -1133,7 +1145,8 @@ window.addEventListener("resize", layoutButtonKnock);
 //gin
 //__ layoutButtonGin
 function layoutButtonGin() {
-    const btn = document.getElementById("btn-gin");
+    return;   // delete me soon!!!
+/*    const btn = document.getElementById("btn-gin");
     const w = window.innerWidth;
     const h = window.innerHeight;
     const margin = 0.05; // 0.05 is 5% .. take into account button size
@@ -1144,7 +1157,7 @@ function layoutButtonGin() {
     //  title.style.position = "absolute";
     btn.style.left = (w * (1 - margin) - bw - extraOffset) + "px";
     btn.style.top = (h * 0.5 - bh / 2) + "px";
-    
+*/    
 }//layoutButtonGin
 
 window.addEventListener("load", layoutButtonGin);

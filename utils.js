@@ -343,13 +343,21 @@ function scoreBoardDetails() {
 	} else {
 	    runningLine = `Running: ${g.accumulated.player}  vs  ${g.accumulated.cpu} (${lastCpu} + ${g.pointsThisGame})`;
 	}
-				     
+
+	let calcLine = `${g.deadwood.player} vs ${g.deadwood.cpu} ➜ ${g.deadwood.diff}`;
+	if (g.type === "gin" && g.winner === "player") {
+	    calcLine = `${g.deadwood.cpu} + 25 points bonus for GIN`;
+	}
+	if (g.type === "gin" && g.winner === "cpu") {
+	    calcLine = `${g.deadwood.player} + 25 points bonus for GIN`;
+	}
+
 	out += "____" + "\n";
 	out += `Game ${g.gameNumber}: ${g.winner.toUpperCase()} wins! ` +
 	    `( ${g.type} by ${g.who} )` + "\n";
 	
-	out += `${g.deadwood.player} vs ${g.deadwood.cpu} ➜ ${g.deadwood.diff}` + "\n" ;
-	
+//	out += `${g.deadwood.player} vs ${g.deadwood.cpu} ➜ ${g.deadwood.diff}` + "\n" ;
+	out += calcLine + "\n" ;
 	out += bonusLine;
 	
 	out += `${g.winner} gets ${g.pointsThisGame} points` + "\n";
