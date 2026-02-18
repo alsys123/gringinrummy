@@ -302,10 +302,29 @@ h1 {
   transform-origin: top left;
 }
 
+/*
 .card.just-drawn {
   border-color: #ffb400;
-  box-shadow: 0 0 20px #ffb400;
+  box-shadow: 0 0 40px #ffb400;
   transform: scale(1.1);
+}
+*/
+/*
+.card.just-drawn {
+    outline: 5px solid #ffb400;
+    outline-offset: -4px;
+    border-color: #ffb400;
+    box-shadow: 0 0 18px #ffb400;
+    transform: scale(1.1);
+}
+*/
+.card.just-drawn {
+    transform: scale(1.12);
+    border-color: #ffb400;
+    outline: 4px solid #ffb400;
+    outline-offset: -3px;
+    box-shadow: 0 0 25px rgba(255, 180, 0, 0.8);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
   .card.player-card {
