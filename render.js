@@ -69,7 +69,10 @@ function render() {
 //    const totalWidth = (sorted.length - 1) * effectiveSpacing;
 //    const offset = (window.innerWidth - totalWidth) / 2;
       const offset = 100; // move entire hand right
-      
+
+    const PLAYER_SHIFT_X = -00;   // move left
+    const PLAYER_SHIFT_Y = 20;      // move up/down
+
       for (const c of sorted) {
 	  const isMeld = meldIds.has(c.id);
 
@@ -131,11 +134,14 @@ function render() {
 	  f.style.position = "absolute";
 	  
 	  //    f.style.left = `${offset + i * 95}px`;
-	  f.style.left = `${offset + i * effectiveSpacing}px`;
-	  
+//	  f.style.left = `${offset + i * effectiveSpacing}px`;
+	  f.style.left = `${offset + PLAYER_SHIFT_X + i * effectiveSpacing}px`;
+
 	  //    f.style.left = `${i * 75}px`;
 //	  f.style.top = "400px";
-	  f.style.top = `${400 + yOffset}px`;  // for the curve
+//	 f.style.top = `${400 + yOffset}px`;  // for the curve
+	  f.style.top = `${400 + PLAYER_SHIFT_Y + yOffset}px`;
+
 	  // Rotation
 	  f.style.transform = `rotate(${angle}deg)`;
 	  f.style.transformOrigin = "50% 80%";
@@ -247,12 +253,19 @@ function computeCpuSlots() {
     
     const rightmostX = w - rightMargin - LEFT_SHIFT;
 
+    // ⭐ Add your CPU hand shift here
+    const CPU_SHIFT_X = -60;   // negative = move left, positive = move right
+    const CPU_SHIFT_Y = -100;     // adjust if you want to move up/down
+
     const slots = [];
 
     for (let i = 0; i < SLOTS; i++) {
 	const angle = -((i - (SLOTS - 1) / 2) * ANGLE_STEP);
-	const x = rightmostX + i * SPACING;
-        slots.push({ x, angle, top: topMargin });
+	//	const x = rightmostX + i * SPACING;
+	const x = rightmostX + i * SPACING + CPU_SHIFT_X;
+	const top = topMargin + CPU_SHIFT_Y;
+//        slots.push({ x, angle, top: topMargin });
+        slots.push({ x, angle, top: top });
     }
 
     return slots;
@@ -379,3 +392,40 @@ function logCpuFanBounds(el) {
 
 
 
+/* NOTES on moving content:
+
+   a)    Main Title:
+
+   b)   ScoreBoard: use style.css
+      .scoreboard
+      transform: translateX(-40px)
+      
+      c)  btn-new  use style.css
+          btn-knock
+	  btn-gin
+	  --> left: 90%;
+	      top:  40%;
+
+	      d) cpu cards -- use render.js
+	      computeCpuSlots function
+        // ⭐ Add your CPU hand shift here
+    const CPU_SHIFT_X = -60;   // negative = move left, positive = move right
+    const CPU_SHIFT_Y = -100;     // adjust if you want to move up/down
+
+    e) player cards .. in render.js
+    render():
+    
+    const PLAYER_SHIFT_X = -50;   // move left
+    const PLAYER_SHIFT_Y = 10;    
+
+    f) middle card stack . om style.css
+    #center-area ...
+    margin-left: -175px; 
+  
+
+    g) deadwood diplay .. in style.css
+
+  #deadwood-info ...
+    margin-left: -175px; 
+  
+   */

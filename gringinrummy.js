@@ -340,8 +340,13 @@ function showHandTally(result) {
     const actor  = result.who;      // player, cpu, or na
     const winner = result.winner;  // player, cpu, tie
     const type   = result.type;      // gin, knock, stock
-    
+
     let title = actionText[type][actor];
+
+//    if (result.winner === "cpu" && result.who === "cpu" &&
+//	result.type === "knock") {
+//	title = "CPU Knocked and Won!";
+//    }
     
     // Stock has no winner
     if (type !== "stock") {
@@ -392,6 +397,7 @@ function showHandTally(result) {
     }
 
     const tally =
+	  " - - - Game Card - - - " + "\n" + "\n" +
 	  `${title}\n\n` +
 	  yourDeadwoodLine + "\n" +
 	  cpuDeadwoodLine  + "\n" +
