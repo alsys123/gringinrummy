@@ -148,19 +148,19 @@ function cardFace(c) {
     //    div.style.backgroundImage = `url('images/cards-svg/${rankCodeUpper}${suitCode}.svg')`;
     if (gCardDeck === 'classic') {
 	div.style.backgroundImage = `url('images/cards/Classic/${rankCodeUpper}${suitCode}.svg')`;
-	document.documentElement.style.setProperty("--card-height", "160px");
+//	document.documentElement.style.setProperty("--card-height", "160px");
 
     }
     if (gCardDeck === 'simple') {
 	div.style.backgroundImage = `url('images/cards/Simple/${c.suit}${rankCode}.png')`;
-	document.documentElement.style.setProperty("--card-height", "160px");
+//	document.documentElement.style.setProperty("--card-height", "160px");
 
     }
 
     if (gCardDeck === 'jumbo') {
 	div.style.backgroundImage = `url('images/cards/JumboCards/${rankCodeUpper}${suitCode}.jpg')`;
-	document.documentElement.style.setProperty("--card-height", "154px");
-	document.documentElement.style.setProperty("--card-width", "110px"); 
+//	document.documentElement.style.setProperty("--card-height", "154px");
+//	document.documentElement.style.setProperty("--card-width", "110px"); 
 	
     }
 
@@ -197,15 +197,15 @@ function log(t) {
   }
 
   function updateScoreboard() {
-//    el.scoreboard.textContent =
+      //    el.scoreboard.textContent =
       //      `Score — You: ${matchScore.player} | CPU: ${matchScore.cpu}`;
-  document.getElementById("score-you").textContent = matchScore.player;
-  document.getElementById("score-cpu").textContent = matchScore.cpu;
-
-  // Optional bump animation
-  document.getElementById("score-you").classList.add("score-bump");
-  document.getElementById("score-cpu").classList.add("score-bump");
-
+      document.getElementById("score-you").textContent = matchScore.player;
+      document.getElementById("score-cpu").textContent = matchScore.cpu;
+      
+      // Optional bump animation
+      document.getElementById("score-you").classList.add("score-bump");
+      document.getElementById("score-cpu").classList.add("score-bump");
+      
       setTimeout(() => {
 	  document.getElementById("score-you").classList.remove("score-bump");
 	  document.getElementById("score-cpu").classList.remove("score-bump");
@@ -224,7 +224,8 @@ function applyScoring(result) {
 	updateScoreboard();
 
 	addGameToDetailsScore(result.winner, result.type, result.who,
-			      result.pDW,result.cDW, result.layoff, result.OriginalDW);
+			      result.pDW, result.cDW, result.layoff,
+			      result.originalDW);
 
 	return result;
     }
@@ -246,7 +247,8 @@ function applyScoring(result) {
     updateScoreboard();
     
     addGameToDetailsScore(result.winner, result.type, result.who,
-			  result.pDW, result.cDW, result.layoff, result.OriginalDW);
+			  result.pDW, result.cDW, result.layoff,
+			  result.originalDW);
     
     result.points = points;
 
@@ -255,7 +257,7 @@ function applyScoring(result) {
 } //applyScoring
 
 //__addGameToDetailsScore
-function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, OriginalDW) {
+function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, originalDW) {
     // Determine bonus points
     let bonus = 0;
     let pointsThisGame = 0;
@@ -300,7 +302,7 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, OriginalD
 	layoff: newLayoff,
 	pointsThisGame,
 	accumulated: {player: pPoints, cpu: cPoints},
-	originalDeadwood: OriginalDW
+	originalDW: originalDW
     };
     
     // Store it
@@ -358,7 +360,7 @@ function showHandTally(result) {
     // about player layoffs
     if (actor === "cpu" && result.layoff > 0 && type === "knock") {
 	yourDeadwoodLine = `Your deadwood: ${result.pDW}` +
-	    ` (${result.OriginalDW} - ${result.layoff} layoffs)`;
+	    ` (${result.originalDW} - ${result.layoff} layoffs)`;
     }
     
     if (actor === "cpu" && type === "knock" &&
@@ -370,7 +372,7 @@ function showHandTally(result) {
     // about CPU layoffs
     if (actor === "player" && result.layoff > 0 && type === "knock") {
 	cpuDeadwoodLine  = `CPU deadwood: ${result.cDW}` +
-	    ` (${result.OriginalDW} - ${result.layoff} layoffs)`;
+	    ` (${result.originalDW} - ${result.layoff} layoffs)`;
 	pointsThisHandCalc =
 	    " = ( " + `${result.cDW} - ${result.pDW}` + " )";
     } 
@@ -419,6 +421,8 @@ function showHandTally(result) {
   function resetMatch() {
       matchScore.player = 0;
       matchScore.cpu = 0;
+
+      detailedMatchScore.games = []; // now reset previous scoreboard
 
       updateScoreboard();
       
@@ -513,7 +517,8 @@ function start() {
     game.stock = [];
     game.discard = [];
 
-    detailedMatchScore.games = []; // now reset previous scoreboard
+    // not sure ??? 
+//    detailedMatchScore.games = []; // now reset previous scoreboard
 
     game.turn = "player";
     game.phase = "await-draw";
@@ -544,6 +549,8 @@ function start() {
       //   log("New hand started.");
 
     // test data
+    
+    //winner, type, who, pDW, cDW, layoff, originalDW);
 //    addGameToDetailsScore("player","knock", "player",  8,  35,  3, 38);
 //    addGameToDetailsScore("cpu",   "knock", "cpu",    15,   9,  0, 9);
 //    addGameToDetailsScore("cpu",   "knock", "cpu",    0,   9,  6, 15);
@@ -684,7 +691,7 @@ function playerKnock() {
 	cDW,
 	who: "player",
 	layoff: layoffTotal,
-	OriginalDW: origCDW
+	originalDW: origCDW
     });
 
     let msg;
@@ -889,7 +896,7 @@ function cpuKnock() {
 	cDW,
 	who: "cpu",
 	layoff: layoffTotal,
-	OriginalDW: origPDW
+	originalDW: origPDW
     });
     
     let msg;

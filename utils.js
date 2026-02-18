@@ -3,7 +3,7 @@
      General Backdoor
   ------------------------------ */
 
-const gBackDoorLock = 1;  // when to open/close back door .. 3 is good
+const gBackDoorLock = 3;  // when to open/close back door .. 3 is good
 let   gBackDoorCode = 0;
 let   gBackDoorDir = 1; // +1 going up, -1 going down ... the direction
 
@@ -323,11 +323,11 @@ function scoreBoardDetails() {
 	
 	if (g.layoff > 0 && g.who === "player" && g.winner === "player" && g.type == "knock") {
 	    bonusLine = `CPU Deadwood is ${g.deadwood.cpu} = ` +
-		`${g.originalDeadwood} - ${g.layoff} layoff` + "\n";
+		`${g.originalDW} - ${g.layoff} layoff` + "\n";
 	}
 	if (g.layoff > 0 && g.who === "cpu" && g.winner === "cpu" && g.type == "knock") {
 	    bonusLine = `Player Deadwood is ${g.deadwood.player} = ` +
-		`${g.originalDeadwood} - ${g.layoff} layoff` + "\n";
+		`${g.originalDW} - ${g.layoff} layoff` + "\n";
 	}
 	
 	    
@@ -438,21 +438,17 @@ function showDocumentViewer(pages) {
 
     const pageLabels = [
 	"About",
-    "Contents",
-    "Intro",
-    "Deck",
+	"Contents",
+	"Intro",
+	"Deck",
 	"Objective",
 	"Deal",
-    "Play",
-    "Knocking",
-    "Big Gin",
-    "Scoring",
-    "Knock Points",
-    "Gin Bonus",
-    "Undercut",
-    "Game Bonus",
-    "Shutout Bonus"
-];
+	"Play",
+	"Knocking",
+	"Big Gin",
+	"Scoring",
+	"Undercut"
+    ];
 
     const pager = document.createElement("div");
     pager.style.display = "flex";
@@ -528,7 +524,7 @@ function showDocumentViewer(pages) {
     extra.appendChild(nav);
 
     updatePage();
-    showMessage("Document Viewer");
+    showMessage("Gin Rummy Rules");
 }//showDocumentViewer
 
 function showRules() {
@@ -537,22 +533,20 @@ function showRules() {
 	    "Gin Rummy. It explains the flow of the game, how cards are dealt, how turns work," + "\n" +
 	    "how to knock, how scoring is calculated, and the special rules such as Gin, Big Gin," + "\n" +
 	    "and undercuts. Whether you are new to the game or brushing up on the rules, this" + "\n" +
-	    "guide will walk you through everything you need to know. (version 3, Feb 17, 2026)\n\n",
+	    "guide will walk you through everything you need to know. (version 4, Feb 18, 2026)\n\n",
 	
 	"TABLE OF CONTENTS:" + "\n" +
 	    "1. Intro – Overview of Gin Rummy and its popularity." + "\n" +
-	    "2. Objective – What players are trying to achieve." + "\n" +
-	    "3. Deck – Card ranks and deck structure." + "\n" +
+	    "2. Deck – Card ranks and deck structure." + "\n" +
+	    "3. Objective – What players are trying to achieve." + "\n" +
 	    "4. Deal – How cards are dealt and how rounds begin." + "\n" +
 	    "5. Play – Turn structure, drawing, discarding, and round flow." + "\n" +
 	    "6. Knocking – How a hand ends and how deadwood is handled." + "\n" +
 	    "7. Big Gin – Special 11‑card Gin rule and scoring." + "\n" +
 	    "8. Scoring – Deadwood values and point calculations." + "\n" +
-	    "9. Knock Points – Scoring when knocking with deadwood." + "\n" +
-	    "10. Gin Bonus – Bonus points for going Gin." + "\n" +
-	    "11. Undercut – When the defender beats the knocker." + "\n" +
-	    "12. Game Bonus – End‑of‑game scoring and line bonuses." + "\n" +
-	    "13. Shutout Bonus – Special rule for winning every hand." + "\n\n",
+	    "   - Knock Points: Scoring when knocking with deadwood." + "\n" +
+	    "   - Gin Bonus:    Bonus points for going Gin." + "\n" +
+	    "9. Undercut – When the defender beats the knocker." + "\n" + "\n\n",
 	
 	"INTRO: Gin Rummy is a two-player card game that has enjoyed widespread popularity as" + "\n" +
 	    "both a social and gambling game, especially during the mid twentieth century. It" + "\n" +
@@ -587,7 +581,7 @@ function showRules() {
 	    "who draws the face-up card may not discard that same card." + "\n\n" +
 	    "Players alternate turns until one player ends the round by knocking, or until only two" + "\n" +
 	    "cards remain in the stock pile, in which case the round ends in a draw. The game ends" + "\n" +
-	    "when a player reaches 100 or more points (or another agreed-upon amount).\n\n",
+	    "when a player reaches 100 or more points.\n\n",
 	
 	"KNOCKING: In standard Gin, a player with 10 or fewer points of deadwood may knock," + "\n" +
 	    "immediately ending the hand. Knocking with no deadwood is called going Gin, while" + "\n" +
@@ -615,12 +609,12 @@ function showRules() {
 	"SCORING: Aces count as 1 point, face cards as 10, and all other cards at their" + "\n" +
 	    "numerical values. Deadwood is the total point value of all cards not included in" + "\n" +
 	    "melds. The difference in deadwood between the two players determines the score" + "\n" +
-	    "awarded for the hand.\n\n",
+	    "awarded for the hand.\n\n" +
 	
 	"KNOCK POINTS: After a player knocks and layoffs are made, the knocker scores the" + "\n" +
 	    "difference between the two deadwood counts. For example, if a player knocks with 8" + "\n" +
 	    "deadwood and the defender has 10 after laying off, the knocker scores 2 points." + "\n" +
-	    "If a player knocks before any cards are accepted, it is considered a misdeal.\n\n",
+	    "If a player knocks before any cards are accepted, it is considered a misdeal.\n\n" +
 	
 	"GIN BONUS: A player who goes Gin (ending the hand with no deadwood) receives a" + "\n" +
 	    "bonus of 25 points plus the entire count of deadwood in the opponent's hand. The" + "\n" +
@@ -630,18 +624,8 @@ function showRules() {
 	    "than or equal to that of the knocker. The defender scores the difference plus an" + "\n" +
 	    "undercut bonus (commonly 25 points, though some rules use 20 or 10). An undercut" + "\n" +
 	    "may occur either before or after the defender lays off cards. A knocker can never" + "\n" +
-	    "lay off their own deadwood into the defender's melds.\n\n",
+	    "lay off their own deadwood into the defender's melds.\n\n"
 	
-	"GAME BONUS: When a player reaches 100 points (or another agreed-upon target), the" + "\n" +
-	    "game ends and that player receives a game bonus of 100 points. In some variations," + "\n" +
-	    "a line or box bonus is added at the end of the game, awarding 25 points for each" + "\n" +
-	    "hand won during the match.\n\n",
-	
-	
-	"SHUTOUT BONUS: If a match ends with one player having won every hand, the points" + "\n" +
-	    "for each hand are doubled before adding the line bonus. In some variations, if a" + "\n" +
-	    "match ends with one player ahead by exactly 50 points, that player automatically" + "\n" +
-	    "loses the match.\n\n"
     ];
     
     showDocumentViewer(pages);
