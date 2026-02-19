@@ -217,8 +217,9 @@ h1 {
   
   .player-card.layoff-used {
   top: 375px !important;  
-  transition: top 0.2s ease;
+/*  transition: top 0.2s ease;
   z-index: 999;
+*/
   outline: 6px solid #ffe58f;
   }
    
@@ -347,13 +348,13 @@ h1 {
   display: inline-block;
 }
 
-  /*
+  
 .meld-gap-between {
-    width: 100px;   
+    width: 50px;   
     height: 1px;
     pointer-events: none;
 }
- */
+ 
   
   /*
 .meld-gap {
@@ -500,13 +501,22 @@ h1 {
 /*  font-family: "Courier New", monospace;  */
   white-space: pre; /* preserves alignment and newlines */
 }
-
+/*
 .modal-header {
   padding: 8px;
   background: #444;
   color: white;
   cursor: move;
   user-select: none;
+}
+*/
+.modal-header {
+    cursor: move;
+    touch-action: none;
+    user-select: none;
+    padding: 8px;
+    background: #444;
+    color: white;
 }
 
 #player {

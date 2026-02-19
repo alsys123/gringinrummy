@@ -789,7 +789,7 @@ function playerGin() {
      CPU Turn + AI
   ------------------------------ */
 
-  function cpuTurn() {
+  async function cpuTurn() {
     if (game.phase === "round-over") return;
 
     const evalCpu = evaluate(game.cpu);
@@ -813,7 +813,8 @@ function playerGin() {
       if (evalWith.deadwood + 1 <= cDW) {
         drawn = game.discard.pop();
           log("CPU drew " + prettyCard(drawn) + " from discard.");
-//	   animateCpuTakeFromDiscard(drawn);
+
+	  //	   animateCpuTakeFromDiscard(drawn);
       }
     }// if from topDiscard
       
@@ -827,7 +828,9 @@ function playerGin() {
 	log("CPU drew from stock.");
     }
       
-    game.cpu.push(drawn);
+      game.cpu.push(drawn);
+      
+//      await sleep(3000);
 
     const idx = cpuChooseDiscardIndex();
     const [d] = game.cpu.splice(idx,1);
@@ -848,7 +851,10 @@ function playerGin() {
       game.turn = "player";
       game.phase = "await-draw";
       setMsg("Draw from stock or discard.");
-      
+
+      updateButtons();
+      await sleep(1000);
+
       render();
       
       
@@ -1219,38 +1225,3 @@ document.getElementById("title").addEventListener("click", () => {
     
 });
 
-makeModalDraggable(document.getElementById("modal-content"), 
-                   document.getElementById("modal-header"));
-
-function makeModalDraggable(modal, handle) {
-    let offsetX = 0, offsetY = 0, startX = 0, startY = 0;
-
-    handle.onmousedown = dragStart;
-
-    function dragStart(e) {
-        e.preventDefault();
-        startX = e.clientX;
-        startY = e.clientY;
-
-        document.onmousemove = dragMove;
-        document.onmouseup = dragEnd;
-    }
-
-    function dragMove(e) {
-        e.preventDefault();
-        offsetX = e.clientX - startX;
-        offsetY = e.clientY - startY;
-
-        startX = e.clientX;
-        startY = e.clientY;
-
-        modal.style.top = (modal.offsetTop + offsetY) + "px";
-        modal.style.left = (modal.offsetLeft + offsetX) + "px";
-        modal.style.position = "absolute";
-    }
-
-    function dragEnd() {
-        document.onmousemove = null;
-        document.onmouseup = null;
-    }
-}

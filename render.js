@@ -63,7 +63,8 @@ function render() {
     let gapInserted = false;
 //      gapInserted = false;
     let i= 0;
-
+    let idx = 0; // for meld group spacing
+    
     // center the cards
 //    const effectiveSpacing = 70 * scale; // adjust for overlap
 //    const totalWidth = (sorted.length - 1) * effectiveSpacing;
@@ -72,6 +73,12 @@ function render() {
 
     const PLAYER_SHIFT_X = -00;   // move left
     const PLAYER_SHIFT_Y = 20;      // move up/down
+
+// This is for meld group spacing    
+const groupIndex = new Map();
+evalPlayer.melds.forEach((group, idx) => {
+    group.forEach(i => groupIndex.set(game.player[i].id, idx));
+});
 
       for (const c of sorted) {
 	  const isMeld = meldIds.has(c.id);
@@ -85,7 +92,8 @@ function render() {
 	  // Rotation amount
 	  const maxAngle = 12;        // degrees at far edges
 	  // Compute relative index from center
-	  const rel = i - center;
+// is working...	  const rel = i - center;
+	  const rel = idx - center;
 	  // Vertical curve (parabolic)
 	  const yOffset = - (curveStrength * (1 - Math.pow(rel / center, 2))); 
 	  // Middle goes up, edges go down
@@ -130,26 +138,6 @@ function render() {
               gapInserted = true;
 	  } // if: !isMeld && !gapInserted
 
-	  /*
-	  	  // Insert a gap BETWEEN meld groups
-if (isMeld) {
-    const nextCard = sorted[i + 1];
-    const nextIsMeld = nextCard && meldIds.has(nextCard.id);
-
-    // If this meld ends and the next card is ALSO a meld group
-    if (!nextIsMeld && nextCard && meldIds.has(nextCard.id)) {
-        const gap = document.createElement("div");
-        gap.className = "meld-gap-between";
-        gap.style.position = "absolute";
-        gap.style.left = `${offset + (i + 1) * effectiveSpacing}px`;
-        gap.style.top = `${400}px`;
-        el.player.appendChild(gap);
-
-//        i++;
-	 i += 1.5; // ⭐ THIS controls the actual gap size
-    }
-}
-*/
 	  
 	  // Insert a gap AFTER a meld group
 	  const f = cardFace(c);
@@ -158,7 +146,9 @@ if (isMeld) {
 	  f.style.position = "absolute";
 	  
 	  //    f.style.left = `${offset + i * 95}px`;
-//	  f.style.left = `${offset + i * effectiveSpacing}px`;
+	  //	  f.style.left = `${offset + i * effectiveSpacing}px`;
+	  	  
+
 	  f.style.left = `${offset + PLAYER_SHIFT_X + i * effectiveSpacing}px`;
 
 	  //    f.style.left = `${i * 75}px`;
@@ -179,20 +169,47 @@ if (isMeld) {
 	  }
 	  
 	  
-	  i++;
-
+//	  i++;
+//	  idx++; // for gap group spacing
+	  
 	  // open backdoor
 	  f.ondblclick = () => openCloseBackDoor();
 
 	  // append ONCE
 	  el.player.appendChild(f);
+	  
+  // Insert a gap BETWEEN meld groups
+if (isMeld) {
+    const nextCard = sorted[idx+1];
+    if (nextCard && meldIds.has(nextCard.id)) {
+        // both are melds — check if they are different groups
+        const thisGroup = groupIndex.get(c.id);
+        const nextGroup = groupIndex.get(nextCard.id);
+
+        if (thisGroup !== nextGroup) {
+            const gap = document.createElement("div");
+            gap.className = "meld-gap-between";
+            gap.style.position = "absolute";
+            gap.style.left = `${offset + (i + 1) * effectiveSpacing}px`;
+            gap.style.top = `${400 + PLAYER_SHIFT_Y}px`;
+            el.player.appendChild(gap);
+
+            i += 0.5; // actual gap size
+        }
+    }
+}
 
 //	  el.player.appendChild(f);
 
+
+	  i++;
+	  idx++; // for gap group spacing
+
       } // for sorted - the player
       
-      
-
+   renderDiscardAndDeadwood(el, game, evalPlayer);
+   
+/*
       // ====== display deadwook count ======
     el.deadwood.textContent = "Deadwood: " + evalPlayer.deadwood;
 
@@ -212,10 +229,28 @@ if (isMeld) {
     }
 
 //    showMessage("update buttons in render");
+*/
     
      updateButtons();
   } // render
 
+function renderDiscardAndDeadwood(el, game, evalPlayer) {
+    // Deadwood count
+    el.deadwood.textContent = "Deadwood: " + evalPlayer.deadwood;
+
+    // Discard pile
+    if (game.discard.length) {
+        const top = game.discard[game.discard.length - 1];
+        const f = cardFace(top);
+
+        el.discard.innerHTML = "";
+        el.discard.className = "card";
+        el.discard.appendChild(f);
+    } else {
+        el.discard.className = "card back";
+        el.discard.innerHTML = "<span>EMPTY</span>";
+    }
+}
 
 // -- part of render
 // -- area:  866 .  Needed:  680 == normal
