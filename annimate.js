@@ -143,7 +143,7 @@ async function cpuDiscardAnimate(card) {
 //	hover.style.transition = "opacity 0.4s ease, top 0.4s ease";
 	//	hover.style.transition = "opacity 1s ease";
 	// ⭐ Slow, smooth movement (adjust this number)
-	const MOVE_TIME = 4.0; // seconds — make this bigger to slow it down 
+	const MOVE_TIME = 0.50; // seconds — make this bigger to slow it down 
 
 	hover.style.transition =
 	    "opacity 2s cubic-bezier(0.16, 1, 0.3, 1), " +

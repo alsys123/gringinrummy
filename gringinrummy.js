@@ -842,7 +842,7 @@ function playerGin() {
 
      cpuDiscardAnimate(d);  // Animate the discard
 
-      await sleep(1000);
+//      await sleep(1000);
       
      game.discard.push(d);
 
@@ -855,7 +855,7 @@ function playerGin() {
       setMsg("Draw from stock or discard.");
 
       updateButtons();
-//      await sleep(1000);
+      await sleep(1000);
 
      render();
       
