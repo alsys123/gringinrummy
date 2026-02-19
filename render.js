@@ -68,13 +68,14 @@ function render() {
 //    const effectiveSpacing = 70 * scale; // adjust for overlap
 //    const totalWidth = (sorted.length - 1) * effectiveSpacing;
 //    const offset = (window.innerWidth - totalWidth) / 2;
-      const offset = 100; // move entire hand right
+//      const offset = 100; // move entire hand right
 
     const PLAYER_SHIFT_X = -00;   // move left
     const PLAYER_SHIFT_Y = 20;      // move up/down
 
       for (const c of sorted) {
 	  const isMeld = meldIds.has(c.id);
+
 
 	  // *** Fan parameters  ***
 	  const total = sorted.length;
@@ -107,6 +108,7 @@ function render() {
 //	  const offset = (window.innerWidth - totalWidth) / 2 - cardWidth / 2;
 	  const offset = ((window.innerWidth - totalWidth) / 2 ) - 100;
 
+
 	  
 	  // Insert gap before the first non-meld card
 	  if (!isMeld && !gapInserted) {
@@ -127,7 +129,29 @@ function render() {
 	      
               gapInserted = true;
 	  } // if: !isMeld && !gapInserted
+
+	  /*
+	  	  // Insert a gap BETWEEN meld groups
+if (isMeld) {
+    const nextCard = sorted[i + 1];
+    const nextIsMeld = nextCard && meldIds.has(nextCard.id);
+
+    // If this meld ends and the next card is ALSO a meld group
+    if (!nextIsMeld && nextCard && meldIds.has(nextCard.id)) {
+        const gap = document.createElement("div");
+        gap.className = "meld-gap-between";
+        gap.style.position = "absolute";
+        gap.style.left = `${offset + (i + 1) * effectiveSpacing}px`;
+        gap.style.top = `${400}px`;
+        el.player.appendChild(gap);
+
+//        i++;
+	 i += 1.5; // ⭐ THIS controls the actual gap size
+    }
+}
+*/
 	  
+	  // Insert a gap AFTER a meld group
 	  const f = cardFace(c);
 	  if (isMeld) f.classList.add("meld-card");
 	  // REQUIRED — without this, cards do not appear

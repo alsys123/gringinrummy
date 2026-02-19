@@ -602,7 +602,8 @@ function start() {
 	setMsg("Click a card to discard, or Knock/Gin if available.");
 	render();
   }
-    
+
+//_ playerDiscard
 function playerDiscard(id) {
     if (game.turn!=="player" || game.phase!=="await-discard") return;
     const i = game.player.findIndex(c=>c.id===id);
@@ -616,7 +617,7 @@ function playerDiscard(id) {
     game.drawn = null;
     
     endPlayerTurn();
-}
+} //playerDiscard
 
   function endPlayerTurn() {
     if (game.stock.length <= 2) {
@@ -663,25 +664,55 @@ function playerDiscard(id) {
      Knock + Gin
   ------------------------------ */
 
-    //__ playerKnock
+//__ playerKnock
 function playerKnock() {
     const cEval = evaluate(game.cpu);
-    const pEval = evaluate(game.player);
+    let pEval = evaluate(game.player);
 
     let cDW = cEval.deadwood;
     
-    const pDW = pEval.deadwood; 
-    const origCDW = cDW;
+    let pDW = pEval.deadwood; 
+    let origCDW = cDW;
 
     game.revealCpu = true;
     render();
+
+    /*
+    if (game.player.length > 10) {
+	showMessage("Sorry cannot do anything yet.  Player has more than 10 cards.");
+	return;
+    }
+    */
+    
+    if (game.player.length > 10) {
+	// Auto-discard highest deadwood card
+//	pEval = evaluate(game.player);
+	const deadwoodCards = pEval.deadwoodCards;
+	
+	if (deadwoodCards.length > 0) {
+            // Sort descending by value
+        deadwoodCards.sort((a, b) => b.deadwoodValue - a.deadwoodValue);
+            const highest = deadwoodCards[0];
+	    
+            playerDiscard(highest.id);
+            render(); // update UI
+	}
+
+	// reset these because we just removed a card
+	pEval = evaluate(game.player);
+	pDW = pEval.deadwood; 
+	origCDW = cDW;
+
+    } // if more than 10 cards
+
     
     // not really possible but good to have here.
     if (pEval.deadwood > 10) {
 	showMessage("You can only knock with deadwood 10 or less.");
 	return;
     }
-
+   
+    
     const playerMeldCards = expandMelds(game.player, pEval.melds);
     const CpuDeadwood     = cEval.deadwoodCards;
     
@@ -1187,3 +1218,39 @@ document.getElementById("title").addEventListener("click", () => {
     });
     
 });
+
+makeModalDraggable(document.getElementById("modal-content"), 
+                   document.getElementById("modal-header"));
+
+function makeModalDraggable(modal, handle) {
+    let offsetX = 0, offsetY = 0, startX = 0, startY = 0;
+
+    handle.onmousedown = dragStart;
+
+    function dragStart(e) {
+        e.preventDefault();
+        startX = e.clientX;
+        startY = e.clientY;
+
+        document.onmousemove = dragMove;
+        document.onmouseup = dragEnd;
+    }
+
+    function dragMove(e) {
+        e.preventDefault();
+        offsetX = e.clientX - startX;
+        offsetY = e.clientY - startY;
+
+        startX = e.clientX;
+        startY = e.clientY;
+
+        modal.style.top = (modal.offsetTop + offsetY) + "px";
+        modal.style.left = (modal.offsetLeft + offsetX) + "px";
+        modal.style.position = "absolute";
+    }
+
+    function dragEnd() {
+        document.onmousemove = null;
+        document.onmouseup = null;
+    }
+}
