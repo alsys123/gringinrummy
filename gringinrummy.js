@@ -840,9 +840,11 @@ function playerGin() {
 //      console.log("CPU discarded 1 - " + prettyCard(d) + ".");
 //      showMessage("CPU discarded 1 - " + prettyCard(d) + ".");
 
-//     cpuDiscard(d);  //... not quite right but the right idea ???
+     cpuDiscardAnimate(d);  // Animate the discard
+
+      await sleep(1000);
       
-      game.discard.push(d);
+     game.discard.push(d);
 
 //      console.log("CPU discarded 2 - " + prettyCard(d) + ".");
 //      showMessage("CPU discarded 2 - " + prettyCard(d) + ".");
@@ -853,9 +855,9 @@ function playerGin() {
       setMsg("Draw from stock or discard.");
 
       updateButtons();
-      await sleep(1000);
+//      await sleep(1000);
 
-      render();
+     render();
       
       
   } // cpuTurn

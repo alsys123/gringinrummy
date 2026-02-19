@@ -67,33 +67,34 @@ function animateCpuTakeFromDiscard(card) {
 function animateCpuToDiscard( card ) {
 
     const discardElem = el.discard;
-  const cpuHandElem = el.cpu;
+    const cpuHandElem = el.cpu;
+    
+    const end = discardElem.getBoundingClientRect();
+    const start = cpuHandElem.getBoundingClientRect();
 
-  const end = discardElem.getBoundingClientRect();
-  const start = cpuHandElem.getBoundingClientRect();
-
-  const flying = cardFace(card); // your existing card renderer
-  flying.style.position = "fixed";
-  flying.style.left = start.left + 700 + "px";
+    const flying = cardFace(card); // your existing card renderer
+    flying.style.position = "fixed";
+    flying.style.left = start.left + 700 + "px";
   flying.style.top = start.top - 100 + "px";
-  flying.style.zIndex = 9999;
-  flying.style.transition = "all 1000ms ease-out";
+    flying.style.zIndex = 9999;
+  flying.style.transition = "all 100ms ease-out";
 
-  document.body.appendChild(flying);
-
-  requestAnimationFrame(() => {
-    flying.style.left = end.left - 20 + "px";
-    flying.style.top = end.top + 50 + "px";
-    flying.style.transform = "rotate(-20deg)";
-  });
-
+    document.body.appendChild(flying);
+    
+    requestAnimationFrame(() => {
+	flying.style.left = end.left - 20 + "px";
+	flying.style.top = end.top + 50 + "px";
+	flying.style.transform = "rotate(-20deg)";
+    });
+    
     flying.addEventListener("transitionend", () => {
 	flying.remove();
     }, { });
     
 } //animateCpuToDiscard
 
-function cpuDiscard(card) {
+
+async function cpuDiscardAnimate(card) {
 
     const pile = document.getElementById("discard-top");
 
@@ -106,7 +107,14 @@ function cpuDiscard(card) {
     const hover = document.createElement("div");
     hover.className = "card";   // face-up card
     hover.style.position = "absolute";
+//    hover.style.transition = "all .6s ease"; // ⭐ smooth animation
 
+//    hover.style.transition = "opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)";
+    hover.style.transform = "translateY(-12px) scale(0.97)"; // subtle lift
+    hover.style.transition = "opacity 0.45s ease-out, transform 0.45s ease-out"; 
+
+    hover.style.opacity = "0"; // ⭐ start invisible
+    
     // Insert the face image
     const face = cardFace(card);
     face.style.position = "absolute";
@@ -121,12 +129,26 @@ function cpuDiscard(card) {
     hover.style.top = (rect.top - 40) + "px"; // hover 40px above
 
     document.body.appendChild(hover);
-
+   
+    // ⭐ Two-frame trick — REQUIRED for smooth fade-in
+    requestAnimationFrame(() => {
+	requestAnimationFrame(() => {
+	    hover.style.opacity = "1";
+	    hover.style.transform = "translateY(0px) scale(1)";
+	});
+    });
     
     // Wait 3 seconds, then finalize discard
     setTimeout(() => {
-	hover.style.transition = "opacity 0.4s ease, top 0.4s ease";
-//	hover.style.transition = "opacity 1s ease";
+//	hover.style.transition = "opacity 0.4s ease, top 0.4s ease";
+	//	hover.style.transition = "opacity 1s ease";
+	// ⭐ Slow, smooth movement (adjust this number)
+	const MOVE_TIME = 4.0; // seconds — make this bigger to slow it down 
+
+	hover.style.transition =
+	    "opacity 2s cubic-bezier(0.16, 1, 0.3, 1), " +
+	    "top 2s cubic-bezier(0.16, 1, 0.3, 1), " +
+	    "left 2s cubic-bezier(0.16, 1, 0.3, 1)"; 
 	hover.style.opacity = "0";
 	hover.style.top = (rect.top + 10) + "px"; // drop 10px
 	hover.style.left = (rect.left - 1) + "px";
@@ -134,23 +156,12 @@ function cpuDiscard(card) {
 //	hover.style.transition = "opacity 0.4s ease";
 //	hover.style.opacity = "0";
 	// Remove after fade
-	setTimeout(() => hover.remove(), 1000); 
+	setTimeout(() => hover.remove(), MOVE_TIME * 1000 + 50); //was 1300
 
-//        hover.remove();
+    }, 1000);
+}//cpuDiscard
 
-        // Remove from CPU hand data
-//        const idx = game.cpuCards.findIndex(c => c.id === card.id);
-//        if (idx !== -1) game.cpuCards.splice(idx, 1);
 
-        // Add to discard pile
-        game.discard.push(card);
-
-        // Re-render CPU hand and discard pile
-//        renderCPU(game.cpuCards, null, game.cpuMeldIds, elements);
-        render();
-
-    }, 2000);
-}
 
 // move the player card up a little to show it was used in a layoff
 function markPlayerLayoffCards(layoffCards) {

@@ -248,7 +248,7 @@ function renderDiscardAndDeadwood(el, game, evalPlayer) {
         el.discard.appendChild(f);
     } else {
         el.discard.className = "card back";
-        el.discard.innerHTML = "<span>EMPTY</span>";
+        el.discard.innerHTML = "<span></span>";
     }
 }
 
@@ -293,6 +293,13 @@ function cardBack() {
   return div;
 }
 
+
+/* ****
+
+   RENDER CPU
+
+   ****
+   */
 
 // --- new renderCPU
 

@@ -593,7 +593,7 @@ h1 {
 }
 
 .discard-animate {
-  animation: discardDrop 2000ms ease-out;
+  animation: discardDrop 200ms ease-out;
 }
 
 @keyframes discardDrop {
