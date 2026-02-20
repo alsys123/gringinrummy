@@ -1,35 +1,38 @@
-function animateCpuTakeFromStock(card) {
+async function animateCpuTakeFromStock(card) {
     const stockElem = el.stock;     // your stock pile element
-  const cpuHandElem = el.cpu;     // your CPU hand container
-
-  const start = stockElem.getBoundingClientRect();
-  const end = cpuHandElem.getBoundingClientRect();
-
-//    const flying = cardFace(card);
+    const cpuHandElem = el.cpu;     // your CPU hand container
+    
+    const start = stockElem.getBoundingClientRect();
+    const end = cpuHandElem.getBoundingClientRect();
+    
+    //    const flying = cardFace(card);
     const flying = cardBack();
+    
+    flying.style.position = "fixed";
+    flying.style.left = start.left + "px";
+    flying.style.top = start.top + "px";
+    flying.style.zIndex = 9999;
+    flying.style.transition = "all 400ms ease-out";
+    
+    document.body.appendChild(flying);
+    
+    // Move up and right (or however you want)
+    requestAnimationFrame(() => {
+	flying.style.left = start.left + 500 + "px";  // right
+	flying.style.top = start.top - 200 + "px";    // up
+	flying.style.transform = "rotate(-10deg)";
+    });
+    
+    flying.addEventListener("transitionend", () => {
+	flying.remove();
+    }, { once: true });
 
-  flying.style.position = "fixed";
-  flying.style.left = start.left + "px";
-  flying.style.top = start.top + "px";
-  flying.style.zIndex = 9999;
-  flying.style.transition = "all 400ms ease-out";
-
-  document.body.appendChild(flying);
-
-  // Move up and right (or however you want)
-  requestAnimationFrame(() => {
-    flying.style.left = start.left + 500 + "px";  // right
-    flying.style.top = start.top - 200 + "px";    // up
-    flying.style.transform = "rotate(-10deg)";
-  });
-
-  flying.addEventListener("transitionend", () => {
-    flying.remove();
-  }, { once: true });
+//    await sleep(2000);
+    
 } // animateCpuTakeFromStock
 
 
-function animateCpuTakeFromDiscard(card) {
+async function animateCpuTakeFromDiscard(card) {
   const discardElem = el.discard;
   const cpuHandElem = el.cpu;
 
@@ -63,7 +66,7 @@ function animateCpuTakeFromDiscard(card) {
   });
 } //animateCpuTakeFromDiscard
 
-
+/*
 function animateCpuToDiscard( card ) {
 
     const discardElem = el.discard;
@@ -92,7 +95,7 @@ function animateCpuToDiscard( card ) {
     }, { });
     
 } //animateCpuToDiscard
-
+*/
 
 async function cpuDiscardAnimate(card) {
 

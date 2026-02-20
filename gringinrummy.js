@@ -315,7 +315,11 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, originalD
 function showHandTally(result) {
 
     pointsThisHandCalc = "";
-//    console.log("Result: ", result);
+
+    // ???here i am
+    
+       console.log("Result: ", result.winner, ". Who: ", result.who);
+
     //    const actor = result.who;
     
     const actionText = {
@@ -353,6 +357,12 @@ function showHandTally(result) {
 	title += " " + resultText[winner];
     }
     
+    if(result.actor === "player" && result.winner === "player") {
+	title = "You WON!";
+    }
+    if(result.actor === "cpu" && result.winner === "cpu") {
+	title = "CPU won!";
+    }
     
 //    layoff: layoffTotal,
 //	  OriginalPDW: origPDW
@@ -814,7 +824,8 @@ function playerGin() {
         drawn = game.discard.pop();
           log("CPU drew " + prettyCard(drawn) + " from discard.");
 
-	  //	   animateCpuTakeFromDiscard(drawn);
+//  animateCpuTakeFromDiscard(drawn);
+
       }
     }// if from topDiscard
       
@@ -824,7 +835,9 @@ function playerGin() {
         return;
       }
 	drawn = game.stock.pop();
-//	animateCpuTakeFromStock(drawn);
+
+//animateCpuTakeFromStock(drawn);
+	
 	log("CPU drew from stock.");
     }
       
@@ -864,7 +877,7 @@ function playerGin() {
 
 
 
-  function cpuChooseDiscardIndex() {
+function cpuChooseDiscardIndex() {
     const hand = game.cpu;
     const sorted = sortHandByRank(hand);
     const evalInfo = evaluate(sorted);
@@ -1101,7 +1114,7 @@ const w = window.innerWidth;
   const tr = document.getElementById("star-tr");
   const bl = document.getElementById("star-bl");
   const br = document.getElementById("star-br");
-  const ml = document.getElementById("star-midleft");
+//  const ml = document.getElementById("star-midleft");
 
   // Top-left
     tl.style.left = (w * margin)-20 + "px";
@@ -1120,8 +1133,8 @@ const w = window.innerWidth;
   br.style.top  = (h * (1 - margin)) + "px";
 
   // Mid-left (50% down, 5% in)
-  ml.style.left = (w * margin) + "px";
-  ml.style.top  = (h * 0.5) + "px";
+//  ml.style.left = (w * margin) + "px";
+//  ml.style.top  = (h * 0.5) + "px";
 }
 
 window.addEventListener("load", layoutStars);

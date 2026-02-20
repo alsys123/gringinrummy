@@ -10,4 +10,3 @@ Entry point is:
 
 "https://alsys123.github.io/gringinrummy/index.html"
 
-- move to mac development

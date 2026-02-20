@@ -11,24 +11,27 @@
     <div id="game">
       
       <h1 id="title">
-	GIN RUMMY <span style="font-size: 0.5em;">(v2.1)</span>
+	GIN RUMMY <span style="font-size: 0.5em;">(rev2 v2.1)</span>
       </h1>
       
       <div id="scoreboard" class="scoreboard">
-	<div class="score-block you">
-	  <span class="label">You</span>
-	  <span id="score-you" class="value">0</span>
-	</div>
-	<div class="divider">vs</div>
+
 	<div class="score-block cpu">
 	  <span class="label">CPU</span>
 	      <span id="score-cpu" class="value">0</span>
 	</div>
+
+	<div class="divider">vs</div>
+
+	<div class="score-block you">
+	  <span class="label">You</span>
+	  <span id="score-you" class="value">0</span>
+	</div>
+
       </div>
       
-      <div id="status-bar">
-	<div id="message">Click "New Game" to start.</div>
-	
+      <div id="status-bar" hidden>
+	<div id="message" hidden>Click "New Game" to start.</div>
       </div>
       
       <div id="back-door" hidden>
@@ -38,7 +41,6 @@
 	<button id="btn-backDoor-testMelds">Test Melds</button>   
 	<button id="btn-backDoor-showStats">Show Stats</button>   
 	<button id="btn-backDoor-pickCardDeck">Pick Card Deck</button>   
-
       </div>
       
       <div id="modal" class="modal">
@@ -74,7 +76,7 @@
 	  <div id="star-tr" class="star">★</div>
 	  <div id="star-bl" class="star">★</div>
 	  <div id="star-br" class="star">★</div>
-	  <div id="star-midleft" class="star">★</div>
+<!--	  <div id="star-midleft" class="star">★</div> -->
 
 	  <button id="btn-new"   >New Game</button>
 	  <button id="btn-knock" >Knock   </button>

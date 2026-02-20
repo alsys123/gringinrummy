@@ -440,7 +440,8 @@ h1 {
     gap: 24px;
     align-items: center;
     margin: 8px 0 4px;
-    margin-left: -175px; /* move left */
+    margin-left: -190px; /* move left */
+    margin-top: 90px; /* move up/down */
   }
 
   #deadwood-info {
@@ -526,19 +527,34 @@ h1 {
 }
 
 
+/*
 .scoreboard {
     display: flex;
-/*     display: inline-flex;*/ /* or inline-block */
   justify-content: center;
   align-items: center;
   gap: 22px;
   margin: 12px 0 20px;
   font-family: "Segoe UI", sans-serif;
-  margin: 12px auto 20px; /* centers it */
+  margin: 12px auto 20px; 
   margin-left: auto;
   margin-right: auto;
   width: fit-content;
-  transform: translateX(-40px); /* nudge left */
+  transform: translateX(-40px);
+  transform: translateY(0px); 
+}
+*/
+.scoreboard {
+  position: absolute;        /* allows free placement */
+  left: 40px;                /* push to far left */
+  top: 40%;                  /* vertical center */
+  transform: translateY(-50%); /* perfect centering */
+
+  display: flex;
+  flex-direction: column;    /* CPU on top, You on bottom */
+  align-items: center;
+  gap: 18px;
+
+  font-family: "Segoe UI", sans-serif;
 }
 
 .score-block {
@@ -619,3 +635,12 @@ h1 {
 .scoreboard * {
   pointer-events: none;
 }
+
+#back-door {
+/*  display: inline-flex; */
+  flex-wrap: wrap;
+  gap: 8px 12px;      /* spacing between buttons */
+  max-width: 420px;   /* controls how many fit per row */
+  margin-top: 60px;   /* move down */
+}
+
