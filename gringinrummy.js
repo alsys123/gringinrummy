@@ -37,6 +37,7 @@ let gCardDeck = "simple";
 //    btnDrawDiscard: document.getElementById("btn-draw-discard"),
     btnKnock: document.getElementById("btn-knock"),
     btnGin: document.getElementById("btn-gin"),
+    btnNewMatch: document.getElementById("btn-newMatch"),
     deadwood: document.getElementById("deadwood-info"),
     scoreboard: document.getElementById("scoreboard")
   };
@@ -317,8 +318,7 @@ function showHandTally(result) {
     pointsThisHandCalc = "";
 
     // ???here i am
-    
-       console.log("Result: ", result.winner, ". Who: ", result.who);
+    //       console.log("Result: ", result.winner, ". Who: ", result.who);
 
     //    const actor = result.who;
     
@@ -356,11 +356,13 @@ function showHandTally(result) {
     if (type !== "stock") {
 	title += " " + resultText[winner];
     }
-    
-    if(result.actor === "player" && result.winner === "player") {
+
+//    console.log("Result: ", result.winner, ". Who: ", result.who);
+
+    if(result.who === "player" && result.winner === "player") {
 	title = "You WON!";
     }
-    if(result.actor === "cpu" && result.winner === "cpu") {
+    if(result.who === "cpu" && result.winner === "cpu") {
 	title = "CPU won!";
     }
     
@@ -429,15 +431,18 @@ function showHandTally(result) {
     function checkMatchEnd() {
 	if (matchScore.player >= matchScore.target) {
 	    showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
-	    document.getElementById("btn-new").textContent = "New Game";
-	resetMatch();
+//old	    document.getElementById("btn-new").textContent = "New Game";
+	    document.getElementById("btn-newMatch").textContent = "New MATCH";
+//??	    resetMatch();
 	} else if (matchScore.cpu >= matchScore.target) {
 	    showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
-	    document.getElementById("btn-new").textContent = "New Game";
-	    resetMatch();
+//old	    document.getElementById("btn-new").textContent = "New Game";
+	    document.getElementById("btn-newMatch").textContent = "New MATCH";
+	    //??	    resetMatch();
+	    /// ??? check THIS SEEMS -- REPEATED in error
 	} else if (matchScore.cpu >= matchScore.target) {
 	    showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
-
+	    
 	}
 	
     } //checkMatchEnd
@@ -459,20 +464,12 @@ function showHandTally(result) {
 
 //__ updateButtons
 function updateButtons() {
-
     
 //	console.log("updateButtons game.turn = ",game.turn );
 	
 	const t = game.turn === "player";
 	const p = game.phase;
 
-//    showMessage(`${t} and phase ${p} .. in updateButtons`);
-    
-//	el.btnKnock.disabled = true;
-	//	el.btnGin.disabled   = true;
-	//hide
-//	document.getElementById("btn-knock").style.display = "none";  // hide
-//	document.getElementById("btn-gin").style.display = "none";
 	document.getElementById("btn-knock").style.visibility = "hidden";  // hide
 	document.getElementById("btn-gin").style.visibility = "hidden";
 
@@ -481,8 +478,6 @@ function updateButtons() {
 
 	  const evalPlayer = evaluate(game.player);
 	   
-//	  if (evalPlayer.deadwood === 0) el.btnGin.disabled = false;
-//	  if (evalPlayer.deadwood <= 10) el.btnKnock.disabled = false;
 	  if (evalPlayer.deadwood === 0)
 	      document.getElementById("btn-gin").style.visibility = "visible"; // show
 	  if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
@@ -490,9 +485,7 @@ function updateButtons() {
 	  
 	  // hide
 	  document.getElementById("btn-new").style.display = "none";
-	  // show it
-//	  document.getElementById("btn-knock").style.display = "";
-//	  document.getElementById("btn-gin").style.display = "";
+	  document.getElementById("btn-newMatch").style.display = "none";
 	  return;
       }
 
@@ -501,8 +494,6 @@ function updateButtons() {
 
 	    const evalPlayer = evaluate(game.player);
 	    
-//	  console.log("here i am ... with deadwood=", evalPlayer.deadwood);
-	    
 	    if (evalPlayer.deadwood === 0)
 		document.getElementById("btn-gin").style.visibility = "visible";
 	    if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
@@ -510,15 +501,36 @@ function updateButtons() {
 	    
 	    // hide
 	    document.getElementById("btn-new").style.display = "none";
-	    // show it
-// 	    document.getElementById("btn-knock").style.display = "none";
-//	    document.getElementById("btn-gin").style.display = "none";
+	    document.getElementById("btn-newMatch").style.display = "none";
 	    return;
 	}
 
-	// show by default
-	document.getElementById("btn-new").style.display = "";
-	// hide by default
+//    console.log("state: ", game);
+
+    // show by default
+    // either a new game or a new match
+    const playerWon = matchScore.player >= matchScore.target;
+    const cpuWon = matchScore.cpu >= matchScore.target;
+    
+    const matchOverFlag = playerWon || cpuWon;
+    
+    console.log("flag: ", game.phase,
+		matchOverFlag,
+		matchScore.player,playerWon,
+		matchScore.cpu,   cpuWon);
+
+    //game.phase could be await draw 
+    if (!matchOverFlag ) {
+	document.getElementById("btn-new").style.display = "";  // New Game
+	console.log("set new GAME!");
+    }
+
+    if (game.phase === "round-over" && matchOverFlag ) {
+	document.getElementById("btn-newMatch").style.display = ""; // New Match
+//	console.log("new match");
+    }
+
+// hide by default
 	document.getElementById("btn-knock").style.visibility = "hidden";
 	document.getElementById("btn-gin").style.visibility = "hidden";
 
@@ -529,6 +541,12 @@ function updateButtons() {
   /* ------------------------------
      Game Flow
   ------------------------------ */
+
+function newMatch() {
+    resetMatch();
+    start();
+    //    return; /// nothing for now
+}
 
 function start() {
     game.deck = createDeck();
@@ -793,7 +811,7 @@ function playerGin() {
       setMsg("You had Gin! Click New Hand to play again.");
       
     render();
-  }
+  } //playerGin
 
   /* ------------------------------
      CPU Turn + AI
@@ -1086,6 +1104,8 @@ el.btnNew.onclick = start;
 el.btnKnock.onclick = playerKnock;
 el.btnGin.onclick = playerGin;
 
+el.btnNewMatch.onclick = newMatch;
+
 updateScoreboard();
 render();
 
@@ -1161,19 +1181,6 @@ window.addEventListener("resize", layoutTitle);
 //__ layoutButton
 function layoutButton() {
     return;   // delete me soon!!!
-    /*
-    const btn = document.getElementById("btn-new");
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const margin = 0.05; // 0.05 is 5% .. take into account button size
-    
-    const bw = btn.offsetWidth;
-    const bh = btn.offsetHeight;
-
-    //  title.style.position = "absolute";
-    btn.style.left = (w * (1 - margin) - bw) + "px";
-    btn.style.top = (h * 0.5 - bh / 2) + "px";
-*/    
 }//layoutButton
 
 window.addEventListener("load", layoutButton);
