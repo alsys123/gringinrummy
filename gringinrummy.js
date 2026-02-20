@@ -519,6 +519,20 @@ function updateButtons() {
 		matchScore.player,playerWon,
 		matchScore.cpu,   cpuWon);
 
+    // Hide both by default
+    document.getElementById("btn-new").style.display = "none";
+    document.getElementById("btn-newMatch").style.display = "none";
+    // If match is over → show New Match
+    if (matchOverFlag && game.phase === "round-over") {
+	document.getElementById("btn-newMatch").style.display = "";
+	return;
+    }
+    // If match is NOT over → show New Game
+    if (!matchOverFlag) {
+	document.getElementById("btn-new").style.display = "";
+	return;
+    }
+/*    
     //game.phase could be await draw 
     if (!matchOverFlag ) {
 	document.getElementById("btn-new").style.display = "";  // New Game
@@ -529,7 +543,8 @@ function updateButtons() {
 	document.getElementById("btn-newMatch").style.display = ""; // New Match
 //	console.log("new match");
     }
-
+*/
+    
 // hide by default
 	document.getElementById("btn-knock").style.visibility = "hidden";
 	document.getElementById("btn-gin").style.visibility = "hidden";
@@ -679,7 +694,9 @@ function playerDiscard(id) {
       });
 
 //      console.log("ehh ..show cpu prepre!",game.revealCpu);
-	 
+
+//      commonEventEnd(scored, "Hand over. Click New Hand to play again.");
+		     
       showHandTally(scored);
       checkMatchEnd();
       game.phase = "round-over";
@@ -691,6 +708,21 @@ function playerDiscard(id) {
   /* ------------------------------
      Knock + Gin
   ------------------------------ */
+
+function commonEventEnd(scored, Message) {
+
+//    game.revealCpu = true;  .. should have done this earlier??
+
+    showHandTally(scored);
+    checkMatchEnd();
+    game.phase = "round-over";
+    setMsg(Message);
+    
+    updateButtons();
+
+    //    render();  .. should have done this earlier??
+    
+} //commonEventEnd
 
 //__ playerKnock
 function playerKnock() {
@@ -767,18 +799,24 @@ function playerKnock() {
 	originalDW: origCDW
     });
 
-    let msg;
-    log(msg);
+//    let msg;
+//    log(msg);
+
     
+    commonEventEnd(scored,"Hand over. Click New Hand to play again.");
+
+    /*
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
     setMsg("Hand over. Click New Hand to play again.");
 
     updateButtons();
+    */
     
 //    render(); // out for now
   } // playerKnock
+
 
 function playerGin() {
     
@@ -801,14 +839,14 @@ function playerGin() {
 	who: "player"
     });
 
-      showHandTally(scored);
-
-
+//    commonEventEnd(scored,"You had Gin! Click New Hand to play again.");
+    
+    showHandTally(scored);
     checkMatchEnd();
-      game.phase = "round-over";
-      game.revealCpu = true;
-
-      setMsg("You had Gin! Click New Hand to play again.");
+    game.phase = "round-over";
+    game.revealCpu = true;
+    
+    setMsg("You had Gin! Click New Hand to play again.");
       
     render();
   } //playerGin
@@ -935,9 +973,12 @@ function cpuChooseDiscardIndex() {
       });
       
       log("CPU went Gin.");
-      game.revealCpu = true;
 
 //      game.revealCpu = "true";  ........... here i am .. revealing CPU cards
+
+      //    commonEventEnd(scored,"CPU went Gin. Click New Hand to play again.");
+
+      game.revealCpu = true;
       
       showHandTally(scored);
       checkMatchEnd();
@@ -992,6 +1033,8 @@ function cpuKnock() {
 	msg = "CPU knocked. Deadwood tie.\nCPU: " + cDW + " | You: " + pDW;
     }
     log(msg);
+
+    //    commonEventEnd(scored,"CPU knocked. Click New Hand to play again.");
     
     showHandTally(scored);
     checkMatchEnd();
