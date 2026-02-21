@@ -113,6 +113,7 @@ function loadGameFromFile(file) {
 
 	    updateScoreboard();
 	    render();
+	    updateButtons();
 	    setMsg("Game restored.");
 	} catch (err) {
 	    console.error("Error loading save:", err);
@@ -143,6 +144,7 @@ function openLoadDialog() {
 document.getElementById("btn-backDoor-showCpuCards").onclick = () => {
     game.revealCpu = !game.revealCpu;
     render();
+    updateButtons();
 //    console.log("Game object: ", game)
 }
   /* ------------------------------
@@ -165,6 +167,10 @@ document.getElementById("btn-backDoor-showStats").onclick = () => {
 document.getElementById("btn-backDoor-showLog").onclick = () => {
     toggleShowlog();
 }
+// save log file
+document.getElementById("btn-backDoor-saveLogFile").onclick = () => {
+    downloadLog();
+}
 
 function toggleShowlog() {
     // hide the log
@@ -185,25 +191,50 @@ function toggleShowlog() {
 
 } //toggleShowlog
 
+/*
 function log(t) {
-    const p = document.createElement("p");
-    p.textContent = t;
-    el.log.prepend(p);
+    log(t, "normal");
+//    const p = document.createElement("p");
+//    p.textContent = t;
+//    el.log.prepend(p);
   }
+*/
 
+function log(message, type = "normal") {
+    
+    logHistory.push({ message, type, time: new Date().toISOString() });
 
-function log(message, type) {    
-  const p = document.createElement("p");
-  p.textContent = message;
+    const p = document.createElement("p");
+    p.textContent = message;
 
   // Inline color coding
-  if (type === "sys")   p.style.color = "red";
-  if (type === "cpu")   p.style.color = "blue";
-  if (type === "player") p.style.color = "green";
-  if (type === "warn")  p.style.color = "orange";
+  if (type === "sys")     p.style.color = "red";
+  if (type === "cpu")     p.style.color = "blue";
+  if (type === "player")  p.style.color = "green";
+  if (type === "warn")    p.style.color = "orange";
+  if (type === "normal")  p.style.color = "pink";
 
   el.log.prepend(p);
-}
+} //log
+
+function downloadLog() {
+  let text = "";
+
+  for (const entry of logHistory) {
+    text += `[${entry.time}] (${entry.type}) ${entry.message}\n`;
+  }
+
+  const blob = new Blob([text], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "game-log.txt";
+  a.click();
+
+  URL.revokeObjectURL(url);
+} //downloadLog
+
 
 function setMsg(t) {
     el.msg.textContent = t;
@@ -479,6 +510,7 @@ function showDeckSelector() {
 //	console.log("Changed to:", e.target.value);
 //	start();
 	render();
+	updateButtons();
     });
 
 }//showDeckSelector

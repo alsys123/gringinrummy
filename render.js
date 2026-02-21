@@ -5,6 +5,8 @@
 
 //__ render
 function render() {
+    log("render", "sys");
+    
     el.cpu.innerHTML = "";
 
     // version 3
@@ -74,12 +76,12 @@ function render() {
     const PLAYER_SHIFT_X = -00;   // move left
     const PLAYER_SHIFT_Y = 20;      // move up/down
 
-// This is for meld group spacing    
-const groupIndex = new Map();
-evalPlayer.melds.forEach((group, idx) => {
-    group.forEach(i => groupIndex.set(game.player[i].id, idx));
-});
-
+    // This is for meld group spacing    
+    const groupIndex = new Map();
+    evalPlayer.melds.forEach((group, idx) => {
+	group.forEach(i => groupIndex.set(game.player[i].id, idx));
+    });
+    
       for (const c of sorted) {
 	  const isMeld = meldIds.has(c.id);
 
@@ -178,27 +180,27 @@ evalPlayer.melds.forEach((group, idx) => {
 	  // append ONCE
 	  el.player.appendChild(f);
 	  
-  // Insert a gap BETWEEN meld groups
-if (isMeld) {
-    const nextCard = sorted[idx+1];
-    if (nextCard && meldIds.has(nextCard.id)) {
-        // both are melds — check if they are different groups
-        const thisGroup = groupIndex.get(c.id);
-        const nextGroup = groupIndex.get(nextCard.id);
-
-        if (thisGroup !== nextGroup) {
-            const gap = document.createElement("div");
-            gap.className = "meld-gap-between";
-            gap.style.position = "absolute";
-            gap.style.left = `${offset + (i + 1) * effectiveSpacing}px`;
-            gap.style.top = `${400 + PLAYER_SHIFT_Y}px`;
-            el.player.appendChild(gap);
-
+	  // Insert a gap BETWEEN meld groups
+	  if (isMeld) {
+	      const nextCard = sorted[idx+1];
+	      if (nextCard && meldIds.has(nextCard.id)) {
+		  // both are melds — check if they are different groups
+		  const thisGroup = groupIndex.get(c.id);
+		  const nextGroup = groupIndex.get(nextCard.id);
+		  
+		  if (thisGroup !== nextGroup) {
+		      const gap = document.createElement("div");
+		      gap.className = "meld-gap-between";
+		      gap.style.position = "absolute";
+		      gap.style.left = `${offset + (i + 1) * effectiveSpacing}px`;
+		      gap.style.top = `${400 + PLAYER_SHIFT_Y}px`;
+		      el.player.appendChild(gap);
+		      
             i += 0.5; // actual gap size
-        }
-    }
-}
-
+		  }
+	      }
+	  }
+	  
 //	  el.player.appendChild(f);
 
 
@@ -231,7 +233,7 @@ if (isMeld) {
 //    showMessage("update buttons in render");
 */
     
-     updateButtons();
+//     updateButtons();
   } // render
 
 function renderDiscardAndDeadwood(el, game, evalPlayer) {

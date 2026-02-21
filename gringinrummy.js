@@ -24,6 +24,7 @@ const detailedMatchScore = { games: [] };
 
 let gCardDeck = "simple";
 let gshowLog  = false;
+const logHistory = [];
 
   const el = {
     msg: document.getElementById("message"),
@@ -458,7 +459,9 @@ function showHandTally(result) {
 function updateButtons() {
     
 //	console.log("updateButtons game.turn = ",game.turn );
-	
+
+    log("Update Buttons", "sys");
+    
 	const t = game.turn === "player";
 	const p = game.phase;
 
@@ -506,10 +509,10 @@ function updateButtons() {
     
     const matchOverFlag = playerWon || cpuWon;
     
-    console.log("flag: ", game.phase,
-		matchOverFlag,
-		matchScore.player,playerWon,
-		matchScore.cpu,   cpuWon);
+//    console.log("flag: ", game.phase,
+//		matchOverFlag,
+//		matchScore.player,playerWon,
+//		matchScore.cpu,   cpuWon);
 
     // Hide both by default
     document.getElementById("btn-new").style.display = "none";
@@ -550,12 +553,16 @@ function updateButtons() {
   ------------------------------ */
 
 function newMatch() {
+    log("newMatch: new game");
     resetMatch();
     start();
     //    return; /// nothing for now
 }
 
 function start() {
+
+    log("start: new hand or game");
+    
     game.deck = createDeck();
     shuffle(game.deck);
     
@@ -574,7 +581,7 @@ function start() {
       game.drawn = null;
       game.revealCpu = false;
 
-      el.log.innerHTML = "";
+//      el.log.innerHTML = ""; // clears the log
 
     for (let i=0;i<10;i++) {
       game.player.push(game.deck.pop());
@@ -606,6 +613,7 @@ function start() {
 //    addGameToDetailsScore("cpu",   "Gin",   "cpu",    45,   0,  0, 0);
       
     render();
+    updateButtons();
 }//start
 
     //__ drawStock
@@ -621,6 +629,7 @@ function start() {
 	game.phase = "await-discard";
 	setMsg("Click a card to discard, or Knock/Gin if available.");
 	render();
+	updateButtons();
     } //drawStock
     
     function drawDiscard() {
@@ -636,6 +645,7 @@ function start() {
 	game.phase = "await-discard";
 	setMsg("Click a card to discard, or Knock/Gin if available.");
 	render();
+	updateButtons();
   }
 
 //_ playerDiscard
@@ -662,7 +672,8 @@ function playerDiscard(id) {
     game.turn = "cpu";
     game.phase = "await-draw";
     setMsg("CPU thinking...");
-    render();
+      render();
+      updateButtons();
    // setTimeout(cpuTurn, 650);
     setTimeout(cpuTurn, 0);
   }
@@ -694,7 +705,8 @@ function playerDiscard(id) {
       game.phase = "round-over";
       setMsg("Hand over. Click New Hand to play again.");
 
-    render();
+      render();
+      updateButtons();
   } //stockDepletionResolution
 
   /* ------------------------------
@@ -728,7 +740,8 @@ function playerKnock() {
 
     game.revealCpu = true;
     render();
-
+    updateButtons();
+    
     /*
     if (game.player.length > 10) {
 	showMessage("Sorry cannot do anything yet.  Player has more than 10 cards.");
@@ -748,6 +761,7 @@ function playerKnock() {
 	    
             playerDiscard(highest.id);
             render(); // update UI
+	    updateButtons();
 	}
 
 	// reset these because we just removed a card
@@ -841,6 +855,7 @@ function playerGin() {
     setMsg("You had Gin! Click New Hand to play again.");
       
     render();
+    updateButtons();
   } //playerGin
 
   /* ------------------------------
@@ -919,7 +934,7 @@ function playerGin() {
       await sleep(1000);
 
      render();
-      
+      updateButtons();
       
   } // cpuTurn
 
@@ -978,6 +993,7 @@ function cpuChooseDiscardIndex() {
       setMsg("CPU went Gin. Click New Hand to play again.");
       
       render();
+      updateButtons();
   } //cpuGin
 
     //__ cpuKnock
@@ -991,6 +1007,7 @@ function cpuKnock() {
     
     game.revealCpu = true;
     render();
+    updateButtons();
     
     const cpuMeldCards   = expandMelds(game.cpu, cEval.melds);
     const playerDeadwood = pEval.deadwoodCards;
@@ -1143,7 +1160,7 @@ el.btnNewMatch.onclick = newMatch;
 
 updateScoreboard();
 render();
-
+updateButtons();
 //})();
 
 // functions global ...
