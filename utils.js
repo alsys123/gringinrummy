@@ -209,7 +209,7 @@ function log(message, type = "normal") {
 
   // Inline color coding
   if (type === "sys")     p.style.color = "red";
-  if (type === "cpu")     p.style.color = "blue";
+  if (type === "cpu")     p.style.color = "yellow";
   if (type === "player")  p.style.color = "green";
   if (type === "warn")    p.style.color = "orange";
   if (type === "normal")  p.style.color = "pink";
@@ -432,8 +432,12 @@ function scoreBoardDetails() {
 	}
 
 	out += "____" + "\n";
+	let whatWho = `( ${g.type} by ${g.who} )`;
+	if (g.type === "undercut") {
+	    whatWho = `( ${g.type} against ${g.who} )`;
+	}
 	out += `Game ${g.gameNumber}: ${g.winner.toUpperCase()} wins! ` +
-	    `( ${g.type} by ${g.who} )` + "\n";
+	    whatWho + "\n";
 	
 //	out += `${g.deadwood.player} vs ${g.deadwood.cpu} ➜ ${g.deadwood.diff}` + "\n" ;
 	out += calcLine + "\n" ;

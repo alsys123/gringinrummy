@@ -235,6 +235,8 @@ function applyScoring(result) {
 	else points = diff;
     } else if (result.type === "stock") {
 	points = Math.abs(result.pDW - result.cDW);
+    } else if (result.type === "undercut") {
+	points = 25 + (result.winner === "player" ? result.cDW : result.pDW);
     }
     
     matchScore[result.winner] += points;
@@ -326,6 +328,10 @@ function showHandTally(result) {
 	},
 	stock: {
 	    na: "Stock depleted."
+	},
+	undercut: {
+	    player: "You knocked.",
+	    cpu:    "CPU knocked."
 	}
     };
     const resultText = {
@@ -336,7 +342,7 @@ function showHandTally(result) {
     
     const actor  = result.who;      // player, cpu, or na
     const winner = result.winner;  // player, cpu, tie
-    const type   = result.type;      // gin, knock, stock
+    const type   = result.type;      // gin, knock, stock, undercut
 
     let title = actionText[type][actor];
 
@@ -396,9 +402,15 @@ function showHandTally(result) {
     if (actor === "cpu" && result.type === "gin") {
 	pointsThisHandCalc = " = ( " + `${result.pDW} + 25 Bonus points for gin` + " )";
     }
+    if (actor === "cpu" && result.type === "undercut") {
+	pointsThisHandCalc = " = ( " + `${result.cDW} + 10 Bonus points for an undercut` + " )";
+    }
     
     if (actor === "player" && result.type === "gin") {
 	pointsThisHandCalc = " = ( " + `${result.cDW} + 25 Bonus points for gin` + " )";
+    }
+    if (actor === "player" && result.type === "undercut") {
+	pointsThisHandCalc = " = ( " + `${result.pDW} + 10 Bonus points for an undercut` + " )";
     }
 
     const tally =
@@ -458,8 +470,6 @@ function showHandTally(result) {
 //__ updateButtons
 function updateButtons() {
     
-//	console.log("updateButtons game.turn = ",game.turn );
-
     log("Update Buttons", "sys");
     
 	const t = game.turn === "player";
@@ -624,7 +634,7 @@ function start() {
 	game.player.push(c);
 	game.drawn = c;
 	
-	log("You drew from stock: " + prettyCard(c) );
+	log("You drew from stock: " + prettyCard(c), "player" );
 	
 	game.phase = "await-discard";
 	setMsg("Click a card to discard, or Knock/Gin if available.");
@@ -638,7 +648,7 @@ function start() {
 	const c = game.discard.pop();
 	game.player.push(c);
 	game.drawn = c;
-	log("You drew " + prettyCard(c) + " from discard.");
+	log("You drew " + prettyCard(c) + " from discard.", "player");
 	
 	game.drawn = c.id;  //... not sure this is right?
 	
@@ -655,7 +665,7 @@ function playerDiscard(id) {
     if (i<0) return;
     const [c] = game.player.splice(i,1);
     game.discard.push(c);
-    log("You discarded " + prettyCard(c) + ".");
+    log("You discarded " + prettyCard(c) + ".", "player");
     
     game.drawn = c.id;
     
@@ -792,12 +802,16 @@ function playerKnock() {
     cDW = cDW - layoffTotal;
    
     let winner = "tie";
+    let finalType = "knock";
     if (pDW < cDW)      winner = "player";
-    else if (pDW > cDW) winner = "cpu";
+    else if (pDW > cDW) {
+	winner = "cpu";
+	finalType = "undercut";
+    }
 
     const scored = applyScoring({
 	winner,
-	type: "knock",
+	type: finalType,
 	pDW,
 	cDW,
 	who: "player",
@@ -885,7 +899,7 @@ function playerGin() {
       const evalWith = evaluate(hypothetical);
       if (evalWith.deadwood + 1 <= cDW) {
         drawn = game.discard.pop();
-          log("CPU drew " + prettyCard(drawn) + " from discard.");
+          log("CPU drew " + prettyCard(drawn) + " from discard.","cpu");
 
 //  animateCpuTakeFromDiscard(drawn);
 
@@ -901,7 +915,7 @@ function playerGin() {
 
 //animateCpuTakeFromStock(drawn);
 	
-	log("CPU drew from stock.");
+	log("CPU drew from stock.","cpu");
     }
       
       game.cpu.push(drawn);
@@ -925,7 +939,7 @@ function playerGin() {
 //      console.log("CPU discarded 2 - " + prettyCard(d) + ".");
 //      showMessage("CPU discarded 2 - " + prettyCard(d) + ".");
 
-      log("CPU discarded " + prettyCard(d) + ".");
+      log("CPU discarded " + prettyCard(d) + ".","cpu");
       game.turn = "player";
       game.phase = "await-draw";
       setMsg("Draw from stock or discard.");
@@ -979,7 +993,7 @@ function cpuChooseDiscardIndex() {
 	  who: "cpu"
       });
       
-      log("CPU went Gin.");
+      log("CPU went Gin.","cpu");
 
 //      game.revealCpu = "true";  ........... here i am .. revealing CPU cards
 
@@ -1020,12 +1034,17 @@ function cpuKnock() {
     pDW = pDW - layoffTotal;
     
     let winner = "tie";
+    let finalType = "knock";
+    
     if (cDW < pDW) winner = "cpu";
-    else if (cDW > pDW) winner = "player";
+    else if (cDW > pDW) {
+	winner = "player";
+	finalType = "undercut";
+    }
     
     const scored = applyScoring({
 	winner,
-	type: "knock",
+	type: finalType,
 	pDW,
 	cDW,
 	who: "cpu",
@@ -1041,7 +1060,7 @@ function cpuKnock() {
     } else {
 	msg = "CPU knocked. Deadwood tie.\nCPU: " + cDW + " | You: " + pDW;
     }
-    log(msg);
+    log(msg,"cpu");
 
     //    commonEventEnd(scored,"CPU knocked. Click New Hand to play again.");
     

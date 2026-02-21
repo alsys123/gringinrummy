@@ -683,7 +683,8 @@ h1 {
 /*  display: inline-flex; */
   flex-wrap: wrap;
   gap: 8px 12px;      /* spacing between buttons */
-  max-width: 420px;   /* controls how many fit per row */
-  margin-top: 60px;   /* move down */
+  max-width: 600px;   /* controls how many fit per row */
+  margin-top: 600px;   /* move down */
+  margin-left: 300px;   /* move right */
 }
 
