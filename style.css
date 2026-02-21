@@ -470,6 +470,7 @@ h1 {
     margin-left: -175px; /* move left */
   }
 
+  /*
   #log {
     margin-top: 10px;
     max-height: 120px;
@@ -479,9 +480,32 @@ h1 {
     background: rgba(0, 0, 0, 0.55);
     border-radius: 8px;
   }
+ */
+  #log {
+  position: fixed;          /* stays in place on screen */
+  right: 200px;              /* distance from right edge */
+  top: 50%;                 /* vertical midpoint */
+  transform: translateY(-70%); /* perfect vertical centering */
 
+  width: 25ch;              /* ~25 characters wide */
+  max-height: calc(1.2em * 8); /* 8 lines visible */
+  overflow-y: auto;         /* scroll when full */
+
+  margin: 0;
+  padding: 6px 8px;
+
+  font-size: 12px;
+  line-height: 1.2em;       /* consistent line height */
+
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 8px;
+}
+#log p {
+  margin: 0 0 4px 0;
+}
+/*
   #log p { margin: 2px 0; }
-
+*/
   @media (max-width: 800px) {
     .card {
       width: 52px;

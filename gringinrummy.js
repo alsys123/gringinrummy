@@ -23,7 +23,8 @@
 const detailedMatchScore = { games: [] };
 
 let gCardDeck = "simple";
-    
+let gshowLog  = false;
+
   const el = {
     msg: document.getElementById("message"),
     cpu: document.getElementById("cpu-hand"),
@@ -187,15 +188,6 @@ function cardFace(c) {
 }//cardFace
 
 
-function log(t) {
-    const p = document.createElement("p");
-    p.textContent = t;
-    el.log.prepend(p);
-  }
-
-  function setMsg(t) {
-    el.msg.textContent = t;
-  }
 
   function updateScoreboard() {
       //    el.scoreboard.textContent =

@@ -41,6 +41,7 @@
 	<button id="btn-backDoor-testMelds">Test Melds</button>   
 	<button id="btn-backDoor-showStats">Show Stats</button>   
 	<button id="btn-backDoor-pickCardDeck">Pick Card Deck</button>   
+	<button id="btn-backDoor-showLog">Show/hide Log</button>   
       </div>
       
       <div id="modal" class="modal">
@@ -67,10 +68,7 @@
 	</div>
       </div>
       
-      <div id="deadwood-info">Deadwood: –</div>
-      
-      <div id="log" hidden></div>
-      
+      <div id="deadwood-info">Deadwood: –</div>      
       
       <div id="star-tl" class="star">🥹</div>
 	  <div id="star-tr" class="star">★</div>
@@ -85,7 +83,9 @@
 
 	  <div id="cpu-hand" class="hand"></div>
 	  <div id="player-hand" class="hand"></div>
-	      
+
+      <div id="log" hidden></div>
+	  
     </div>
 
     <input type="file" id="load-file" accept=".json" style="display:none;">

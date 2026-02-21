@@ -161,6 +161,54 @@ document.getElementById("btn-backDoor-showStats").onclick = () => {
     showGameStats();
 }
 
+// toggle log display
+document.getElementById("btn-backDoor-showLog").onclick = () => {
+    toggleShowlog();
+}
+
+function toggleShowlog() {
+    // hide the log
+    if (gshowLog)  {
+	log("hide the log","sys");
+	gshowLog = false;
+	document.getElementById("log").hidden = true;
+	return;
+    }
+
+    // show the log
+    if (!gshowLog) {
+	log("show the log","sys");
+	gshowLog = true;
+	document.getElementById("log").hidden = false;
+	return;
+    }
+
+} //toggleShowlog
+
+function log(t) {
+    const p = document.createElement("p");
+    p.textContent = t;
+    el.log.prepend(p);
+  }
+
+
+function log(message, type) {    
+  const p = document.createElement("p");
+  p.textContent = message;
+
+  // Inline color coding
+  if (type === "sys")   p.style.color = "red";
+  if (type === "cpu")   p.style.color = "blue";
+  if (type === "player") p.style.color = "green";
+  if (type === "warn")  p.style.color = "orange";
+
+  el.log.prepend(p);
+}
+
+function setMsg(t) {
+    el.msg.textContent = t;
+}
+
 // another day ... grab ...     el.cpu.innerHTML = ""; 
 /// then use logCpuFanBounds  to see where the cpu cards are placed.
 
