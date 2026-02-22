@@ -97,7 +97,8 @@ function showHelpViewer(pages) {
 
 function showHelp() {
     const pages = [
-	"<h2>ABOUT THIS GUIDE:</h2>" +
+	"<h2>About:</h2>" +
+	    "<p>THIS IS STILL BEING BUILT --- " +
 	    "<p>This document provides a <bold>clear</bold> and complete overview of how to play" +
 	    "Gin Rummy. It explains the flow of the game, how cards are dealt, how turns work," +
 	    "guide will walk you through everything you need to know. (version 4, Feb 18, 2026)" +
