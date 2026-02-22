@@ -1318,3 +1318,10 @@ document.getElementById("title").addEventListener("click", () => {
     
 });
 
+document.getElementById("star-tr").addEventListener("click", () => {
+  openHelpModal(); 
+});
+
+function openHelpModal() {
+    showMessage("Coming soon!");
+}

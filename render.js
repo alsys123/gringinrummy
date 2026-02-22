@@ -73,8 +73,16 @@ function render() {
 //    const offset = (window.innerWidth - totalWidth) / 2;
 //      const offset = 100; // move entire hand right
 
-    const PLAYER_SHIFT_X = -00;   // move left
-    const PLAYER_SHIFT_Y = 20;      // move up/down
+    let PLAYER_SHIFT_X = -00;   // move left
+    let PLAYER_SHIFT_Y = 20;      // move up/down
+
+    // setup for long and thin display like iphone
+    const iw = window.innerWidth;
+    if (iw <= 500) {
+	PLAYER_SHIFT_X = 50; // move more to the right
+	PLAYER_SHIFT_Y = 70;      // move up/down
+    } 
+
 
     // This is for meld group spacing    
     const groupIndex = new Map();

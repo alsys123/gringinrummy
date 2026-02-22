@@ -1,6 +1,6 @@
 
 /* ------------------------------
-     General Backdoor
+     Backdoor
   ------------------------------ */
 
 const gBackDoorLock = 3;  // when to open/close back door .. 3 is good
@@ -8,44 +8,25 @@ let   gBackDoorCode = 0;
 let   gBackDoorDir = 1; // +1 going up, -1 going down ... the direction
 
 function openCloseBackDoor() {
-  // Step the counter
-  gBackDoorCode += gBackDoorDir;
-
-  // Clamp and flip direction at the ends
-  if (gBackDoorCode >= gBackDoorLock) {
-    gBackDoorCode = gBackDoorLock;
-    gBackDoorDir = -1; // start going down
-  } else if (gBackDoorCode <= 0) {
-    gBackDoorCode = 0;
-    gBackDoorDir = 1; // start going up
-  }
-
-  // Show only when fully open
-  const open = gBackDoorCode === gBackDoorLock;
-  document.getElementById("back-door").hidden = !open;
-
-//  console.log("code:", gBackDoorCode, "dir:", gBackDoorDir, "open:", open);
+    log("Open back door","sys");
+    // Step the counter
+    gBackDoorCode += gBackDoorDir;
+    
+    // Clamp and flip direction at the ends
+    if (gBackDoorCode >= gBackDoorLock) {
+	gBackDoorCode = gBackDoorLock;
+	gBackDoorDir = -1; // start going down
+    } else if (gBackDoorCode <= 0) {
+	gBackDoorCode = 0;
+	gBackDoorDir = 1; // start going up
+    }
+    
+    // Show only when fully open
+    const open = gBackDoorCode === gBackDoorLock;
+    document.getElementById("back-door").hidden = !open;
+    
+    //  console.log("code:", gBackDoorCode, "dir:", gBackDoorDir, "open:", open);
 }
-/*
-    // open a back door to save and restore game states
-function openCloseBackDoor() {
-//    gBackDoorCode++;
-	//	console.log("Back door - double click: ", gBackDoorCode);
-	if (gBackDoorCode > 3 ) {
-//	    dec(gBackDoorCode);
-	    gBackDoorCode = Math.max(0, gBackDoorCode - 1);
-	    document.getElementById("back-door").hidden = false;
-	    console.log("code -: ", gBackDoorCode);
-	}
-	if (gBackDoorCode <= 3 ) {
-	    //	gBackDoorCode++;
-//	    inc(gBackDoorCode);
-	    gBackDoorCode = Math.min(4, gBackDoorCode + 1);
-	    document.getElementById("back-door").hidden = true;
-	    console.log("code+ : ", gBackDoorCode);
-	}
-    } // openCloseBackDoor
-*/
 
 
   /* ------------------------------
