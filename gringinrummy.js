@@ -1212,8 +1212,8 @@ const w = window.innerWidth;
   tl.style.top  = (h * margin) + "px";
 
   // Top-right
-  tr.style.left = (w * (1 - margin)) + "px";
-  tr.style.top  = (h * margin) + "px";
+  tr.style.left = (w * (1 - margin))-30 + "px";
+  tr.style.top  = (h * margin) + 20 + "px";
 
   // Bottom-left
   bl.style.left = (w * margin) + "px";
@@ -1319,9 +1319,9 @@ document.getElementById("title").addEventListener("click", () => {
 });
 
 document.getElementById("star-tr").addEventListener("click", () => {
-  openHelpModal(); 
+  showHelp(); 
 });
 
-function openHelpModal() {
-    showMessage("Coming soon!");
-}
+//function openHelpModal() {
+//    showMessage("Coming soon!");
+//}

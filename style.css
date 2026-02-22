@@ -650,6 +650,9 @@ h1 {
 #star-tr {
   cursor: pointer;
   pointer-events: auto;
+  width: 40px;
+  height: 40px;
+  font-size: 24px; /* optional, but harmless now */
 }
 
 @keyframes bump {
