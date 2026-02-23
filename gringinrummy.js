@@ -419,7 +419,7 @@ function showHandTally(result) {
 	  yourDeadwoodLine + "\n" +
 	  cpuDeadwoodLine  + "\n" +
 	  "\n" +
-	  `Points this hand: ${result.points} ` + 
+	  `${result.winner} wins: ${result.points} ` + 
 	  pointsThisHandCalc + "\n\n" +
 	  `Match Score:\n` +
 	  `You: ${matchScore.player}\n` +
