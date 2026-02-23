@@ -80,6 +80,12 @@ function render() {
 
     // setup for long and thin display like iphone
     const iw = window.innerWidth;
+	//tablet - portrait
+	if (iw <= 850) {
+	PLAYER_SHIFT_X = 50; // move more to the right
+	PLAYER_SHIFT_Y = 70;      // move up/down
+    } 
+	// iphone portrait, for examplw
     if (iw <= 500) {
 	PLAYER_SHIFT_X = 50; // move more to the right
 	PLAYER_SHIFT_Y = 70;      // move up/down
