@@ -236,7 +236,7 @@ function applyScoring(result) {
     } else if (result.type === "stock") {
 	points = Math.abs(result.pDW - result.cDW);
     } else if (result.type === "undercut") {
-	points = 25 + (result.winner === "player" ? result.cDW : result.pDW);
+	points = 10 + (result.winner === "player" ? result.cDW : result.pDW);
     }
     
     matchScore[result.winner] += points;
