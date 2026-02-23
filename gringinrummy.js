@@ -1339,6 +1339,11 @@ function positionCenterArea() {
 
     // for iphone or portrait mode - reset them
     const iw = window.innerWidth;
+// tablet portait mode
+	if (iw <= 850) {
+    center.style.marginLeft = +(w * 0.1) + "px";
+    center.style.marginTop  = (h * 0.40) + "px";
+    }
     if (iw <= 500) {
     center.style.marginLeft = +(w * 0.1) + "px";
     center.style.marginTop  = (h * 0.40) + "px";
