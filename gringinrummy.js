@@ -1342,7 +1342,7 @@ function positionCenterArea() {
 // tablet portait mode
 	if (iw <= 850) {
     center.style.marginLeft = +(w * 0.1) + "px";
-    center.style.marginTop  = (h * 0.40) + "px";
+    center.style.marginTop  = (h * 0.30) + "px";
     }
     if (iw <= 500) {
     center.style.marginLeft = +(w * 0.1) + "px";
