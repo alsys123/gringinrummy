@@ -83,7 +83,7 @@ function render() {
 	//tablet - portrait
 	if (iw <= 850) {
 	PLAYER_SHIFT_X = 50; // move more to the right
-	PLAYER_SHIFT_Y = 100;      // move up/down
+	PLAYER_SHIFT_Y = 200;      // move up/down
     } 
 	// iphone portrait, for examplw
     if (iw <= 500) {
