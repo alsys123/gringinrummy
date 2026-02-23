@@ -338,6 +338,7 @@ h1 {
     transform: scale(1.1);
 }
 */
+
 .card.just-drawn {
     transform: scale(1.12);
     border-color: #ffb400;
@@ -346,6 +347,7 @@ h1 {
     box-shadow: 0 0 25px rgba(255, 180, 0, 0.8);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 
   .card.player-card {
     cursor: pointer;

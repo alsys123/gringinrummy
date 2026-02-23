@@ -80,7 +80,7 @@ function scoreBoardDetails() {
 	out += calcLine + "\n" ;
 	out += bonusLine;
 	
-	out += `${g.winner} gets ${g.pointsThisGame} points` + "\n";
+	out += `${g.winner} wins ${g.pointsThisGame} points` + "\n";
 
 	out += runningLine + "\n";
 //	out += `Running: ${g.accumulated.player}  vs  ${g.accumulated.cpu}`;

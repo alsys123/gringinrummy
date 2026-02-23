@@ -1,4 +1,52 @@
+/* ------------------------------
+   Animate
+   ------------------------------ */
+
+//
 async function animateCpuTakeFromStock(card) {
+  const stockElem = el.stock;
+  const cpuHandElem = el.cpu;
+
+  const start = stockElem.getBoundingClientRect();
+  const end = cpuHandElem.getBoundingClientRect();
+
+  const flying = cardBack();
+  flying.style.position = "fixed";
+  flying.style.left = start.left + "px";
+  flying.style.top = start.top + "px";
+  flying.style.zIndex = 9999;
+  flying.style.opacity = "1";
+
+  // 1. Append to DOM first
+  document.body.appendChild(flying);
+
+  // 2. Force layout flush
+  void flying.offsetWidth;
+
+  // 3. Initial transform
+  flying.style.transform = "translate(0px, 0px) rotate(0deg)";
+
+  // 4. Animate transform AND opacity
+  flying.style.transition =
+    "transform 3000ms ease-in-out, opacity 6000ms ease-in-out";
+
+  // 5. Next frame → animate to CPU area + fade out
+  requestAnimationFrame(() => {
+    const dx = (end.left + 700) - start.left;
+    const dy = (end.top - 300) - start.top; // was -200
+
+    flying.style.transform = `translate(${dx}px, ${dy}px) rotate(-10deg)`;
+    flying.style.opacity = "0";   // fade out
+  });
+
+  flying.addEventListener("transitionend", () => flying.remove(), { once: true });
+}
+
+/*
+async function animateCpuTakeFromStock(card) {
+
+    console.log("CPU From Stock: ",cardFace(card).outerHTML);
+
     const stockElem = el.stock;     // your stock pile element
     const cpuHandElem = el.cpu;     // your CPU hand container
     
@@ -28,10 +76,200 @@ async function animateCpuTakeFromStock(card) {
     }, { once: true });
 
 //    await sleep(2000);
+}
+*/
+/*
+async function animateCpuTakeFromStock(card) {
+//    console.log("CPU From Stock: ",cardFace(card).outerHTML);
     
-} // animateCpuTakeFromStock
+  const stockElem = el.stock;
+  const cpuHandElem = el.cpu;
 
+  const start = stockElem.getBoundingClientRect();
+  const end = cpuHandElem.getBoundingClientRect();
 
+  const flying = cardBack();
+  flying.style.position = "fixed";
+  flying.style.left = start.left + "px";
+  flying.style.top = start.top + "px";
+  flying.style.zIndex = 9999;
+    flying.style.opacity = "1";
+    
+  // 1. Append to DOM FIRST
+  document.body.appendChild(flying);
+
+  // 2. Force layout flush (critical)
+  void flying.offsetWidth;
+
+  // 3. Initial transform (no movement)
+  flying.style.transform = "translate(0px, 0px) rotate(0deg)";
+
+  // 4. Apply transition AFTER initial transform is set
+//  flying.style.transition = "transform 3000ms ease-in-out";
+//flying.style.transition = "transform 2000ms cubic-bezier(.25,.8,.25,1)";
+    flying.style.transition = "transform 1200ms ease-in-out, opacity 600ms ease-in-out";
+    
+  // 5. Next frame → animate to final transform
+  requestAnimationFrame(() => {
+    const dx = (end.left + 500) - start.left;
+    const dy = (end.top - 300) - start.top; // was -200
+
+    flying.style.transform = `translate(${dx}px, ${dy}px) rotate(-10deg)`;
+  });
+
+    flying.addEventListener("transitionend", () => flying.remove(), { once: true });
+
+//    await sleep(2000);
+
+}
+*/
+
+/*
+async function animateCpuTakeFromDiscard(card) {
+
+//    console.log("CPU From Discard: ",cardFace(card).outerHTML);
+
+  const discardElem = el.discard;
+  const cpuHandElem = el.cpu;
+
+  const start = discardElem.getBoundingClientRect();
+  const end = cpuHandElem.getBoundingClientRect();
+
+  const flying = cardFace(card);
+  flying.style.position = "fixed";
+  flying.style.left = start.left + "px";
+  flying.style.top = start.top + "px";
+  flying.style.zIndex = 9999;
+
+  // 1. Append to DOM FIRST
+  document.body.appendChild(flying);
+
+  // 2. Force layout flush (critical for Safari/iPad)
+  void flying.offsetWidth;
+
+  // 3. Now set the initial transform
+  flying.style.transform = "translate(0px, 0px) rotate(0deg)";
+
+  // 4. Apply transition AFTER initial transform is set
+  flying.style.transition = "transform 3000ms ease-in-out";
+
+  // 5. Next frame → animate to final transform
+  requestAnimationFrame(() => {
+    const dx = (end.left + 600) - start.left;
+    const dy = (end.top - 300) - start.top; // was 100
+
+    flying.style.transform = `translate(${dx}px, ${dy}px) rotate(-10deg)`;
+  });
+
+    flying.addEventListener("transitionend", () => flying.remove());
+
+//        await sleep(2000);
+
+}
+*/
+/*
+async function animateCpuTakeFromDiscard(card) {
+  const discardElem = el.discard;
+  const cpuHandElem = el.cpu;
+
+  const start = discardElem.getBoundingClientRect();
+  const end = cpuHandElem.getBoundingClientRect();
+
+  const flying = cardFace(card);
+  flying.style.position = "fixed";
+  flying.style.left = start.left + "px";
+  flying.style.top = start.top + "px";
+  flying.style.zIndex = 9999;
+  flying.style.opacity = "1";
+
+  // 1. Append to DOM FIRST
+  document.body.appendChild(flying);
+
+  // 2. Force layout flush (critical for Safari/iPad)
+  void flying.offsetWidth;
+
+  // 3. Initial transform
+  flying.style.transform = "translate(0px, 0px) rotate(0deg)";
+
+  // 4. Animate transform AND opacity
+  flying.style.transition =
+    "transform 3000ms ease-in-out, opacity 800ms ease-in-out";
+
+  // 5. Next frame → animate to final transform
+  requestAnimationFrame(() => {
+    const dx = (end.left + 600) - start.left;
+    const dy = (end.top - 300) - start.top;
+
+    flying.style.transform = `translate(${dx}px, ${dy}px) rotate(-10deg)`;
+  });
+
+  // 6. Flip the card near the end (e.g., last 25% of the animation)
+  setTimeout(() => {
+    flying.style.transform += " rotateY(180deg)";
+    flying.style.opacity = "0";   // fade out
+  }, 2250); // 75% of 3000ms
+
+  flying.addEventListener("transitionend", () => flying.remove());
+}
+*/
+async function animateCpuTakeFromDiscard(card) {
+  const discardElem = el.discard;
+  const cpuHandElem = el.cpu;
+
+  const start = discardElem.getBoundingClientRect();
+  const end = cpuHandElem.getBoundingClientRect();
+
+  const flying = cardFace(card);   // starts as the face
+  flying.style.position = "fixed";
+  flying.style.left = start.left + "px";
+  flying.style.top = start.top + "px";
+  flying.style.zIndex = 9999;
+  flying.style.opacity = "1";
+  flying.style.backfaceVisibility = "hidden";
+
+  // 1. Append to DOM FIRST
+  document.body.appendChild(flying);
+
+  // 2. Force layout flush
+  void flying.offsetWidth;
+
+  // 3. Initial transform
+  flying.style.transform = "translate(0px, 0px) rotate(0deg) rotateY(0deg)";
+
+  // 4. Animate transform + opacity
+  flying.style.transition =
+    "transform 3000ms ease-in-out, opacity 800ms ease-in-out";
+
+  // 5. Next frame → animate toward CPU
+  requestAnimationFrame(() => {
+    const dx = (end.left + 600) - start.left;
+    const dy = (end.top - 300) - start.top;
+
+    flying.style.transform =
+      `translate(${dx}px, ${dy}px) rotate(-10deg) rotateY(0deg)`;
+  });
+
+  // 6. Halfway through → flip + swap to back
+  setTimeout(() => {
+    // flip
+    flying.style.transform += " rotateY(180deg)";
+
+    // swap to back AFTER the flip begins
+    setTimeout(() => {
+      const back = cardBack();
+      flying.innerHTML = back.innerHTML;
+    }, 300); // small delay so swap happens during the flip
+  }, 1500); // halfway through 3000ms
+
+  // 7. Fade out near the end
+  setTimeout(() => {
+    flying.style.opacity = "0";
+  }, 2200);
+
+  flying.addEventListener("transitionend", () => flying.remove());
+}
+
+/*
 async function animateCpuTakeFromDiscard(card) {
   const discardElem = el.discard;
   const cpuHandElem = el.cpu;
@@ -44,11 +282,19 @@ async function animateCpuTakeFromDiscard(card) {
     
   const flying = cardFace(card); // your existing card renderer
   flying.style.position = "fixed";
-  flying.style.left = start.left + "px";
-  flying.style.top = start.top + "px";
-  flying.style.zIndex = 9999;
+
+//    flying.style.left = start.left + "px";
+//  flying.style.top = start.top + "px";
+const dx = (end.left + 600) - start.left;
+const dy = (end.top - 100) - start.top;
+flying.style.transform = `translate(${dx}px, ${dy}px) rotate(-10deg)`;
+flying.style.transition = "transform 5000ms ease-in-out";
+
+//    flying.style.zIndex = 9999;
 //  flying.style.transition = "all 250ms ease-out";
-  flying.style.transition = "all 600ms ease-out";
+//  flying.style.transition = "all 600ms ease-out";
+//    flying.style.transition = "all 2500ms ease-in-out";
+//flying.style.transition = "all 10000ms cubic-bezier(.25,.8,.25,1)";
 
 //    console.log("start here: left:", flying.style.left, " top: ",flying.style.top);
 //    console.log("start left -- start:", start.left, " end: ",end.left);
@@ -65,6 +311,7 @@ async function animateCpuTakeFromDiscard(card) {
     flying.remove();
   });
 } //animateCpuTakeFromDiscard
+*/
 
 /*
 function animateCpuToDiscard( card ) {

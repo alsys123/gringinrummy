@@ -1,7 +1,97 @@
 
-  /* ------------------------------
-     Rendering
-     ------------------------------ */
+/* ------------------------------
+   Rendering
+   ------------------------------ */
+
+//__ updateButtons
+function updateButtons() {
+    
+    log("Update Buttons", "sys");
+    
+    const t = game.turn === "player";
+    const p = game.phase;
+
+    document.getElementById("btn-knock").style.visibility = "hidden";  // hide
+    document.getElementById("btn-gin").style.visibility = "hidden";
+
+    // player - await-discard
+    if (t && p === "await-discard") {
+
+	const evalPlayer = evaluate(game.player);
+	
+	if (evalPlayer.deadwood === 0)
+	    document.getElementById("btn-gin").style.visibility = "visible"; // show
+	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
+	    document.getElementById("btn-knock").style.visibility = "visible";
+	
+	// hide
+	document.getElementById("btn-new").style.display = "none";
+	document.getElementById("btn-newMatch").style.display = "none";
+	return;
+    }
+
+    /// try this one out .. if play and awaiting to draw
+    if (t && p === "await-draw") {
+
+	const evalPlayer = evaluate(game.player);
+	
+	if (evalPlayer.deadwood === 0)
+	    document.getElementById("btn-gin").style.visibility = "visible";
+	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
+	    document.getElementById("btn-knock").style.visibility = "visible";
+	
+	// hide
+	document.getElementById("btn-new").style.display = "none";
+	document.getElementById("btn-newMatch").style.display = "none";
+	return;
+    }
+
+//    console.log("state: ", game);
+
+    // show by default
+    // either a new game or a new match
+    const playerWon = matchScore.player >= matchScore.target;
+    const cpuWon = matchScore.cpu >= matchScore.target;
+    
+    const matchOverFlag = playerWon || cpuWon;
+    
+//    console.log("flag: ", game.phase,
+//		matchOverFlag,
+//		matchScore.player,playerWon,
+//		matchScore.cpu,   cpuWon);
+
+    // Hide both by default
+    document.getElementById("btn-new").style.display = "none";
+    document.getElementById("btn-newMatch").style.display = "none";
+    // If match is over → show New Match
+    if (matchOverFlag && game.phase === "round-over") {
+	document.getElementById("btn-newMatch").style.display = "";
+	return;
+    }
+    // If match is NOT over → show New Game
+    if (!matchOverFlag) {
+	document.getElementById("btn-new").style.display = "";
+	return;
+    }
+/*    
+    //game.phase could be await draw 
+    if (!matchOverFlag ) {
+	document.getElementById("btn-new").style.display = "";  // New Game
+	console.log("set new GAME!");
+    }
+
+    if (game.phase === "round-over" && matchOverFlag ) {
+	document.getElementById("btn-newMatch").style.display = ""; // New Match
+//	console.log("new match");
+    }
+*/
+    
+// hide by default
+	document.getElementById("btn-knock").style.visibility = "hidden";
+	document.getElementById("btn-gin").style.visibility = "hidden";
+
+	
+} // updateButtons
 
 //__ render
 function render() {

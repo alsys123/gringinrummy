@@ -343,7 +343,7 @@ function showHandTally(result) {
     const actor  = result.who;      // player, cpu, or na
     const winner = result.winner;  // player, cpu, tie
     const type   = result.type;      // gin, knock, stock, undercut
-
+    
     let title = actionText[type][actor];
 
 //    if (result.winner === "cpu" && result.who === "cpu" &&
@@ -413,17 +413,24 @@ function showHandTally(result) {
 	pointsThisHandCalc = " = ( " + `${result.pDW} + 10 Bonus points for an undercut` + " )";
     }
 
+    const personalWinner =
+	  result.winner === "player"
+	  ? "You win"
+	  : result.winner === "cpu"
+	  ? "CPU wins"
+	  : result.winner; // or whatever default you want
+
     const tally =
 	  " - - - Game Card - - - " + "\n" + "\n" +
 	  `${title}\n\n` +
 	  yourDeadwoodLine + "\n" +
 	  cpuDeadwoodLine  + "\n" +
 	  "\n" +
-	  `${result.winner} wins: ${result.points} ` + 
+	  `${personalWinner} ${result.points} points` + 
 	  pointsThisHandCalc + "\n\n" +
 	  `Match Score:\n` +
-	  `You: ${matchScore.player}\n` +
-	  `CPU: ${matchScore.cpu}`;
+	  `   You: ${matchScore.player} points\n` +
+	  `   CPU: ${matchScore.cpu} points`;
     
     //     alert(tally);
     showMessage(tally);
@@ -461,101 +468,6 @@ function showHandTally(result) {
       updateScoreboard();
       
   }
-
-  /* ------------------------------
-     Rendering
-  ------------------------------ */
-
-
-//__ updateButtons
-function updateButtons() {
-    
-    log("Update Buttons", "sys");
-    
-	const t = game.turn === "player";
-	const p = game.phase;
-
-	document.getElementById("btn-knock").style.visibility = "hidden";  // hide
-	document.getElementById("btn-gin").style.visibility = "hidden";
-
-	// player - await-discard
-      if (t && p === "await-discard") {
-
-	  const evalPlayer = evaluate(game.player);
-	   
-	  if (evalPlayer.deadwood === 0)
-	      document.getElementById("btn-gin").style.visibility = "visible"; // show
-	  if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
-	      document.getElementById("btn-knock").style.visibility = "visible";
-	  
-	  // hide
-	  document.getElementById("btn-new").style.display = "none";
-	  document.getElementById("btn-newMatch").style.display = "none";
-	  return;
-      }
-
-	/// try this one out .. if play and awaiting to draw
-	if (t && p === "await-draw") {
-
-	    const evalPlayer = evaluate(game.player);
-	    
-	    if (evalPlayer.deadwood === 0)
-		document.getElementById("btn-gin").style.visibility = "visible";
-	    if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
-		document.getElementById("btn-knock").style.visibility = "visible";
-	    
-	    // hide
-	    document.getElementById("btn-new").style.display = "none";
-	    document.getElementById("btn-newMatch").style.display = "none";
-	    return;
-	}
-
-//    console.log("state: ", game);
-
-    // show by default
-    // either a new game or a new match
-    const playerWon = matchScore.player >= matchScore.target;
-    const cpuWon = matchScore.cpu >= matchScore.target;
-    
-    const matchOverFlag = playerWon || cpuWon;
-    
-//    console.log("flag: ", game.phase,
-//		matchOverFlag,
-//		matchScore.player,playerWon,
-//		matchScore.cpu,   cpuWon);
-
-    // Hide both by default
-    document.getElementById("btn-new").style.display = "none";
-    document.getElementById("btn-newMatch").style.display = "none";
-    // If match is over → show New Match
-    if (matchOverFlag && game.phase === "round-over") {
-	document.getElementById("btn-newMatch").style.display = "";
-	return;
-    }
-    // If match is NOT over → show New Game
-    if (!matchOverFlag) {
-	document.getElementById("btn-new").style.display = "";
-	return;
-    }
-/*    
-    //game.phase could be await draw 
-    if (!matchOverFlag ) {
-	document.getElementById("btn-new").style.display = "";  // New Game
-	console.log("set new GAME!");
-    }
-
-    if (game.phase === "round-over" && matchOverFlag ) {
-	document.getElementById("btn-newMatch").style.display = ""; // New Match
-//	console.log("new match");
-    }
-*/
-    
-// hide by default
-	document.getElementById("btn-knock").style.visibility = "hidden";
-	document.getElementById("btn-gin").style.visibility = "hidden";
-
-	
-  } // updateButtons
 
     
   /* ------------------------------
@@ -901,7 +813,9 @@ function playerGin() {
         drawn = game.discard.pop();
           log("CPU drew " + prettyCard(drawn) + " from discard.","cpu");
 
-//  animateCpuTakeFromDiscard(drawn);
+  animateCpuTakeFromDiscard(drawn);
+
+	  await sleep(3000);
 
       }
     }// if from topDiscard
@@ -913,7 +827,9 @@ function playerGin() {
       }
 	drawn = game.stock.pop();
 
-//animateCpuTakeFromStock(drawn);
+animateCpuTakeFromStock(drawn);
+
+	await sleep(3000);
 	
 	log("CPU drew from stock.","cpu");
     }
