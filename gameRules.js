@@ -26,6 +26,8 @@ function showDocumentViewer(pages) {
     pager.style.flexWrap = "wrap";
     pager.style.rowGap = "6px";
     pager.style.maxWidth = "800px"; // adjust to taste
+
+    const buttons = []; // store references to all pager buttons
     
     for (let i = 0; i < pages.length; i++) {
 	const btn = document.createElement("button");
@@ -36,6 +38,8 @@ function showDocumentViewer(pages) {
             pageIndex = i;
             updatePage();
 	};
+
+	 buttons.push(btn); // save it
 	pager.appendChild(btn);
     }
     
@@ -70,7 +74,16 @@ function showDocumentViewer(pages) {
         pre.textContent = pages[pageIndex];
         btnPrev.disabled = pageIndex === 0;
         btnNext.disabled = pageIndex === pages.length - 1;
-    }
+
+	// highlight selected
+	buttons.forEach((b, idx) => {
+	    if (idx === pageIndex) {
+		b.classList.add("gameRules-active");
+	    } else {
+		b.classList.remove("gameRules-active"); }
+	}); 
+
+    }//updatePage
 
     btnPrev.onclick = () => {
         if (pageIndex > 0) {

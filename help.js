@@ -25,6 +25,8 @@ function showHelpViewer(pages) {
     pager.style.flexWrap = "wrap";
     pager.style.rowGap = "6px";
     pager.style.maxWidth = "800px"; // adjust to taste
+
+    const buttons = []; // store references to all pager buttons
     
     for (let i = 0; i < pages.length; i++) {
 	const btn = document.createElement("button");
@@ -35,6 +37,9 @@ function showHelpViewer(pages) {
             pageIndex = i;
             updatePage();
 	};
+
+	buttons.push(btn); // save it
+	
 	pager.appendChild(btn);
     }
     
@@ -68,13 +73,31 @@ function showHelpViewer(pages) {
     btnNext.textContent = "Next ▶";
 
     function updatePage() {
+    pre.innerHTML = pages[pageIndex];
+
+    // highlight selected button
+    buttons.forEach((b, idx) => {
+        if (idx === pageIndex) {
+            b.classList.add("help-active");
+        } else {
+            b.classList.remove("help-active");
+        }
+    });
+
+    btnPrev.disabled = pageIndex === 0;
+    btnNext.disabled = pageIndex === pages.length - 1;
+}
+
+    /*
+    function updatePage() {
 //        pre.textContent = pages[pageIndex];
 	pre.innerHTML = pages[pageIndex];
 
         btnPrev.disabled = pageIndex === 0;
         btnNext.disabled = pageIndex === pages.length - 1;
     } //updatePage
-
+*/
+    
     btnPrev.onclick = () => {
         if (pageIndex > 0) {
             pageIndex--;
@@ -245,6 +268,8 @@ display:block; margin: 12px 0;">
    PAGE 4 - Dialog Boxes
 ------------------------------------------------------------ */
 	`
+<h2>Dialog Boxes</h2>
+
 <h3>Top part of dialog box:</h3>
 <img src="images/screenShots/dialogTop.png" style="max-width: 200px;
 display:block; margin: 12px 0;">
@@ -258,7 +283,7 @@ display:block; margin: 12px 0;">
    PAGE 5 — Developer Tools:  BACKDOOR
 ------------------------------------------------------------ */
 	
-`<h2>🛠️ Back‑Door Tools</h2>
+`<h2>🛠️ Developer Tools</h2>
 <p>You can <strong>press</strong> these only when the hidden panel is enabled:</p>
 <ul>
   <li>💾 Save / Restore State</li>

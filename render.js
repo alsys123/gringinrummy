@@ -6,8 +6,9 @@
 //__ updateButtons
 function updateButtons() {
     
-    log("Update Buttons", "sys");
+    log(`Update Buttons phase: ${game.phase} who: ${game.turn}`, "sys");
 
+   
     console.log("in updateButtons .. flags: game.phase, matchScore.player, matchScore.cpu,game.turn ==> ",
 		game.phase,
 		matchScore.player,
@@ -82,14 +83,16 @@ function updateButtons() {
 	return;
     }
 
+// rev8
     // match is not over but the round is over
-    if (game.turn === "cpu" && game.phase === "await-draw") {
-	document.getElementById("btn-new").style.display = "";
-
-	console.log("show New Game - !matchOverFlag",);
-	
-	return;
-    }
+//    if (game.turn === "cpu" && game.phase === "await-draw") {
+//	document.getElementById("btn-new").style.display = "";
+//
+//	console.log("show New Game - !matchOverFlag",);
+//	
+//	return;
+    //    }
+    
     // match is not over but the round is over
     if (game.turn === "cpu" && game.phase === "round-over") {
 	document.getElementById("btn-new").style.display = "";

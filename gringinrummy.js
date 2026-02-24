@@ -499,9 +499,9 @@ function start() {
 //    detailedMatchScore.games = []; // now reset previous scoreboard
 
     game.turn = "player";
-
     game.phase = "await-draw";
-//    game.phase = "idle";
+
+    //    game.phase = "idle";
 
     game.drawn = null;
       game.revealCpu = false;
@@ -557,13 +557,14 @@ function start() {
 	updateButtons();
     } //drawStock
     
-    function drawDiscard() {
+function drawDiscard() {
 	if (game.turn!=="player" || game.phase!=="await-draw") return;
 	if (!game.discard.length) return;
 	const c = game.discard.pop();
 	game.player.push(c);
-	game.drawn = c;
-	log("You drew " + prettyCard(c) + " from discard.", "player");
+
+//    game.drawn = c; //rev8
+    	log("You drew " + prettyCard(c) + " from discard.", "player");
 	
 	game.drawn = c.id;  //... not sure this is right?
 	
@@ -582,7 +583,7 @@ function playerDiscard(id) {
     game.discard.push(c);
     log("You discarded " + prettyCard(c) + ".", "player");
     
-    game.drawn = c.id;
+//    game.drawn = c.id;
     
     game.drawn = null;
     
@@ -596,10 +597,13 @@ function playerDiscard(id) {
     }
     game.turn = "cpu";
     game.phase = "await-draw";
-    setMsg("CPU thinking...");
+
+      setMsg("CPU thinking...");
+
       render();
-      updateButtons();
-   // setTimeout(cpuTurn, 650);
+      updateButtons(); //rev8
+
+      // setTimeout(cpuTurn, 650);
     setTimeout(cpuTurn, 0);
   }
 
@@ -792,8 +796,13 @@ function playerGin() {
   ------------------------------ */
 
   async function cpuTurn() {
-    if (game.phase === "round-over") return;
 
+      log("cpuTurn","sys");
+
+      if (game.phase === "round-over") return;
+
+//      game.phase = "cpu-thinking"; // new rev8
+      
     const evalCpu = evaluate(game.cpu);
     const cDW = evalCpu.deadwood;
 
@@ -822,7 +831,8 @@ function playerGin() {
 
       }
     }// if from topDiscard
-      
+
+     // Otherwise draw stock
     if (!drawn) {
       if (!game.stock.length) {
         stockDepletionResolution();
@@ -838,6 +848,8 @@ animateCpuTakeFromStock(drawn);
     }
       
       game.cpu.push(drawn);
+
+//      game.phase = "cpu-drawn"; // rev8
       
 //      await sleep(3000);
 
@@ -986,6 +998,9 @@ function cpuKnock() {
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
+
+    updateButtons();  //rev8
+    
     setMsg("CPU knocked. Click New Hand to play again.");
     // .. for now    render();
   } //cpuKnock
@@ -1062,11 +1077,6 @@ function layoffValue(cards) {
    
  */
 
-function showMessage(msg) {
-	const padded = msg + "\n\n"; // always add two newlines
-	document.getElementById("modal-text").textContent = padded;
-	document.getElementById("modal").style.display = "flex";
-} // showMessage
 
 
 //    add the handlers

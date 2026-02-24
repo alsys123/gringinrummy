@@ -487,12 +487,12 @@ h1 {
  */
   #log {
   position: fixed;          /* stays in place on screen */
-  right: 200px;              /* distance from right edge */
+  right: 100px;              /* distance from right edge */
   top: 50%;                 /* vertical midpoint */
   transform: translateY(-70%); /* perfect vertical centering */
 
-  width: 25ch;              /* ~25 characters wide */
-  max-height: calc(1.2em * 8); /* 8 lines visible */
+  width: 35ch;              /* ~25 characters wide */
+  max-height: calc(1.2em * 9); /* 8 lines visible */
   overflow-y: auto;         /* scroll when full */
 
   margin: 0;
@@ -527,7 +527,8 @@ h1 {
       z-index: 999999;        /* higher than anything else */
 }
 
-.modal-content {
+  .modal-content {
+       position: relative; /* <-- THIS is required */
   background: white;
   padding: 20px;
   border-radius: 8px;
@@ -538,6 +539,36 @@ h1 {
 
 }
 
+
+/* Shared X button styling */
+.modal-close {
+    position: absolute;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+     color: #c00; /* 🔥 red X */
+    cursor: pointer;
+    user-select: none;
+    transition: 0.2s;
+    z-index: 9999;
+}
+
+.modal-close:hover {
+    color: black;
+    transform: scale(1.2);
+}
+
+/* Left X */
+.modal-close.left {
+    left: 10px;
+}
+
+/* Right X */
+.modal-close.right {
+    right: 10px;
+}
+
+
   /*
 #modal-text {
     color: black;
@@ -545,6 +576,7 @@ h1 {
 }
 */
 #modal-text {
+     display: block; /* forces it onto its own line rev8 */
     color: black;
 /*  font-family: "Courier New", monospace;  */
   white-space: pre; /* preserves alignment and newlines */
@@ -558,15 +590,37 @@ h1 {
   user-select: none;
 }
 */
+/*
 .modal-header {
     cursor: move;
     touch-action: none;
     user-select: none;
-    padding: 8px;
+
+     padding: 6px 10px;
     background: #444;
     color: white;
 }
+*/
 
+.modal-header {
+/*  display: inline-block;*/     /* shrink to fit text */
+  font-size: 14px;           /* smaller text */
+  font-weight: 600;
+  padding: 4px 10px;         /* small pill shape */
+  background: lightgrey;       /* light gray */
+  border-radius: 6px;
+  margin-bottom: 2px solid black;       /* spacing above content */
+  cursor: move;              /* optional: looks draggable */
+  color: black;
+
+  display: block;
+  width: fit-content;
+  margin: 0 auto 10px auto;   /* centers the badge */
+  text-align: center;
+  padding-bottom: 6px;
+  
+}
+/*
 .resize-handle {
   position: absolute;
   width: 16px;
@@ -575,6 +629,23 @@ h1 {
   bottom: 4px;
   cursor: se-resize;
   background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+  touch-action: none;
+}
+*/
+.resize-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  right: 4px;
+  bottom: 4px;
+  cursor: se-resize;
+  background:
+    linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.3) 50%) 0 0,
+    linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.3) 50%) 4px 4px,
+    linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.3) 50%) 8px 8px;
+  background-size: 4px 4px;
+  background-repeat: no-repeat;
   border-radius: 4px;
   touch-action: none;
 }
@@ -750,3 +821,16 @@ h1 {
 }
  */
  
+.help-active {
+  background: #0078d4;   /* Microsoft blue, looks professional */
+  color: white;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.gameRules-active {
+  background: #0078d4;   /* Microsoft blue, looks professional */
+  color: white;
+  font-weight: 600;
+  border-radius: 4px;
+}

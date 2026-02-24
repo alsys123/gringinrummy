@@ -1,6 +1,14 @@
+/* ------------------------------
+   Utils
+   ------------------------------ */
 
 
 
+function showMessage(msg) {
+	const padded = msg + "\n\n"; // always add two newlines
+	document.getElementById("modal-text").textContent = padded;
+	document.getElementById("modal").style.display = "flex";
+} // showMessage
 
     /* datastructure
     const gameData = {
