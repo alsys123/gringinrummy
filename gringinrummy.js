@@ -499,8 +499,11 @@ function start() {
 //    detailedMatchScore.games = []; // now reset previous scoreboard
 
     game.turn = "player";
+
     game.phase = "await-draw";
-      game.drawn = null;
+//    game.phase = "idle";
+
+    game.drawn = null;
       game.revealCpu = false;
 
 //      el.log.innerHTML = ""; // clears the log

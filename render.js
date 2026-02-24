@@ -7,7 +7,12 @@
 function updateButtons() {
     
     log("Update Buttons", "sys");
-    
+
+    console.log("in updateButtons .. flags: game.phase, matchScore.player, matchScore.cpu,game.turn ==> ",
+		game.phase,
+		matchScore.player,
+		matchScore.cpu, game.turn   );
+
     const t = game.turn === "player";
     const p = game.phase;
 
@@ -55,10 +60,10 @@ function updateButtons() {
     
     const matchOverFlag = playerWon || cpuWon;
     
-//    console.log("flag: ", game.phase,
-//		matchOverFlag,
-//		matchScore.player,playerWon,
-//		matchScore.cpu,   cpuWon);
+    console.log("flag: ", game.phase,
+		matchOverFlag,
+		matchScore.player,playerWon,
+		matchScore.cpu,   cpuWon);
 
     // Hide both by default
     document.getElementById("btn-new").style.display = "none";
@@ -68,11 +73,41 @@ function updateButtons() {
 	document.getElementById("btn-newMatch").style.display = "";
 	return;
     }
-    // If match is NOT over → show New Game
-    if (!matchOverFlag) {
+    // If match is NOT over → show New Game but we are idle
+    if (!matchOverFlag && game.phase === "idle") {
 	document.getElementById("btn-new").style.display = "";
+
+	console.log("show New Game - !matchOverFlag",);
+	
 	return;
     }
+
+    // match is not over but the round is over
+    if (game.turn === "cpu" && game.phase === "await-draw") {
+	document.getElementById("btn-new").style.display = "";
+
+	console.log("show New Game - !matchOverFlag",);
+	
+	return;
+    }
+    // match is not over but the round is over
+    if (game.turn === "cpu" && game.phase === "round-over") {
+	document.getElementById("btn-new").style.display = "";
+
+	console.log("show New Game - !matchOverFlag",);
+	
+	return;
+    }
+
+    // match is not over but the round is over
+    if (!matchOverFlag && game.phase === "round-over") {
+	document.getElementById("btn-new").style.display = "";
+
+	console.log("show New Game - !matchOverFlag",);
+	
+	return;
+    }
+
 /*    
     //game.phase could be await draw 
     if (!matchOverFlag ) {
