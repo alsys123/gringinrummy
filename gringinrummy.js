@@ -840,9 +840,8 @@ function playerGin() {
       }
 	drawn = game.stock.pop();
 
-animateCpuTakeFromStock(drawn);
-
-	await sleep(3000);
+//animateCpuTakeFromStock(drawn);
+//	await sleep(3000);
 	
 	log("CPU drew from stock.","cpu");
     }
