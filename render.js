@@ -9,22 +9,30 @@ function updateButtons() {
     log(`Update Buttons phase: ${game.phase} who: ${game.turn}`, "sys");
 
    
-    console.log("in updateButtons .. flags: game.phase, matchScore.player, matchScore.cpu,game.turn ==> ",
-		game.phase,
-		matchScore.player,
-		matchScore.cpu, game.turn   );
+//    console.log("in updateButtons .. flags: game.phase, matchScore.player, matchScore.cpu,game.turn ==> ",
+//		game.phase,
+//		matchScore.player,
+//		matchScore.cpu, game.turn   );
 
     const t = game.turn === "player";
     const p = game.phase;
 
     document.getElementById("btn-knock").style.visibility = "hidden";  // hide
     document.getElementById("btn-gin").style.visibility = "hidden";
+    document.getElementById("btn-bigGin").style.visibility = "hidden";
 
+    const checkBigGinFlag = playerHasBigGin();
+    
     // player - await-discard
     if (t && p === "await-discard") {
 
 	const evalPlayer = evaluate(game.player);
-	
+
+//	console.log(checkBigGinFlag,`. and deadwood: ${evalPlayer.deadwood}`);	
+
+	if (evalPlayer.deadwood <= 10 && checkBigGinFlag )
+	    document.getElementById("btn-bigGin").style.visibility = "visible"; // show
+
 	if (evalPlayer.deadwood === 0)
 	    document.getElementById("btn-gin").style.visibility = "visible"; // show
 	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
@@ -61,10 +69,10 @@ function updateButtons() {
     
     const matchOverFlag = playerWon || cpuWon;
     
-    console.log("flag: ", game.phase,
-		matchOverFlag,
-		matchScore.player,playerWon,
-		matchScore.cpu,   cpuWon);
+//    console.log("flag: ", game.phase,
+//		matchOverFlag,
+//		matchScore.player,playerWon,
+//		matchScore.cpu,   cpuWon);
 
     // Hide both by default
     document.getElementById("btn-new").style.display = "none";
@@ -78,7 +86,7 @@ function updateButtons() {
     if (!matchOverFlag && game.phase === "idle") {
 	document.getElementById("btn-new").style.display = "";
 
-	console.log("show New Game - !matchOverFlag",);
+//	console.log("show New Game - !matchOverFlag",);
 	
 	return;
     }
@@ -97,7 +105,7 @@ function updateButtons() {
     if (game.turn === "cpu" && game.phase === "round-over") {
 	document.getElementById("btn-new").style.display = "";
 
-	console.log("show New Game - !matchOverFlag",);
+//	console.log("show New Game - !matchOverFlag",);
 	
 	return;
     }
@@ -106,7 +114,7 @@ function updateButtons() {
     if (!matchOverFlag && game.phase === "round-over") {
 	document.getElementById("btn-new").style.display = "";
 
-	console.log("show New Game - !matchOverFlag",);
+//	console.log("show New Game - !matchOverFlag",);
 	
 	return;
     }
@@ -127,6 +135,7 @@ function updateButtons() {
 // hide by default
 	document.getElementById("btn-knock").style.visibility = "hidden";
 	document.getElementById("btn-gin").style.visibility = "hidden";
+	document.getElementById("btn-bigGin").style.visibility = "hidden";
 
 	
 } // updateButtons

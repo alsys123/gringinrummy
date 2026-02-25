@@ -40,6 +40,7 @@ const logHistory = [];
     btnKnock: document.getElementById("btn-knock"),
     btnGin: document.getElementById("btn-gin"),
     btnNewMatch: document.getElementById("btn-newMatch"),
+    btnBigGin: document.getElementById("btn-bigGin"),
     deadwood: document.getElementById("deadwood-info"),
     scoreboard: document.getElementById("scoreboard")
   };
@@ -257,7 +258,8 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, originalD
     // Determine bonus points
     let bonus = 0;
     let pointsThisGame = 0;
-
+    let dDW = 0;
+    
     // Accumulated totals
     const last = detailedMatchScore.games.at(-1);
     const prevPlayerPoints = last ? last.accumulated.player : 0;
@@ -270,6 +272,7 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, originalD
     // deadwood calc
     if (winner === "player") dDW = cDW - pDW;
     if (winner === "cpu")    dDW = pDW - cDW;
+    
     
   // Total original points (deadwood + bonus)
     pointsThisGame = dDW + bonus;
@@ -440,34 +443,38 @@ function showHandTally(result) {
 } //showHandTally
 
 //__ checkMatchEnd
-    function checkMatchEnd() {
-	if (matchScore.player >= matchScore.target) {
-	    showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
-//old	    document.getElementById("btn-new").textContent = "New Game";
-	    document.getElementById("btn-newMatch").textContent = "New MATCH";
-//??	    resetMatch();
-	} else if (matchScore.cpu >= matchScore.target) {
-	    showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
-//old	    document.getElementById("btn-new").textContent = "New Game";
-	    document.getElementById("btn-newMatch").textContent = "New MATCH";
-	    //??	    resetMatch();
-	    /// ??? check THIS SEEMS -- REPEATED in error
-	} else if (matchScore.cpu >= matchScore.target) {
-	    showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
-	    
-	}
-	
-    } //checkMatchEnd
+function checkMatchEnd() {
+    if (matchScore.player >= matchScore.target) {
+	showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
+	//old	    document.getElementById("btn-new").textContent = "New Game";
+	document.getElementById("btn-newMatch").textContent = "New MATCH";
+	//??	    resetMatch();
+    } else if (matchScore.cpu >= matchScore.target) {
+	showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
+	//old	    document.getElementById("btn-new").textContent = "New Game";
+	document.getElementById("btn-newMatch").textContent = "New MATCH";
+	//??	    resetMatch();
+    }
     
-  function resetMatch() {
-      matchScore.player = 0;
-      matchScore.cpu = 0;
+    /*
+   /// ??? check THIS SEEMS -- REPEATED in error
+   else if (matchScore.cpu >= matchScore.target) {
+   showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
+   
+   }
+    */	
+} //checkMatchEnd
+    
+//__
+function resetMatch() {
+    matchScore.player = 0;
+    matchScore.cpu = 0;
 
-      detailedMatchScore.games = []; // now reset previous scoreboard
+    detailedMatchScore.games = []; // now reset previous scoreboard
 
-      updateScoreboard();
-      
-  }
+    updateScoreboard();
+    
+}
 
     
   /* ------------------------------
@@ -480,6 +487,32 @@ function newMatch() {
     start();
     //    return; /// nothing for now
 }
+
+function bigGin() {
+    log("bigGin: .. just coding");
+//    resetMatch();
+//    start();
+    //    return; /// nothing for now
+}
+
+// conditions where we can let the player claim a big gin - make button visible
+function playerHasBigGin() {
+
+    console.log("check for Big Gin");
+    
+    //    game.turn === "player" && game.phase === "await-discard"
+
+    // has a single deadwood left
+    // has 11 cards
+    if (game.player.length === 11) {
+	console.log("player has 11 cards");
+    }
+    // single deadwood fits into a set or a run return true
+
+    // else
+    return false;
+//    return true;    
+}//playerHasBigGin
 
 function start() {
 
@@ -678,8 +711,7 @@ function playerKnock() {
     }
     */
     
-    if (game.player.length > 10) {
-	// Auto-discard highest deadwood card
+    if (game.player.length > 10) {	// Auto-discard highest deadwood card
 //	pEval = evaluate(game.player);
 	const deadwoodCards = pEval.deadwoodCards;
 	
@@ -1104,6 +1136,7 @@ el.btnKnock.onclick = playerKnock;
 el.btnGin.onclick = playerGin;
 
 el.btnNewMatch.onclick = newMatch;
+el.btnBigGin.onclick = bigGin;
 
 updateScoreboard();
 render();
