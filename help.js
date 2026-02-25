@@ -221,13 +221,13 @@ to knocking or Gin.
 <strong>⚠️ Reminder:</strong> You must <strong>press a card</strong> to discard — dragging is not used.
 </div>
 <h3>This is what the initial screen looks like:</h3>
-<img src="images/screenShots/initialScreen.png" style="max-width: 200px;
+<img src="images/screenShots/initialScreen.png" style="max-width: 600px;
 display:block; margin: 12px 0;">
 <p>
 Press New Game to start to play.
 </p>
 <h3>After you start the game, this is the game screen</h3>
-<img src="images/screenShots/gameScreen.png" style="max-width: 200px;
+<img src="images/screenShots/gameScreen.png" style="max-width: 600px;
 display:block; margin: 12px 0;">
 `,
 
@@ -271,11 +271,11 @@ display:block; margin: 12px 0;">
 <h2>Dialog Boxes</h2>
 
 <h3>Top part of dialog box:</h3>
-<img src="images/screenShots/dialogTop.png" style="max-width: 200px;
+<img src="images/screenShots/dialogTop.png" style="max-width: 400px;
 display:block; margin: 12px 0;">
 
 <h3>Bottom part of dialog box:</h3>
-<img src="images/screenShots/dialogBottom.png" style="max-width: 200px;
+<img src="images/screenShots/dialogBottom.png" style="max-width: 400px;
 display:block; margin: 12px 0;">
 
 `,
@@ -301,7 +301,7 @@ They can break a running game if used mid‑hand.
 </div>
 
 <h3>Developer Buttons at bottom of screen</h3>
-<img src="images/screenShots/devButtons.png" style="max-width: 200px;
+<img src="images/screenShots/devButtons.png" style="max-width: 600px;
 display:block; margin: 12px 0;">
 
 <h2>How to open & close the Backdoor</h2>
@@ -336,26 +336,3 @@ disapear.
 
     showHelpViewer(pages);
 }
-/*
-function showHelp() {
-    const pages = [
-	"<h2>About:</h2>" +
-	    "<p>THIS IS STILL BEING BUILT --- " +
-	    "<p>This document provides a <bold>clear</bold> and complete overview of how to play" +
-	    "Gin Rummy. It explains the flow of the game, how cards are dealt, how turns work," +
-	    "guide will walk you through everything you need to know. (version 4, Feb 18, 2026)" +
-	    "</p>",
-	
-	"TABLE OF CONTENTS:" + "\n" +
-	    "1. Intro – Overview of Gin Rummy and its popularity." + "\n" +
-	    "     -  Gin Bonus:    Bonus points for going Gin." + "\n" +
-	    "9. Undercut – When the defender beats the knocker." + "\n" + "\n\n",
-	
-	"Text: Gin Rummy is a two-player card game that has enjoyed widespread popularity as" + "\n" +
-	    "6, 5, 4, 3, 2, Ace. \n\n"
-	
-    ];
-    
-    showHelpViewer(pages);
-} // showHelp
-*/

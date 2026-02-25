@@ -90,12 +90,12 @@ async function animateCpuTakeFromDiscard(card) {
       const back = cardBack();
       flying.innerHTML = back.innerHTML;
     }, 300); // small delay so swap happens during the flip
-  }, 1500); // halfway through 3000ms
+  }, 750); // halfway through 3000ms
 
   // 7. Fade out near the end
   setTimeout(() => {
     flying.style.opacity = "0";
-  }, 2200);
+  }, 2000);
 
   flying.addEventListener("transitionend", () => flying.remove());
 }//animateCpuTakeFromDiscard
@@ -166,8 +166,48 @@ async function cpuDiscardAnimate(card) {
 	setTimeout(() => hover.remove(), MOVE_TIME * 1000 + 50); //was 1300
 
     }, 1000);
-}//cpuDiscard
+}//cpuDiscardAnimate
 
+function showMessageBubble(text) {
+  const bubble = document.getElementById("message-bubble");
+  const stock = document.getElementById("stock");
+
+  if (!bubble || !stock) return;
+
+  // Set the text dynamically
+  bubble.textContent = text;
+
+  // Position bubble near stock card
+  const rect = stock.getBoundingClientRect();
+  bubble.style.left = rect.left + window.scrollX - 40 + "px";
+  bubble.style.top  = rect.top  + window.scrollY - 120 + "px";
+
+  let count = 0;
+
+  function flash() {
+    bubble.style.display = "block";
+    bubble.style.opacity = 0;
+    bubble.style.transform = "scale(0.5)";
+
+    requestAnimationFrame(() => {
+      bubble.style.opacity = 1;
+      bubble.style.transform = "scale(1)";
+    });
+
+    setTimeout(() => {
+      bubble.style.opacity = 0;
+      bubble.style.transform = "scale(0.5)";
+    }, 300);
+
+    setTimeout(() => {
+      bubble.style.display = "none";
+      count++;
+      if (count < 3) setTimeout(flash, 300);
+    }, 600);
+  }
+
+  flash();
+}
 
 
 // move the player card up a little to show it was used in a layoff

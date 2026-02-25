@@ -424,7 +424,7 @@ function showHandTally(result) {
 	  : result.winner; // or whatever default you want
 
     const tally =
-	  " - - - Game Card - - - " + "\n" + "\n" +
+	  "" + "\n" + "\n" +
 	  `${title}\n\n` +
 	  yourDeadwoodLine + "\n" +
 	  cpuDeadwoodLine  + "\n" +
@@ -675,21 +675,6 @@ function playerDiscard(id) {
      Knock + Gin
   ------------------------------ */
 
-function commonEventEnd(scored, Message) {
-
-//    game.revealCpu = true;  .. should have done this earlier??
-
-    showHandTally(scored);
-    checkMatchEnd();
-    game.phase = "round-over";
-    setMsg(Message);
-    
-    updateButtons();
-
-    //    render();  .. should have done this earlier??
-    
-} //commonEventEnd
-
 //__ playerKnock
 function playerKnock() {
     const cEval = evaluate(game.cpu);
@@ -823,6 +808,21 @@ function playerGin() {
     updateButtons();
   } //playerGin
 
+function commonEventEnd(scored, Message) {
+
+//    game.revealCpu = true;  .. should have done this earlier??
+
+    showHandTally(scored);
+    checkMatchEnd();
+    game.phase = "round-over";
+    setMsg(Message);
+    
+    updateButtons();
+
+    //    render();  .. should have done this earlier??
+    
+} //commonEventEnd
+
   /* ------------------------------
      CPU Turn + AI
   ------------------------------ */
@@ -859,7 +859,7 @@ function playerGin() {
 
   animateCpuTakeFromDiscard(drawn);
 
-	  await sleep(3000);
+	  await sleep(2000);
 
       }
     }// if from topDiscard
@@ -943,7 +943,7 @@ function cpuChooseDiscardIndex() {
     return realIndex === -1 ? 0 : realIndex;
   }
 
-  function cpuGin() {
+  async function cpuGin() {
     const pEval = evaluate(game.player);
     const pDW = pEval.deadwood;
 
@@ -962,7 +962,10 @@ function cpuChooseDiscardIndex() {
       //    commonEventEnd(scored,"CPU went Gin. Click New Hand to play again.");
 
       game.revealCpu = true;
-      
+
+      showMessageBubble("GIN!");  
+      await sleep(2000);
+
       showHandTally(scored);
       checkMatchEnd();
       game.phase = "round-over";
@@ -973,7 +976,7 @@ function cpuChooseDiscardIndex() {
   } //cpuGin
 
     //__ cpuKnock
-function cpuKnock() {
+async function cpuKnock() {
     const cEval = evaluate(game.cpu);
     const pEval = evaluate(game.player);
     const cDW = cEval.deadwood;
@@ -1025,7 +1028,10 @@ function cpuKnock() {
     log(msg,"cpu");
 
     //    commonEventEnd(scored,"CPU knocked. Click New Hand to play again.");
-    
+
+    showMessageBubble("Knock");  
+    await sleep(2000);
+
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
