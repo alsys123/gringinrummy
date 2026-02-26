@@ -89,13 +89,13 @@ async function animateCpuTakeFromDiscard(card) {
     setTimeout(() => {
       const back = cardBack();
       flying.innerHTML = back.innerHTML;
-    }, 300); // small delay so swap happens during the flip
-  }, 750); // halfway through 3000ms
+    }, 100); // small delay so swap happens during the flip was 300
+  }, 100); // halfway through 3000ms was 750
 
   // 7. Fade out near the end
   setTimeout(() => {
     flying.style.opacity = "0";
-  }, 2000);
+  }, 1000); // was 2000
 
   flying.addEventListener("transitionend", () => flying.remove());
 }//animateCpuTakeFromDiscard

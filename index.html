@@ -11,14 +11,14 @@
     <div id="game">
       
       <h1 id="title">
-	GIN RUMMY <span style="font-size: 0.5em;">(rev1 v2.2)</span>
+	GIN RUMMY <span style="font-size: 0.5em;">(rev2 v2.2)</span>
       </h1>
       
       <div id="scoreboard" class="scoreboard">
 
 	<div class="score-block cpu">
 	  <span class="label">CPU</span>
-	      <span id="score-cpu" class="value">0</span>
+	  <span id="score-cpu" class="value">0</span>
 	</div>
 
 	<div class="divider">vs</div>
@@ -50,8 +50,8 @@
 
 	<div id="modal-content" class="modal-content">
 
-	<div class="modal-close left" onclick="closeModal()">✖</div>
-	<div class="modal-close right" onclick="closeModal()">✖</div> 
+	  <div class="modal-close left" onclick="closeModal()">✖</div>
+	  <div class="modal-close right" onclick="closeModal()">✖</div> 
 
 	  <div id="modal-header" class="modal-header">Select here to move</div>
 	  
@@ -77,13 +77,15 @@
 	</div>
       </div>
 
+      <div id="tally-area" style="display:none;"></div>
+
       <div id="message-bubble" class="knock-bubble"></div>
       
       <div id="deadwood-info">Deadwood: –</div>      
       
       <div id="star-tl" class="star">🥹</div>
 
-<!--            <div id="star-tr" class="star">★</div> -->
+      <!--            <div id="star-tr" class="star">★</div> -->
       
       <svg id="star-tr" class="star" viewBox="0 0 24 24" aria-hidden="true" fill="gold">
 	<path d="M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20zm0 14.5a1.25 1.25 0 1 1 0 2.5a1.25 1.25 0 1 1 0-2.5zm1.2-4.9c-.7.5-1 .9-1 1.9h-2c0-1.7.7-2.6 1.7-3.3c.8-.6 1.3-1 1.3-1.8c0-1-.8-1.8-2-1.8c-1.3 0-2.1.9-2.1 2.2h-2c0-2.4 1.7-4.2 4.1-4.2c2.4 0 4.1 1.6 4.1 3.8c0 1.7-.9 2.6-2.1 3.2z"/>

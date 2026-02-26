@@ -485,7 +485,30 @@ h1 {
     margin: 8px 0 4px;
 /*    margin-left: -190px; 
     margin-top: 90px; */
-  }
+}
+
+#tally-area {
+/*  background: #0f7f4f; */
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  width: fit-content;
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.tally-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.tally-line {
+  margin: 4px 0;
+}
 
 .knock-bubble {
   position: absolute;

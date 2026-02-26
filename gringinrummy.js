@@ -313,6 +313,8 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, originalD
 // maybe here  ... game.revealCpu = "true"
 function showHandTally(result) {
 
+    log("showHandTally","sys");
+    
     pointsThisHandCalc = "";
 
     // ???here i am
@@ -430,39 +432,97 @@ function showHandTally(result) {
 	  cpuDeadwoodLine  + "\n" +
 	  "\n" +
 	  `${personalWinner} ${result.points} points` + 
-	  pointsThisHandCalc + "\n\n" +
-	  `Match Score:\n` +
-	  `   You: ${matchScore.player} points\n` +
-	  `   CPU: ${matchScore.cpu} points`;
+	  pointsThisHandCalc;  // + "\n\n" +
+//	  `Match Score:\n` +
+//	  `   You: ${matchScore.player} points\n` +
+//	  `   CPU: ${matchScore.cpu} points`;
     
     //     alert(tally);
-    showMessage(tally);
+//    showMessage(tally); ... old modal display
     //      showMessage("We have a tally");
 
     
+    const tallyText =
+        `<div class="tally-title">${title}</div>
+         <div class="tally-line">${yourDeadwoodLine}</div>
+         <div class="tally-line">${cpuDeadwoodLine}</div>
+         <div class="tally-line">${personalWinner} ${result.points} points ${pointsThisHandCalc}</div> `;
+    
+//         <div class="tally-line">Match Score:</div>
+//         <div class="tally-line">You: ${matchScore.player} points</div>
+//         <div class="tally-line">CPU: ${matchScore.cpu} points</div>`;
+
+    showTallyArea(tallyText);
+    
+	
 } //showHandTally
+
+function showTallyArea(tallyText) {
+    // hide center area
+    document.getElementById("center-area").style.display = "none";
+    document.getElementById("deadwood-info").style.display = "none";
+
+    // show tally area
+    const tallyArea = document.getElementById("tally-area");
+    tallyArea.innerHTML = tallyText;
+    tallyArea.style.display = "block";
+//    tallyArea.style.display = "flex";
+//    tallyArea.style.left = "130px"; // could per percent like 50%
+//    tallyArea.style.top = "200px";
+    tallyArea.style.marginTop = "130px";
+    tallyArea.style.marginLeft = "200px";
+//    tallyArea.style.transform = "translateX(-50%)";
+
+    console.log("Tally HTML:", tallyArea.innerHTML);
+
+} //showTallyArea
 
 //__ checkMatchEnd
 function checkMatchEnd() {
+    log("f(checkMatchEnd)","sys");
+
+    let message = "";
+    const tallyb = `<div class="tally-line">`;
+    const tallye = "</div>";
+
     if (matchScore.player >= matchScore.target) {
-	showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
+	//	showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
+	message =
+	    tallyb + `You win the match!` + tallye; // +
+//	    tallyb + `Final score: You ${matchScore.player}` +
+//	    tallyb + ` — CPU ${matchScore.cpu}` + tallye;
+
 	//old	    document.getElementById("btn-new").textContent = "New Game";
 	document.getElementById("btn-newMatch").textContent = "New MATCH";
-	//??	    resetMatch();
-    } else if (matchScore.cpu >= matchScore.target) {
-	showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
-	//old	    document.getElementById("btn-new").textContent = "New Game";
-	document.getElementById("btn-newMatch").textContent = "New MATCH";
-	//??	    resetMatch();
+	showTallyArea(message);
+	return;
     }
     
+    //??	    resetMatch();
+    if (matchScore.cpu >= matchScore.target) {
+	//	showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
+	message =
+	    tallyb + `CPU wins the match!` + tallye; // +
+//	    tallyb + `Final score: CPU ${matchScore.cpu}` +
+//	    tallyb + ` — You ${matchScore.player}` + tallye;
+	//old	    document.getElementById("btn-new").textContent = "New Game";
+	document.getElementById("btn-newMatch").textContent = "New MATCH";
+	//??	    resetMatch();
+	showTallyArea(message);
+	return;
+    }
+
+    // else not the match end yet!
+    return;
     /*
    /// ??? check THIS SEEMS -- REPEATED in error
    else if (matchScore.cpu >= matchScore.target) {
    showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
    
    }
-    */	
+    */
+
+    
 } //checkMatchEnd
     
 //__
@@ -516,7 +576,7 @@ function playerHasBigGin() {
 
 function start() {
 
-    log("start: new hand or game");
+    log("f(start): new hand or game");
     
     game.deck = createDeck();
     shuffle(game.deck);
@@ -569,7 +629,15 @@ function start() {
 //    addGameToDetailsScore("cpu",   "knock", "cpu",    15,   9,  0, 9);
 //    addGameToDetailsScore("cpu",   "knock", "cpu",    0,   9,  6, 15);
 //    addGameToDetailsScore("cpu",   "Gin",   "cpu",    45,   0,  0, 0);
-      
+
+    //show again
+    document.getElementById("center-area").style.display = "flex";
+    document.getElementById("deadwood-info").style.display = "flex";
+
+    // hide
+    document.getElementById("tally-area").style.display = "none";
+    document.getElementById("tally-area").innerHTML = "";
+
     render();
     updateButtons();
 }//start
