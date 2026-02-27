@@ -1,135 +1,134 @@
-    /* ------------------------------
-     Meld / Deadwood Evaluation
-  ------------------------------ */
+/* ------------------------------
+   Meld / Deadwood Evaluation
+   ------------------------------ */
     
-    //__ sortHandByRank
-    function sortHandByRank(hand) {
-	return [...hand].sort((a,b) => {
-	    if (a.rank === b.rank) {
-		const order = {"♣":0,"♦":1,"♥":2,"♠":3};
-		return order[a.suit] - order[b.suit];
-	    }
-	    return a.rank - b.rank;
-	});
-    } // sortHandByRank
-    
-    function isSet(cards) {
+//__ sortHandByRank
+function sortHandByRank(hand) {
+    return [...hand].sort((a,b) => {
+	if (a.rank === b.rank) {
+	    const order = {"♣":0,"♦":1,"♥":2,"♠":3};
+	    return order[a.suit] - order[b.suit];
+	}
+	return a.rank - b.rank;
+    });
+} // sortHandByRank
+
+function isSet(cards) {
     if (cards.length < 3) return false;
     const r = cards[0].rank;
     return cards.every(c => c.rank === r);
-  }
+}//sortHandByRank
 
-  function isRun(cards) {
+function isRun(cards) {
     if (cards.length < 3) return false;
     const s = cards[0].suit;
     if (!cards.every(c => c.suit === s)) return false;
     const sorted = [...cards].sort((a,b)=>a.rank-b.rank);
     for (let i=1;i<sorted.length;i++) {
-      if (sorted[i].rank !== sorted[i-1].rank + 1) return false;
+	if (sorted[i].rank !== sorted[i-1].rank + 1) return false;
     }
     return true;
-  }
+}//isRun
 
-  function getAllMelds(hand) {
+function getAllMelds(hand) {
     const melds = [];
     const n = hand.length;
 
     function backtrack(start, idxs) {
-      if (idxs.length >= 3) {
-        const cards = idxs.map(i => hand[i]);
-        if (isSet(cards) || isRun(cards)) {
-          melds.push(idxs.slice());
-        }
-      }
-      for (let i=start;i<n;i++) {
-        idxs.push(i);
-        backtrack(i+1, idxs);
-        idxs.pop();
-      }
+	if (idxs.length >= 3) {
+            const cards = idxs.map(i => hand[i]);
+            if (isSet(cards) || isRun(cards)) {
+		melds.push(idxs.slice());
+            }
+	}
+	for (let i=start;i<n;i++) {
+            idxs.push(i);
+            backtrack(i+1, idxs);
+            idxs.pop();
+	}
     }
     backtrack(0, []);
     return melds;
-  }
+}//getAllMelds
 
 // ENTRY POINT
 //__ evaluate
 function evaluate(hand) {
-
     
     const melds = getAllMeldsv3(hand);
 
-//    consoleLogHand(hand,melds);
+    //    consoleLogHand(hand,melds);
 
     let bestDW = Infinity;
     let bestPattern = [];
 
     function dfs(meldIndex, used, chosen) {
-      if (meldIndex === melds.length) {
-        let dw = 0;
-        for (let i=0;i<hand.length;i++) {
-          if (!used.has(i)) dw += cardValue(hand[i].rank);
-        }
-        if (dw < bestDW) {
-          bestDW = dw;
-          bestPattern = chosen.map(m => m.slice());
-        }
-        return;
-      }
+	if (meldIndex === melds.length) {
+            let dw = 0;
+            for (let i=0;i<hand.length;i++) {
+		if (!used.has(i)) dw += cardValue(hand[i].rank);
+            }
+            if (dw < bestDW) {
+		bestDW = dw;
+		bestPattern = chosen.map(m => m.slice());
+            }
+            return;
+	}
 
-      dfs(meldIndex+1, used, chosen);
+	dfs(meldIndex+1, used, chosen);
 
-      const meld = melds[meldIndex];
-      let can = true;
-      for (const idx of meld) {
-        if (used.has(idx)) { can=false; break; }
-      }
-      if (can) {
-        const used2 = new Set(used);
-        meld.forEach(i => used2.add(i));
-        chosen.push(meld);
-        dfs(meldIndex+1, used2, chosen);
-        chosen.pop();
-      }
+	const meld = melds[meldIndex];
+	let can = true;
+	for (const idx of meld) {
+            if (used.has(idx)) { can=false; break; }
+	}
+	if (can) {
+            const used2 = new Set(used);
+            meld.forEach(i => used2.add(i));
+            chosen.push(meld);
+            dfs(meldIndex+1, used2, chosen);
+            chosen.pop();
+	}
     } //dfs
 
     dfs(0, new Set(), []);
 
     // otherwise count them all
     if (bestDW === Infinity) {
-      let dw = 0;
-      for (const c of hand) dw += cardValue(c.rank);
-      bestDW = dw;
-      bestPattern = [];
+	let dw = 0;
+	for (const c of hand) dw += cardValue(c.rank);
+	bestDW = dw;
+	bestPattern = [];
     }
 
-//      console.log("Evaluate: best Deadwood = ", bestDW, "  Best Melds = ", bestPattern);
+    //      console.log("Evaluate: best Deadwood = ", bestDW, "  Best Melds = ", bestPattern);
 
     // returning the set of deadwood cards
-// Build a set of all indexes used in melds
-const used = new Set();
-for (const meld of bestPattern) {
-  for (const idx of meld) used.add(idx);
-}
+    // Build a set of all indexes used in melds
+    const used = new Set();
+    for (const meld of bestPattern) {
+	for (const idx of meld) used.add(idx);
+    }
 
-// Extract the actual deadwood card objects
-const deadwoodCards = hand.filter((_, i) => !used.has(i));
+    // Extract the actual deadwood card objects
+    const deadwoodCards = hand.filter((_, i) => !used.has(i));
 
     return {  deadwood: bestDW,   melds: bestPattern,  deadwoodCards: deadwoodCards };
 
     //
-// orig    return {deadwood: bestDW, melds: bestPattern};
+    // orig    return {deadwood: bestDW, melds: bestPattern};
 } // evaluate
 
-    //_ meldCardIds
+//_ meldCardIds
 function meldCardIds(hand, evalInfo) {
-//    console.log("\nIn meldCardIds");
-//      console.log("hand:", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
-//      console.log(
-//	  `evalCpu = { deadwood:${evalInfo.deadwood}, melds:${evalInfo.melds
-//    .map(m => `[${m.join(",")}]`)
-//    .join(" ")} }`
-//      );
-      
+    //    console.log("\nIn meldCardIds");
+    //      console.log("hand:", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join("  "));
+    //      console.log(
+    //	  `evalCpu = { deadwood:${evalInfo.deadwood}, melds:${evalInfo.melds
+    //    .map(m => `[${m.join(",")}]`)
+    //    .join(" ")} }`
+    //      );
+    
     const ids = new Set();
     for (const meld of evalInfo.melds) {
 	for (const idx of meld) {
@@ -139,8 +138,8 @@ function meldCardIds(hand, evalInfo) {
 	}
     }
 
-//    console.log("=> MeldCardIds string:", JSON.stringify(ids));
-//    console.log("=> MeldCardIds array:", Array.from(ids));
+    //    console.log("=> MeldCardIds string:", JSON.stringify(ids));
+    //    console.log("=> MeldCardIds array:", Array.from(ids));
 
     return ids;
 } //meldCardIds
@@ -443,25 +442,25 @@ function eliminateDeadCards(hand) {
     suitRanks[s].sort((a,b)=>a-b);
   }
 
-  // Helper: does this card have adjacency in its suit?
-  function hasRunNeighbor(card) {
-    const ranks = suitRanks[card.suit];
-    const v = card.runValue;
-    return ranks.includes(v-1) || ranks.includes(v+1);
-  }
+    // Helper: does this card have adjacency in its suit?
+    function hasRunNeighbor(card) {
+	const ranks = suitRanks[card.suit];
+	const v = card.runValue;
+	return ranks.includes(v-1) || ranks.includes(v+1);
+    } //hasRunNeighbor
 
-  const live = [];
-  const dead = [];
+    const live = [];
+    const dead = [];
 
-  for (const card of hand) {
-    const canSet = rankCounts[card.rank] >= 3;
-    const canRun = hasRunNeighbor(card);
+    for (const card of hand) {
+	const canSet = rankCounts[card.rank] >= 3;
+	const canRun = hasRunNeighbor(card);
 
-    if (canSet || canRun) live.push(card);
-    else dead.push(card);
-  }
+	if (canSet || canRun) live.push(card);
+	else dead.push(card);
+    }
 
-  return { live, dead };
+    return { live, dead };
 } // eliminateDeadCards
 
 
@@ -819,3 +818,35 @@ function sortHandUsingMeldIds(hand, meldCardIds) {
     return a.rank - b.rank;
   });
 } //sortHandUsingMeldIds
+
+
+//Used for BIGGIN
+function checkWillFitAMeld(hand) {
+    // Evaluate the hand normally
+    const evalInfo = evaluate(hand);
+    const deadwoodCards = evalInfo.deadwoodCards;
+
+    // Big Gin requires exactly 1 deadwood card
+    if (deadwoodCards.length !== 1) return false;
+
+    const lone = deadwoodCards[0];
+
+    // Try to fit the lone card into any SET
+    const ranks = hand.filter(c => c.rank === lone.rank);
+    if (ranks.length >= 2) {
+        // lone + 2 others = valid set of 3
+        return true;
+    }
+
+    // Try to fit the lone card into any RUN
+    const sameSuit = hand.filter(c => c.suit === lone.suit && c.id !== lone.id);
+    const values = sameSuit.map(c => c.runValue ?? c.rank).sort((a,b)=>a-b);
+    const v = lone.runValue ?? lone.rank;
+
+    // Check adjacency: v-2,v-1,v or v,v+1,v+2
+    if (values.includes(v-2) && values.includes(v-1)) return true;
+    if (values.includes(v-1) && values.includes(v+1)) return true;
+    if (values.includes(v+1) && values.includes(v+2)) return true;
+
+    return false;
+}

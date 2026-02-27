@@ -213,7 +213,9 @@ function updateScoreboard() {
      Scoring + Tally
   ------------------------------ */
 
+//__applyScoring
 function applyScoring(result) {
+    
     if (result.winner === "tie") {
 	result.points = 0;
 	updateScoreboard();
@@ -223,12 +225,15 @@ function applyScoring(result) {
 			      result.originalDW);
 
 	return result;
-    }
+    }//tie
     
     let points = 0;
-    
+
+    // FUTURE ... put this in its own routine    
     if (result.type === "gin") {
 	points = 25 + (result.winner === "player" ? result.cDW : result.pDW);
+    } else if (result.type === "bigGin") {
+	points = 31 + (result.winner === "player" ? result.cDW : result.pDW);
     } else if (result.type === "knock") {
 	const diff = Math.abs(result.pDW - result.cDW);
 	if (result.winner === "player") points = diff;
@@ -268,6 +273,7 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, originalD
     // bonus calc
     if (type === "gin")      bonus = 25;
     if (type === "undercut") bonus = 10;
+    if (type === "bigGin")   bonus = 31;
 
     // deadwood calc
     if (winner === "player") dDW = cDW - pDW;
@@ -323,6 +329,10 @@ function showHandTally(result) {
     //    const actor = result.who;
     
     const actionText = {
+	bigGin: {
+	    player: "You went BIG Gin!",
+	    cpu: "CPU went BIG Gin!"
+	},
 	gin: {
 	    player: "You went Gin!",
 	    cpu: "CPU went Gin!"
@@ -347,7 +357,7 @@ function showHandTally(result) {
     
     const actor  = result.who;      // player, cpu, or na
     const winner = result.winner;  // player, cpu, tie
-    const type   = result.type;      // gin, knock, stock, undercut
+    const type   = result.type;      // gin, knock, stock, undercut, bigGin
     
     let title = actionText[type][actor];
 
@@ -416,6 +426,14 @@ function showHandTally(result) {
     }
     if (actor === "player" && result.type === "undercut") {
 	pointsThisHandCalc = " = ( " + `${result.pDW} + 10 Bonus points for an undercut` + " )";
+    }
+
+    //bigGin
+    if (actor === "cpu" && result.type === "bigGin") {
+	pointsThisHandCalc = " = ( " + `${result.pDW} + 31 Bonus points for gin` + " )";
+    }
+    if (actor === "player" && result.type === "bigGin") {
+	pointsThisHandCalc = " = ( " + `${result.cDW} + 31 Bonus points for gin` + " )";
     }
 
     const personalWinner =
@@ -549,10 +567,59 @@ function newMatch() {
     resetMatch();
     start();
     //    return; /// nothing for now
-}
+}//newMatch
 
+//__bigGin
 function bigGin() {
     log("bigGin: .. just coding");
+
+//    console.log("at 0");
+
+    //    ... from GIN!!!
+    if (game.turn!=="player" || game.phase!=="await-discard")
+	return; // was draw
+
+//    console.log("at 1");
+    
+    const pEval = evaluate(game.player);
+//    if (pEval.deadwood !== 0) {
+//	//alert("Gin requires 0 deadwood.");
+//	showMessage("Gin requires 0 deadwood.");
+//	return;
+//    }
+    const cEval = evaluate(game.cpu);
+    const cDW = cEval.deadwood;
+
+//    console.log("at 2");
+
+    const scored = applyScoring({
+	winner: "player",
+	type: "bigGin",
+	pDW: pEval.deadwood,
+	cDW,
+	who: "player"
+    });
+
+    //    commonEventEnd(scored,"You had Gin! Click New Hand to play again.");
+  //      console.log("at 3");
+
+    showHandTally(scored);
+
+    console.log("at 4");
+
+    celebrateMatchWin(); // maybe a special one for BIG GIN
+
+        console.log("at 5");
+
+    checkMatchEnd();
+    game.phase = "round-over";
+    game.revealCpu = true;
+    
+    setMsg("You had BIG Gin! Click New Hand to play again.");
+    
+    render();
+    updateButtons();
+    
 //    resetMatch();
 //    start();
     //    return; /// nothing for now
@@ -569,13 +636,30 @@ function playerHasBigGin() {
     // has 11 cards
     if (game.player.length === 11) {
 	console.log("player has 11 cards");
-    }
-    // single deadwood fits into a set or a run return true
+
+	// single deadwood fits into a set or a run return true
+	if (checkPlayerDeadwoodFitsBigGin() ) {
+	    return true;
+	}
+	
+    }// 11 cards
 
     // else
     return false;
-//    return true;    
+    //    return true;
+    
 }//playerHasBigGin
+
+//%__checkPlayerDeadwoodFitsBigGin
+function checkPlayerDeadwoodFitsBigGin() {
+    const pEval = evaluate(game.player);
+    const deadwoodCards = pEval.deadwoodCards;
+
+    if (deadwoodCards.length !== 1) return false;
+
+    return checkWillFitAMeld(game.player);
+}//checkPlayerDeadwoodFitsBigGin
+
 
 function start() {
 
@@ -645,21 +729,21 @@ function start() {
     updateButtons();
 }//start
 
-    //__ drawStock
-    function drawStock() {
-	if (game.turn!=="player" || game.phase!=="await-draw") return;
-	if (!game.stock.length) return;
-	const c = game.stock.pop();
-	game.player.push(c);
-	game.drawn = c;
-	
-	log("You drew from stock: " + prettyCard(c), "player" );
-	
-	game.phase = "await-discard";
-	setMsg("Click a card to discard, or Knock/Gin if available.");
-	render();
-	updateButtons();
-    } //drawStock
+//__ drawStock
+function drawStock() {
+    if (game.turn!=="player" || game.phase!=="await-draw") return;
+    if (!game.stock.length) return;
+    const c = game.stock.pop();
+    game.player.push(c);
+    game.drawn = c;
+    
+    log("You drew from stock: " + prettyCard(c), "player" );
+    
+    game.phase = "await-discard";
+    setMsg("Click a card to discard, or Knock/Gin if available.");
+    render();
+    updateButtons();
+} //drawStock
     
 function drawDiscard() {
 	if (game.turn!=="player" || game.phase!=="await-draw") return;
@@ -694,24 +778,24 @@ function playerDiscard(id) {
     endPlayerTurn();
 } //playerDiscard
 
-  function endPlayerTurn() {
+function endPlayerTurn() {
     if (game.stock.length <= 2) {
-      stockDepletionResolution();
-      return;
+	stockDepletionResolution();
+	return;
     }
     game.turn = "cpu";
     game.phase = "await-draw";
 
-      setMsg("CPU thinking...");
+    setMsg("CPU thinking...");
 
-      render();
-      updateButtons(); //rev8
+    render();
+    updateButtons(); //rev8
 
-      // setTimeout(cpuTurn, 650);
+    // setTimeout(cpuTurn, 650);
     setTimeout(cpuTurn, 0);
-  }
+}
 
-  function stockDepletionResolution() {
+function stockDepletionResolution() {
     const pEval = evaluate(game.player);
     const cEval = evaluate(game.cpu);
     const pDW = pEval.deadwood;
@@ -721,26 +805,26 @@ function playerDiscard(id) {
     if (pDW < cDW) winner = "player";
     else if (pDW > cDW) winner = "cpu";
 
-      const scored = applyScoring({
-	  winner,
-	  type: "stock",
-	  pDW,
-	  cDW,
+    const scored = applyScoring({
+	winner,
+	type: "stock",
+	pDW,
+	cDW,
 	who: "na"
-      });
+    });
 
-//      console.log("ehh ..show cpu prepre!",game.revealCpu);
+    //      console.log("ehh ..show cpu prepre!",game.revealCpu);
 
-//      commonEventEnd(scored, "Hand over. Click New Hand to play again.");
-		     
-      showHandTally(scored);
-      checkMatchEnd();
-      game.phase = "round-over";
-      setMsg("Hand over. Click New Hand to play again.");
+    //      commonEventEnd(scored, "Hand over. Click New Hand to play again.");
+    
+    showHandTally(scored);
+    checkMatchEnd();
+    game.phase = "round-over";
+    setMsg("Hand over. Click New Hand to play again.");
 
-      render();
-      updateButtons();
-  } //stockDepletionResolution
+    render();
+    updateButtons();
+} //stockDepletionResolution
 
   /* ------------------------------
      Knock + Gin
@@ -761,19 +845,19 @@ function playerKnock() {
     updateButtons();
     
     /*
-    if (game.player.length > 10) {
-	showMessage("Sorry cannot do anything yet.  Player has more than 10 cards.");
-	return;
-    }
+      if (game.player.length > 10) {
+      showMessage("Sorry cannot do anything yet.  Player has more than 10 cards.");
+      return;
+      }
     */
     
     if (game.player.length > 10) {	// Auto-discard highest deadwood card
-//	pEval = evaluate(game.player);
+	//	pEval = evaluate(game.player);
 	const deadwoodCards = pEval.deadwoodCards;
 	
 	if (deadwoodCards.length > 0) {
             // Sort descending by value
-        deadwoodCards.sort((a, b) => b.deadwoodValue - a.deadwoodValue);
+            deadwoodCards.sort((a, b) => b.deadwoodValue - a.deadwoodValue);
             const highest = deadwoodCards[0];
 	    
             playerDiscard(highest.id);
@@ -794,7 +878,7 @@ function playerKnock() {
 	showMessage("You can only knock with deadwood 10 or less.");
 	return;
     }
-   
+    
     
     const playerMeldCards = expandMelds(game.player, pEval.melds);
     const CpuDeadwood     = cEval.deadwoodCards;
@@ -802,12 +886,12 @@ function playerKnock() {
     const layoffCards     = getLayoffs(CpuDeadwood, playerMeldCards);
     const layoffTotal     = layoffValue(layoffCards);
 
-//    console.log( playerMeldCards, CpuDeadwood, layoffCards, layoffTotal)
+    //    console.log( playerMeldCards, CpuDeadwood, layoffCards, layoffTotal)
 
     markCPULayoffCards(layoffCards);  // pop the cards up to show a layoff
-     
+    
     cDW = cDW - layoffTotal;
-   
+    
     let winner = "tie";
     let finalType = "knock";
     if (pDW < cDW)      winner = "player";
@@ -826,25 +910,25 @@ function playerKnock() {
 	originalDW: origCDW
     });
 
-//    let msg;
-//    log(msg);
+    //    let msg;
+    //    log(msg);
 
     
     commonEventEnd(scored,"Hand over. Click New Hand to play again.");
 
     /*
-    showHandTally(scored);
-    checkMatchEnd();
-    game.phase = "round-over";
-    setMsg("Hand over. Click New Hand to play again.");
+      showHandTally(scored);
+      checkMatchEnd();
+      game.phase = "round-over";
+      setMsg("Hand over. Click New Hand to play again.");
 
-    updateButtons();
+      updateButtons();
     */
     
-//    render(); // out for now
-  } // playerKnock
+    //    render(); // out for now
+} // playerKnock
 
-
+//__playerGin
 function playerGin() {
     
     if (game.turn!=="player" || game.phase!=="await-draw") return;
@@ -852,21 +936,21 @@ function playerGin() {
     const pEval = evaluate(game.player);
     if (pEval.deadwood !== 0) {
 	//alert("Gin requires 0 deadwood.");
-      showMessage("Gin requires 0 deadwood.");
-      return;
+	showMessage("Gin requires 0 deadwood.");
+	return;
     }
     const cEval = evaluate(game.cpu);
     const cDW = cEval.deadwood;
 
     const scored = applyScoring({
-      winner: "player",
-      type: "gin",
-      pDW: pEval.deadwood,
+	winner: "player",
+	type: "gin",
+	pDW: pEval.deadwood,
 	cDW,
 	who: "player"
     });
 
-//    commonEventEnd(scored,"You had Gin! Click New Hand to play again.");
+    //    commonEventEnd(scored,"You had Gin! Click New Hand to play again.");
     
     showHandTally(scored);
     checkMatchEnd();
@@ -874,10 +958,11 @@ function playerGin() {
     game.revealCpu = true;
     
     setMsg("You had Gin! Click New Hand to play again.");
-      
+    
     render();
     updateButtons();
-  } //playerGin
+} //playerGin
+
 
 function commonEventEnd(scored, Message) {
 

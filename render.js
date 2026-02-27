@@ -174,7 +174,7 @@ function render() {
     
 // v1 and v2    renderCPU(sortedCpu,evalCpu,cpuMeldIds, el);
 
-
+// ***** Render PLAYER ******
     
       // player cards rendering
       
