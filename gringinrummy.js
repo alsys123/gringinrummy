@@ -25,6 +25,7 @@ const detailedMatchScore = { games: [] };
 let gCardDeck = "simple";
 let gshowLog  = false;
 const logHistory = [];
+let cpuLevel = 1; // how hard is the cpu
 
   const el = {
     msg: document.getElementById("message"),
@@ -1329,6 +1330,7 @@ const w = window.innerWidth;
   const tr = document.getElementById("star-tr");
   const bl = document.getElementById("star-bl");
   const br = document.getElementById("star-br");
+  const ml = document.getElementById("star-ml");
 //  const ml = document.getElementById("star-midleft");
 
   // Top-left
@@ -1346,6 +1348,11 @@ const w = window.innerWidth;
   // Bottom-right
   br.style.left = (w * (1 - margin)) + "px";
   br.style.top  = (h * (1 - margin)) + "px";
+
+      // Bottom-left
+    ml.style.left = (w * margin) + "px";
+  ml.style.top  = (h * 0.7) + "px";
+//    ml.style.top  = (h * (1 - margin)) + "px";
 
   // Mid-left (50% down, 5% in)
 //  ml.style.left = (w * margin) + "px";
@@ -1445,6 +1452,27 @@ document.getElementById("title").addEventListener("click", () => {
 document.getElementById("star-tr").addEventListener("click", () => {
   showHelp(); 
 });
+
+document.getElementById("star-ml").addEventListener("click", () => {
+  toggleCPULevel(); 
+});
+
+
+const cpuColors = [
+    "#FFD700", // 1 gold
+    "green",
+    "#FF4500", // 3 fire coral (red-orange)
+    "#C71585", // 4 deep magenta (very distinct)
+    "pink"  
+];
+
+function toggleCPULevel() {
+    cpuLevel = (cpuLevel % 5) + 1;
+    log(`toggleCPULevel: CPU Level ${cpuLevel}`,"sys");
+    document.getElementById("star-ml").style.color = cpuColors[cpuLevel - 1];
+}
+
+
 
 //function openHelpModal() {
 //    showMessage("Coming soon!");

@@ -823,6 +823,14 @@ h1 {
   font-size: 24px; /* optional, but harmless now */
 }
 
+#star-ml {
+  cursor: pointer;
+  pointer-events: auto;
+  width: 40px;
+  height: 40px;
+  font-size: 24px; /* optional, but harmless now */
+}
+
 @keyframes bump {
   0%   { transform: scale(1); }
   50%  { transform: scale(1.25); }
