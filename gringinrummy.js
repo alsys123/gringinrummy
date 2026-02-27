@@ -1460,14 +1460,14 @@ document.getElementById("star-ml").addEventListener("click", () => {
 
 const cpuColors = [
     "#FFD700", // 1 gold
-    "green",
-    "#FF4500", // 3 fire coral (red-orange)
-    "#C71585", // 4 deep magenta (very distinct)
-    "pink"  
+    "green"
+ //   "#FF4500", // 3 fire coral (red-orange)
+ //   "#C71585", // 4 deep magenta (very distinct)
+  //  "pink"  
 ];
 
 function toggleCPULevel() {
-    cpuLevel = (cpuLevel % 5) + 1;
+    cpuLevel = (cpuLevel % 2) + 1;
     log(`toggleCPULevel: CPU Level ${cpuLevel}`,"sys");
     document.getElementById("star-ml").style.color = cpuColors[cpuLevel - 1];
 }
