@@ -1,0 +1,47 @@
+-- works rev2-2.2
+.knock-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -20px; /* move tail up/down */
+  left: 50px;  /* move tail left/right */
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 20px solid white;
+}
+
+.knock-bubble {
+  position: absolute;
+  display: none;
+  z-index: 1000;
+  font-size: 32px;  /*  text size */
+  font-weight: bold;
+  color: lightblue; /* bright yellow */
+  background: white;
+  border: 4px solid black;
+  border-radius: 40px;  /* tighter curve */
+  padding: 20px 40px;   /* padding */
+  box-shadow: 0 0 12px rgba(0,0,0,0.3);
+  text-align: center;
+  transform: scale(1);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+--
+.starflash {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle,
+    #FFF8C6 0%,   /* bright highlight */
+    #FFD700 40%,  /* gold core */
+    rgba(255, 215, 0, 0) 70% /* fade out */
+  );
+  border-radius: 50%;
+  opacity: 0;
+  animation: starFlash 0.8s ease-out forwards;
+  box-shadow:
+    0 0 8px #FFD700,
+    0 0 12px #FFEA00,
+    0 0 20px rgba(255, 215, 0, 0.8);
+}

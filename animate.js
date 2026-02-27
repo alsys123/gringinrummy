@@ -169,45 +169,49 @@ async function cpuDiscardAnimate(card) {
 }//cpuDiscardAnimate
 
 function showMessageBubble(text) {
-  const bubble = document.getElementById("message-bubble");
-  const stock = document.getElementById("stock");
+    const bubble = document.getElementById("message-bubble");
+    const stock = document.getElementById("stock");
 
-  if (!bubble || !stock) return;
+    if (!bubble || !stock) return;
 
-  // Set the text dynamically
-  bubble.textContent = text;
+    // Set the text dynamically
+    bubble.textContent = text;
 
-  // Position bubble near stock card
-  const rect = stock.getBoundingClientRect();
-  bubble.style.left = rect.left + window.scrollX - 40 + "px";
-  bubble.style.top  = rect.top  + window.scrollY - 120 + "px";
+    // Position bubble near stock card
+    const rect = stock.getBoundingClientRect();
+    bubble.style.left = rect.left + window.scrollX - 40 + "px";
+    bubble.style.top  = rect.top  + window.scrollY - 120 + "px";
 
-  let count = 0;
+    let count = 0;
 
-  function flash() {
-    bubble.style.display = "block";
-    bubble.style.opacity = 0;
-    bubble.style.transform = "scale(0.5)";
+    function flash() {
+	bubble.style.display = "block";
+	bubble.style.opacity = 0;
+	bubble.style.transform = "scale(0.5)";
 
-    requestAnimationFrame(() => {
-      bubble.style.opacity = 1;
-      bubble.style.transform = "scale(1)";
-    });
+	requestAnimationFrame(() => {
+	    bubble.style.opacity = 1;
+	    bubble.style.transform = "scale(1)";
+	});
 
-    setTimeout(() => {
-      bubble.style.opacity = 0;
-      bubble.style.transform = "scale(0.5)";
-    }, 300);
+	setTimeout(() => {
+	    bubble.style.opacity = 0;
+	    bubble.style.transform = "scale(0.5)";
+	}, 2000);
 
-    setTimeout(() => {
-      bubble.style.display = "none";
-      count++;
-      if (count < 3) setTimeout(flash, 300);
-    }, 600);
-  }
+/*	
+	setTimeout(() => {
+	    bubble.style.display = "none";
+	    count++;
+	    if (count < 3) setTimeout(flash, 300);
+	    }, 600);
+*/
+	
+    }//flash
 
-  flash();
-}
+    flash();
+
+}//showMessageBubble
 
 
 // move the player card up a little to show it was used in a layoff
@@ -277,3 +281,34 @@ function markCPULayoffCards(layoffCards) {
         }
     }
 }
+
+function celebrateMatchWin() {
+    const field = document.getElementById("star-field");
+
+    // spawn 40–60 stars
+    for (let i = 0; i < 2000; i++) {  // was 50
+        const star = document.createElement("div");
+        star.className = "starflash";
+
+        // random position
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+
+        star.style.left = x + "px";
+        star.style.top = y + "px";
+
+        // random size variation
+        const size = 6 + Math.random() * 10;
+        star.style.width = size + "px";
+        star.style.height = size + "px";
+
+        // random delay so they don't all flash at once
+        star.style.animationDelay = (Math.random() * 5.0) + "s"; // was 0.6
+
+        field.appendChild(star);
+
+        // remove after animation
+        setTimeout(() => star.remove(), 6000);
+    }
+}//celebrateMatchWin
+

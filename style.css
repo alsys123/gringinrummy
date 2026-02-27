@@ -510,33 +510,44 @@ h1 {
   margin: 4px 0;
 }
 
+
 .knock-bubble {
   position: absolute;
   display: none;
   z-index: 1000;
-  font-size: 32px;  /*  text size */
+  font-size: 32px;
   font-weight: bold;
-  color: lightblue; /* bright yellow */
+  color: lightblue;
   background: white;
   border: 4px solid black;
-  border-radius: 40px;  /* tighter curve */
-  padding: 20px 40px;   /* padding */
+  border-radius: 40px;
+  padding: 20px 40px;
   box-shadow: 0 0 12px rgba(0,0,0,0.3);
   text-align: center;
   transform: scale(1);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  overflow: hidden; /* important for shimmer */
 }
 
-.knock-bubble::after {
+.knock-bubble::before {
   content: "";
   position: absolute;
-  bottom: -20px; /* move tail up/down */
-  left: 50px;  /* move tail left/right */
-  width: 0;
-  height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-top: 20px solid white;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,0.6) 50%,
+    transparent 100%
+  );
+  animation: shimmer 3.5s ease-out forwards;
+}
+
+@keyframes shimmer {
+  0% { left: -150%; }
+  100% { left: 150%; }
 }
 
 #deadwood-info {
@@ -905,4 +916,50 @@ h1 {
   color: white;
   font-weight: 600;
   border-radius: 4px;
+}
+
+#star-field {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;   /* stars don't block clicks */
+  overflow: hidden;
+  z-index: 999999;        /* above everything */
+}
+
+
+@keyframes starFlash {
+  0%   { opacity: 0; transform: scale(0.2); }
+  40%  { opacity: 1; transform: scale(1.8); }
+  100% { opacity: 0; transform: scale(0.1); }
+}
+
+
+.starflash {
+  position: absolute;
+  width: 10px;   /* smaller size */
+  height: 10px;
+  background: #FFD700; /* gold base */
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  opacity: 0;
+  animation: starFlash 0.8s ease-out forwards;
+
+  /* gold glow */
+  box-shadow:
+    0 0 6px #FFD700,
+    0 0 10px #FFEA00,
+    0 0 14px rgba(255, 215, 0, 0.8);
 }

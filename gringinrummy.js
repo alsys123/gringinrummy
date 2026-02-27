@@ -191,22 +191,22 @@ function cardFace(c) {
 
 
 
-  function updateScoreboard() {
-      //    el.scoreboard.textContent =
-      //      `Score — You: ${matchScore.player} | CPU: ${matchScore.cpu}`;
-      document.getElementById("score-you").textContent = matchScore.player;
-      document.getElementById("score-cpu").textContent = matchScore.cpu;
-      
-      // Optional bump animation
-      document.getElementById("score-you").classList.add("score-bump");
-      document.getElementById("score-cpu").classList.add("score-bump");
-      
-      setTimeout(() => {
-	  document.getElementById("score-you").classList.remove("score-bump");
-	  document.getElementById("score-cpu").classList.remove("score-bump");
-      }, 300);
-      
-  }
+function updateScoreboard() {
+    //    el.scoreboard.textContent =
+    //      `Score — You: ${matchScore.player} | CPU: ${matchScore.cpu}`;
+    document.getElementById("score-you").textContent = matchScore.player;
+    document.getElementById("score-cpu").textContent = matchScore.cpu;
+    
+    // Optional bump animation
+    document.getElementById("score-you").classList.add("score-bump");
+    document.getElementById("score-cpu").classList.add("score-bump");
+    
+    setTimeout(() => {
+	document.getElementById("score-you").classList.remove("score-bump");
+	document.getElementById("score-cpu").classList.remove("score-bump");
+    }, 300);
+    
+} //updateScoreboard
     
 
   /* ------------------------------
@@ -495,6 +495,9 @@ function checkMatchEnd() {
 	//old	    document.getElementById("btn-new").textContent = "New Game";
 	document.getElementById("btn-newMatch").textContent = "New MATCH";
 	showTallyArea(message);
+
+	celebrateMatchWin();
+
 	return;
     }
     
@@ -632,7 +635,7 @@ function start() {
 
     //show again
     document.getElementById("center-area").style.display = "flex";
-    document.getElementById("deadwood-info").style.display = "flex";
+    document.getElementById("deadwood-info").style.display = "block";
 
     // hide
     document.getElementById("tally-area").style.display = "none";
@@ -895,92 +898,93 @@ function commonEventEnd(scored, Message) {
      CPU Turn + AI
   ------------------------------ */
 
-  async function cpuTurn() {
+async function cpuTurn() {
 
-      log("cpuTurn","sys");
+    log("cpuTurn","sys");
 
-      if (game.phase === "round-over") return;
+    if (game.phase === "round-over") return;
 
-//      game.phase = "cpu-thinking"; // new rev8
-      
+    //      game.phase = "cpu-thinking"; // new rev8
+    
     const evalCpu = evaluate(game.cpu);
     const cDW = evalCpu.deadwood;
 
     if (cDW === 0) {
-      cpuGin();
-      return;
+	cpuGin();
+	return;
     }
     if (cDW <= 7) {
-      cpuKnock();
-      return;
+	cpuKnock();
+	return;
     }
 
     let drawn;
     const topDiscard = game.discard[game.discard.length-1];
 
-      if (topDiscard) {
-      const hypothetical = [...game.cpu, topDiscard];
-      const evalWith = evaluate(hypothetical);
-      if (evalWith.deadwood + 1 <= cDW) {
-        drawn = game.discard.pop();
-          log("CPU drew " + prettyCard(drawn) + " from discard.","cpu");
+    if (topDiscard) {
+	const hypothetical = [...game.cpu, topDiscard];
+	const evalWith = evaluate(hypothetical);
+	if (evalWith.deadwood + 1 <= cDW) {
+            drawn = game.discard.pop();
+            log("CPU drew " + prettyCard(drawn) + " from discard.","cpu");
 
-  animateCpuTakeFromDiscard(drawn);
+	    render();  //new rev3-2.2
+	    animateCpuTakeFromDiscard(drawn);
 
-	  await sleep(2000);
+	    await sleep(2000);
 
-      }
+	}
     }// if from topDiscard
 
-     // Otherwise draw stock
+    // Otherwise draw stock
     if (!drawn) {
-      if (!game.stock.length) {
-        stockDepletionResolution();
-        return;
-      }
+	if (!game.stock.length) {
+            stockDepletionResolution();
+            return;
+	}
 	drawn = game.stock.pop();
 
-//animateCpuTakeFromStock(drawn);
-//	await sleep(3000);
+	//animateCpuTakeFromStock(drawn);
+	//	await sleep(3000);
 	
 	log("CPU drew from stock.","cpu");
     }
-      
-      game.cpu.push(drawn);
+    
+    game.cpu.push(drawn);
 
-//      game.phase = "cpu-drawn"; // rev8
-      
-//      await sleep(3000);
+    //      game.phase = "cpu-drawn"; // rev8
+    
+    //      await sleep(3000);
 
     const idx = cpuChooseDiscardIndex();
     const [d] = game.cpu.splice(idx,1);
 
-//      animateCpuToDiscard(d);
+    //      animateCpuToDiscard(d);
 
-//      console.log("CPU discarded 1 - " + prettyCard(d) + ".");
-//      showMessage("CPU discarded 1 - " + prettyCard(d) + ".");
+    //      console.log("CPU discarded 1 - " + prettyCard(d) + ".");
+    //      showMessage("CPU discarded 1 - " + prettyCard(d) + ".");
 
-     cpuDiscardAnimate(d);  // Animate the discard
+    cpuDiscardAnimate(d);  // Animate the discard
 
-//      await sleep(1000);
-      
-     game.discard.push(d);
+    //      await sleep(1000);
+    
+    game.discard.push(d);
 
-//      console.log("CPU discarded 2 - " + prettyCard(d) + ".");
-//      showMessage("CPU discarded 2 - " + prettyCard(d) + ".");
+    //      console.log("CPU discarded 2 - " + prettyCard(d) + ".");
+    //      showMessage("CPU discarded 2 - " + prettyCard(d) + ".");
 
-      log("CPU discarded " + prettyCard(d) + ".","cpu");
-      game.turn = "player";
-      game.phase = "await-draw";
-      setMsg("Draw from stock or discard.");
+    log("CPU discarded " + prettyCard(d) + ".","cpu");
+    game.turn = "player";
+    game.phase = "await-draw";
+    setMsg("Draw from stock or discard.");
 
-      updateButtons();
-      await sleep(1000);
+    updateButtons();
+    await sleep(1000);
 
-     render();
-      updateButtons();
-      
-  } // cpuTurn
+    render();
+    updateButtons();
+    
+} // cpuTurn
 
 
 
@@ -1097,7 +1101,7 @@ async function cpuKnock() {
 
     //    commonEventEnd(scored,"CPU knocked. Click New Hand to play again.");
 
-    showMessageBubble("Knock");  
+    showMessageBubble("Knock. Knock");  
     await sleep(2000);
 
     showHandTally(scored);
