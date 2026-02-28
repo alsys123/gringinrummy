@@ -18,7 +18,7 @@ function updateButtons() {
     
     log(`Update Buttons phase: ${game.phase} who: ${game.turn}`, "sys");
 
-   
+
 //    console.log("in updateButtons .. flags: game.phase, matchScore.player, matchScore.cpu,game.turn ==> ",
 //		game.phase,
 //		matchScore.player,

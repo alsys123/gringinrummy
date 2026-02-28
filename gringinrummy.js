@@ -227,7 +227,9 @@ function updateScoreboard() {
 	document.getElementById("score-you").classList.remove("score-bump");
 	document.getElementById("score-cpu").classList.remove("score-bump");
     }, 300);
-    
+
+//    document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
+
 } //updateScoreboard
     
 
@@ -1045,7 +1047,7 @@ async function cpuTurn() {
             log("CPU drew " + prettyCard(drawn) + " from discard.","cpu");
             render();
             animateCpuTakeFromDiscard(drawn);
-            await sleep(800);
+            await sleep(2000); // was 800
         }
     }
 
@@ -1320,16 +1322,17 @@ el.btnBigGin.onclick = bigGin;
 updateScoreboard();
 render();
 updateButtons();
+
 //})();
 
 // functions global ...
 
-   function closeModal() {
+function closeModal() {
 //	console.log("in close");
        document.getElementById("modal").style.display = "none";
        // Remove temporary content
        document.getElementById("modal-extra").innerHTML = "";
-    }
+}
 
 function layoutStars() {
 	// 🥹

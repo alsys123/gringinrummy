@@ -828,7 +828,8 @@ h1 {
   pointer-events: auto;
   width: 40px;
   height: 40px;
-  font-size: 24px; /* optional, but harmless now */
+  font-size: 60px;
+  color: red;
 }
 
 @keyframes bump {
