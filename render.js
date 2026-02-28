@@ -3,14 +3,24 @@
    Rendering
    ------------------------------ */
 
-// future!!!! implement these
-function showIt(element) {
+// The "r" means removes the element
+function showItr(element) {
     document.getElementById(element).style.display = "";
 
 } //showIt
 
-function hideIt(element) {
+function hideItr(element) {
 	document.getElementById(element).style.display = "none";
+} //showIt
+
+// The "k" means keep the element
+function showItk(element) {
+    document.getElementById(element).style.visibility = "visible"; // show
+
+} //showIt
+
+function hideItk(element) {
+        document.getElementById(element).style.visibility = "hidden";  // hide
 } //showIt
 
 //__ updateButtons
@@ -27,10 +37,13 @@ function updateButtons() {
     const t = game.turn === "player";
     const p = game.phase;
 
-    document.getElementById("btn-knock").style.visibility = "hidden";  // hide
-    document.getElementById("btn-gin").style.visibility = "hidden";
-    document.getElementById("btn-bigGin").style.visibility = "hidden";
-
+//    document.getElementById("btn-knock").style.visibility = "hidden";  // hide
+//    document.getElementById("btn-gin").style.visibility = "hidden";
+//    document.getElementById("btn-bigGin").style.visibility = "hidden";
+    hideItk("btn-knock");
+    hideItk("btn-gin");
+    hideItk("btn-bigGin");
+    
     const checkBigGinFlag = playerHasBigGin();
     
     // player - await-discard
@@ -41,18 +54,24 @@ function updateButtons() {
 //	console.log(checkBigGinFlag,`. and deadwood: ${evalPlayer.deadwood}`);	
 
 	if (evalPlayer.deadwood <= 10 && checkBigGinFlag )
-	    document.getElementById("btn-bigGin").style.visibility = "visible"; // show
+//	    document.getElementById("btn-bigGin").style.visibility = "visible"; // show
+	showItk("btn-bigGin");
 
 	if (evalPlayer.deadwood === 0)
-	    document.getElementById("btn-gin").style.visibility = "visible"; // show
+//	    document.getElementById("btn-gin").style.visibility = "visible"; // show
+	showItk("btn-gin");
 	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
-	    document.getElementById("btn-knock").style.visibility = "visible";
+//	    document.getElementById("btn-knock").style.visibility = "visible";
+	showItk("btn-knock");
 	
 	// hide
-	document.getElementById("btn-new").style.display = "none";
-	document.getElementById("btn-newMatch").style.display = "none";
-	document.getElementById("star-ml").style.display = "none";
-
+//	document.getElementById("btn-new").style.display = "none";
+//	document.getElementById("btn-newMatch").style.display = "none";
+//	document.getElementById("star-ml").style.display = "none";
+	hideItr("btn-new");
+	hideItr("btn-newMatch");
+	hideItr("star-ml");
+	
 	return;
     }
 
@@ -61,15 +80,20 @@ function updateButtons() {
 
 	const evalPlayer = evaluate(game.player);
 	
-	if (evalPlayer.deadwood === 0)
-	    document.getElementById("btn-gin").style.visibility = "visible";
+	if (evalPlayer.deadwood === 0) 
+//	    document.getElementById("btn-gin").style.visibility = "visible";
+	showIt("btn-gin");
+    
 	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
-	    document.getElementById("btn-knock").style.visibility = "visible";
-	
+//	    document.getElementById("btn-knock").style.visibility = "visible";
+	showItk("btn-knock");
 	// hide
-	document.getElementById("btn-new").style.display = "none";
-	document.getElementById("btn-newMatch").style.display = "none";
-	document.getElementById("star-ml").style.display = "none"; // no level change
+//	document.getElementById("btn-new").style.display = "none";
+//	document.getElementById("btn-newMatch").style.display = "none";
+//	document.getElementById("star-ml").style.display = "none"; // no level change
+	hideItr("btn-new");
+	hideItr("btn-newMatch");
+	hideItr("star-ml");
 
 	return;
     }
@@ -81,7 +105,9 @@ function updateButtons() {
     const playerWon = matchScore.player >= matchScore.target;
     const cpuWon = matchScore.cpu >= matchScore.target;
     
-    const matchOverFlag = playerWon || cpuWon;
+//    const matchOverFlag = playerWon || cpuWon;
+    const matchOverFlag =
+	  playerWon || cpuWon || (matchScore.player === 0 && matchScore.cpu === 0);
     
 //    console.log("flag: ", game.phase,
 //		matchOverFlag,
@@ -89,20 +115,32 @@ function updateButtons() {
 //		matchScore.cpu,   cpuWon);
 
     // Hide both by default
-    document.getElementById("btn-new").style.display = "none";
-    document.getElementById("btn-newMatch").style.display = "none";
-    document.getElementById("star-ml").style.display = "none"; // no level change
+//    document.getElementById("btn-new").style.display = "none";
+//    document.getElementById("btn-newMatch").style.display = "none";
+//    document.getElementById("star-ml").style.display = "none"; // no level change
+	hideItr("btn-new");
+	hideItr("btn-newMatch");
+	hideItr("star-ml");
 
     // If match is over → show New Match
     if (matchOverFlag && game.phase === "round-over") {
-	document.getElementById("btn-newMatch").style.display = "";
-	document.getElementById("star-ml").style.display = ""; // allow level change
+//	document.getElementById("btn-newMatch").style.display = "";
+//	document.getElementById("star-ml").style.display = ""; // allow level change
+	showItr("btn-newMatch");
+	showItr("star-ml");
+	return;
+    }
+    // If match is over → show New Match -- we are idle at the beginning
+    if (matchOverFlag && game.phase === "idle") {
+	showItr("btn-newMatch");
+	showItr("star-ml");
 	return;
     }
     // If match is NOT over → show New Game but we are idle
     if (!matchOverFlag && game.phase === "idle") {
-	document.getElementById("btn-new").style.display = "";
-	document.getElementById("star-ml").style.display = ""; // allow level change
+//	document.getElementById("btn-new").style.display = "";
+	showItr("btn-new");
+//	document.getElementById("star-ml").style.display = ""; // allow level change
 
 //	console.log("show New Game - !matchOverFlag",);
 	
@@ -121,8 +159,9 @@ function updateButtons() {
     
     // match is not over but the round is over
     if (game.turn === "cpu" && game.phase === "round-over") {
-	document.getElementById("btn-new").style.display = "";
-	document.getElementById("star-ml").style.display = ""; // allow level change
+//	document.getElementById("btn-new").style.display = "";
+	showItr("btn-new");
+//	document.getElementById("star-ml").style.display = ""; // allow level change
 
 //	console.log("show New Game - !matchOverFlag",);
 	
@@ -131,8 +170,9 @@ function updateButtons() {
 
     // match is not over but the round is over
     if (!matchOverFlag && game.phase === "round-over") {
-	document.getElementById("btn-new").style.display = "";
-	document.getElementById("star-ml").style.display = ""; // allow level change
+//	document.getElementById("btn-new").style.display = "";
+	showItr("btn-new");
+//	document.getElementById("star-ml").style.display = ""; // allow level change
 
 //	console.log("show New Game - !matchOverFlag",);
 	
@@ -153,11 +193,13 @@ function updateButtons() {
 */
     
 // hide by default
-	document.getElementById("btn-knock").style.visibility = "hidden";
-	document.getElementById("btn-gin").style.visibility = "hidden";
-	document.getElementById("btn-bigGin").style.visibility = "hidden";
-
-	
+//	document.getElementById("btn-knock").style.visibility = "hidden";
+//	document.getElementById("btn-gin").style.visibility = "hidden";
+//	document.getElementById("btn-bigGin").style.visibility = "hidden";
+    hideItk("btn-knock");
+    hideItk("btn-gin");
+    hideItk("btn-bigGin");
+	    
 } // updateButtons
 
 //__ render

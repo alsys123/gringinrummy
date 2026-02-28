@@ -530,12 +530,12 @@ function checkMatchEnd() {
     if (matchScore.player >= matchScore.target) {
 	//	showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
 	message =
-	    tallyb + `You win the match!` + tallye; // +
+	    tallyb + `You win the game!` + tallye; // +
 //	    tallyb + `Final score: You ${matchScore.player}` +
 //	    tallyb + ` — CPU ${matchScore.cpu}` + tallye;
 
 	//old	    document.getElementById("btn-new").textContent = "New Game";
-	document.getElementById("btn-newMatch").textContent = "New MATCH";
+	document.getElementById("btn-newMatch").textContent = "New Game";
 	showTallyArea(message);
 
 	celebrateMatchWin();
@@ -547,11 +547,11 @@ function checkMatchEnd() {
     if (matchScore.cpu >= matchScore.target) {
 	//	showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
 	message =
-	    tallyb + `CPU wins the match!` + tallye; // +
+	    tallyb + `CPU wins the game!` + tallye; // +
 //	    tallyb + `Final score: CPU ${matchScore.cpu}` +
 //	    tallyb + ` — You ${matchScore.player}` + tallye;
 	//old	    document.getElementById("btn-new").textContent = "New Game";
-	document.getElementById("btn-newMatch").textContent = "New MATCH";
+	document.getElementById("btn-newMatch").textContent = "New Game";
 	//??	    resetMatch();
 	showTallyArea(message);
 	return;
