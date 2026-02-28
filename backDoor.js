@@ -178,7 +178,7 @@ function log(message, type = "normal") {
     p.textContent = message;
 
   // Inline color coding
-  if (type === "sys")     p.style.color = "red";
+  if (type === "sys")     p.style.color = "white";
   if (type === "cpu")     p.style.color = "yellow";
   if (type === "player")  p.style.color = "green";
   if (type === "warn")    p.style.color = "orange";

@@ -3,6 +3,16 @@
    Rendering
    ------------------------------ */
 
+// future!!!! implement these
+function showIt(element) {
+    document.getElementById(element).style.display = "";
+
+} //showIt
+
+function hideIt(element) {
+	document.getElementById(element).style.display = "none";
+} //showIt
+
 //__ updateButtons
 function updateButtons() {
     
@@ -41,6 +51,8 @@ function updateButtons() {
 	// hide
 	document.getElementById("btn-new").style.display = "none";
 	document.getElementById("btn-newMatch").style.display = "none";
+	document.getElementById("star-ml").style.display = "none";
+
 	return;
     }
 
@@ -57,6 +69,8 @@ function updateButtons() {
 	// hide
 	document.getElementById("btn-new").style.display = "none";
 	document.getElementById("btn-newMatch").style.display = "none";
+	document.getElementById("star-ml").style.display = "none"; // no level change
+
 	return;
     }
 
@@ -77,14 +91,18 @@ function updateButtons() {
     // Hide both by default
     document.getElementById("btn-new").style.display = "none";
     document.getElementById("btn-newMatch").style.display = "none";
+    document.getElementById("star-ml").style.display = "none"; // no level change
+
     // If match is over → show New Match
     if (matchOverFlag && game.phase === "round-over") {
 	document.getElementById("btn-newMatch").style.display = "";
+	document.getElementById("star-ml").style.display = ""; // allow level change
 	return;
     }
     // If match is NOT over → show New Game but we are idle
     if (!matchOverFlag && game.phase === "idle") {
 	document.getElementById("btn-new").style.display = "";
+	document.getElementById("star-ml").style.display = ""; // allow level change
 
 //	console.log("show New Game - !matchOverFlag",);
 	
@@ -104,6 +122,7 @@ function updateButtons() {
     // match is not over but the round is over
     if (game.turn === "cpu" && game.phase === "round-over") {
 	document.getElementById("btn-new").style.display = "";
+	document.getElementById("star-ml").style.display = ""; // allow level change
 
 //	console.log("show New Game - !matchOverFlag",);
 	
@@ -113,6 +132,7 @@ function updateButtons() {
     // match is not over but the round is over
     if (!matchOverFlag && game.phase === "round-over") {
 	document.getElementById("btn-new").style.display = "";
+	document.getElementById("star-ml").style.display = ""; // allow level change
 
 //	console.log("show New Game - !matchOverFlag",);
 	

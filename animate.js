@@ -132,8 +132,8 @@ async function cpuDiscardAnimate(card) {
     // Position it above the discard pile
     const rect = pile.getBoundingClientRect();
 //    hover.style.left = rect.left + "px";
-    hover.style.left = (rect.left + 40) + "px";
-    hover.style.top = (rect.top - 40) + "px"; // hover 40px above
+    hover.style.left = (rect.left + 40) + "px";  // was +40
+    hover.style.top = (rect.top - 40) + "px"; // hover 40px above - was -40
 
     document.body.appendChild(hover);
    
@@ -156,9 +156,9 @@ async function cpuDiscardAnimate(card) {
 	    "opacity 2s cubic-bezier(0.16, 1, 0.3, 1), " +
 	    "top 2s cubic-bezier(0.16, 1, 0.3, 1), " +
 	    "left 2s cubic-bezier(0.16, 1, 0.3, 1)"; 
-	hover.style.opacity = "0";
-	hover.style.top = (rect.top + 10) + "px"; // drop 10px
-	hover.style.left = (rect.left - 1) + "px";
+	hover.style.opacity = "1"; // was 0
+	hover.style.left = (rect.left - 1) + "px";  //was -1
+	hover.style.top = (rect.top + 0) + "px"; // drop 10px - was +10
 
 //	hover.style.transition = "opacity 0.4s ease";
 //	hover.style.opacity = "0";
