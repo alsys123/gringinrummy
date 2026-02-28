@@ -1459,9 +1459,9 @@ document.getElementById("star-ml").addEventListener("click", () => {
 
 
 const cpuColors = [
-    "#FFD700", // 1 gold
-    "green",
-	"pink"
+    "red",
+	"yellow",
+	"green"
  //   "#FF4500", // 3 fire coral (red-orange)
  //   "#C71585", // 4 deep magenta (very distinct)
   //  "pink"  
