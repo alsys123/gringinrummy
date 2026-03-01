@@ -3,26 +3,6 @@
    Rendering
    ------------------------------ */
 
-// The "r" means removes the element
-function showItr(element) {
-    document.getElementById(element).style.display = "";
-
-} //showIt
-
-function hideItr(element) {
-	document.getElementById(element).style.display = "none";
-} //showIt
-
-// The "k" means keep the element
-function showItk(element) {
-    document.getElementById(element).style.visibility = "visible"; // show
-
-} //showIt
-
-function hideItk(element) {
-        document.getElementById(element).style.visibility = "hidden";  // hide
-} //showIt
-
 //__ updateButtons
 function updateButtons() {
     
@@ -48,7 +28,7 @@ function updateButtons() {
     
     // player - await-discard
     if (t && p === "await-discard") {
-
+	
 	const evalPlayer = evaluate(game.player);
 
 //	console.log(checkBigGinFlag,`. and deadwood: ${evalPlayer.deadwood}`);	
@@ -63,7 +43,14 @@ function updateButtons() {
 	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
 //	    document.getElementById("btn-knock").style.visibility = "visible";
 	showItk("btn-knock");
-	
+
+	// do we have 11 cards and 1 deadwood .. this is GIN
+	const pEval = evaluate(game.player);
+	const deadwoodCards = pEval.deadwoodCards;
+	if (deadwoodCards.length == 1 && game.player.length === 11) {
+	    showItk("btn-gin");
+	}
+
 	// hide
 //	document.getElementById("btn-new").style.display = "none";
 //	document.getElementById("btn-newMatch").style.display = "none";
@@ -82,7 +69,7 @@ function updateButtons() {
 	
 	if (evalPlayer.deadwood === 0) 
 //	    document.getElementById("btn-gin").style.visibility = "visible";
-	showIt("btn-gin");
+	showItk("btn-gin");
     
 	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
 //	    document.getElementById("btn-knock").style.visibility = "visible";
@@ -679,3 +666,22 @@ function logCpuFanBounds(el) {
     
 }
 
+// The "r" means removes the element
+function showItr(element) {
+    document.getElementById(element).style.display = "";
+
+} //showItr
+
+function hideItr(element) {
+	document.getElementById(element).style.display = "none";
+} //showItr
+
+// The "k" means keep the element
+function showItk(element) {
+    document.getElementById(element).style.visibility = "visible"; // show
+
+} //showItk
+
+function hideItk(element) {
+        document.getElementById(element).style.visibility = "hidden";  // hide
+} //showItk

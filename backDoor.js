@@ -90,6 +90,18 @@ function loadGameFromFile(file) {
 //	    delete game.matchScore?.matchScore;
 	    // -- end of cleanup
 
+	    // reset the playing board
+    //show again
+    document.getElementById("center-area").style.display = "flex";
+    document.getElementById("deadwood-info").style.display = "block";
+
+    // hide
+    document.getElementById("tally-area").style.display = "none";
+    document.getElementById("tally-area").innerHTML = "";
+
+    document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
+
+	    
 	    updateScoreboard();
 	    render();
 	    updateButtons();

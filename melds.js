@@ -820,7 +820,7 @@ function sortHandUsingMeldIds(hand, meldCardIds) {
 } //sortHandUsingMeldIds
 
 
-//Used for BIGGIN
+//Used for BIG GIN
 function checkWillFitAMeld(hand) {
     // Evaluate the hand normally
     const evalInfo = evaluate(hand);
@@ -831,9 +831,16 @@ function checkWillFitAMeld(hand) {
 
     const lone = deadwoodCards[0];
 
+//    console.log("Lone deadwood:", lone);
+    
     // Try to fit the lone card into any SET
-    const ranks = hand.filter(c => c.rank === lone.rank);
+//    const ranks = hand.filter(c => c.rank === lone.rank);
+    const ranks = hand.filter(c => c.rank === lone.rank && c.id !== lone.id);
+
     if (ranks.length >= 2) {
+
+//	console.log("fits into a set");
+	
         // lone + 2 others = valid set of 3
         return true;
     }
@@ -843,6 +850,8 @@ function checkWillFitAMeld(hand) {
     const values = sameSuit.map(c => c.runValue ?? c.rank).sort((a,b)=>a-b);
     const v = lone.runValue ?? lone.rank;
 
+//    console.log("test...fits into a run?");
+    
     // Check adjacency: v-2,v-1,v or v,v+1,v+2
     if (values.includes(v-2) && values.includes(v-1)) return true;
     if (values.includes(v-1) && values.includes(v+1)) return true;

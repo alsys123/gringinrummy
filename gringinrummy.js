@@ -300,9 +300,28 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, originalD
     if (type === "bigGin")   bonus = 31;
 
     // deadwood calc
-    if (winner === "player") dDW = cDW - pDW;
-    if (winner === "cpu")    dDW = pDW - cDW;
+//    if (winner === "player") dDW = cDW - pDW;
+//    if (winner === "cpu")    dDW = pDW - cDW;
     
+
+// deadwood calc
+if (winner === "player") {
+    if (type === "gin" || type === "bigGin") {
+        dDW = cDW;              // player gins → take all CPU deadwood
+    } else {
+        dDW = cDW - pDW;        // normal knock or undercut win
+    }
+}
+
+if (winner === "cpu") {
+    if (type === "gin" || type === "bigGin") {
+        dDW = pDW;              // cpu gins → take all player deadwood
+    } else {
+        dDW = pDW - cDW;        // normal knock or undercut win
+    }
+}
+
+   
     
   // Total original points (deadwood + bonus)
     pointsThisGame = dDW + bonus;
@@ -454,10 +473,10 @@ function showHandTally(result) {
 
     //bigGin
     if (actor === "cpu" && result.type === "bigGin") {
-	pointsThisHandCalc = " = ( " + `${result.pDW} + 31 Bonus points for gin` + " )";
+	pointsThisHandCalc = " = ( " + `${result.pDW} + 31 Bonus points for BIG Gin` + " )";
     }
     if (actor === "player" && result.type === "bigGin") {
-	pointsThisHandCalc = " = ( " + `${result.cDW} + 31 Bonus points for gin` + " )";
+	pointsThisHandCalc = " = ( " + `${result.cDW} + 31 Bonus points for BIG Gin` + " )";
     }
 
     const personalWinner =
@@ -515,7 +534,7 @@ function showTallyArea(tallyText) {
     tallyArea.style.marginLeft = "200px";
 //    tallyArea.style.transform = "translateX(-50%)";
 
-    console.log("Tally HTML:", tallyArea.innerHTML);
+//    console.log("Tally HTML:", tallyArea.innerHTML);
 
 } //showTallyArea
 
@@ -620,7 +639,7 @@ function bigGin() {
 	winner: "player",
 	type: "bigGin",
 	pDW: pEval.deadwood,
-	cDW,
+	cDW: cDW,  // added data structure
 	who: "player"
     });
 
@@ -652,14 +671,14 @@ function bigGin() {
 // conditions where we can let the player claim a big gin - make button visible
 function playerHasBigGin() {
 
-    console.log("check for Big Gin");
+//    console.log("check for Big Gin");
     
     //    game.turn === "player" && game.phase === "await-discard"
 
     // has a single deadwood left
     // has 11 cards
     if (game.player.length === 11) {
-	console.log("player has 11 cards");
+//	console.log("player has 11 cards");
 
 	// single deadwood fits into a set or a run return true
 	if (checkPlayerDeadwoodFitsBigGin() ) {
@@ -708,7 +727,7 @@ function start() {
     //    game.phase = "idle";
 
     game.drawn = null;
-      game.revealCpu = false;
+    game.revealCpu = false;
 
 //      el.log.innerHTML = ""; // clears the log
 
@@ -832,10 +851,10 @@ function stockDepletionResolution() {
     else if (pDW > cDW) winner = "cpu";
 
     const scored = applyScoring({
-	winner,
+	winner: winner, // added data structure
 	type: "stock",
-	pDW,
-	cDW,
+	pDW: pDW, // added data structure
+	cdw: cDW, // added data structure
 	who: "na"
     });
 
@@ -927,10 +946,10 @@ function playerKnock() {
     }
 
     const scored = applyScoring({
-	winner,
+	winner: winner, // added data structure
 	type: finalType,
-	pDW,
-	cDW,
+	pDW: pDW, // added data structure
+	cDW: cDW, // added data structure
 	who: "player",
 	layoff: layoffTotal,
 	originalDW: origCDW
@@ -956,15 +975,25 @@ function playerKnock() {
 
 //__playerGin
 function playerGin() {
-    
-    if (game.turn!=="player" || game.phase!=="await-draw") return;
 
+    log("f(playerGin)");
+
+    if (game.turn !== "player") return;
+    if (game.phase !== "await-draw" && game.phase !== "await-discard") return;
+
+//    if (game.turn!=="player" || game.phase!=="await-draw") return;
+
+//    console.log("good for gin...");
+    
     const pEval = evaluate(game.player);
+    /* not true ...
     if (pEval.deadwood !== 0) {
 	//alert("Gin requires 0 deadwood.");
 	showMessage("Gin requires 0 deadwood.");
 	return;
-    }
+	}
+    */
+
     const cEval = evaluate(game.cpu);
     const cDW = cEval.deadwood;
 
@@ -972,7 +1001,7 @@ function playerGin() {
 	winner: "player",
 	type: "gin",
 	pDW: pEval.deadwood,
-	cDW,
+	cDW: cDW, // added data structure
 	who: "player"
     });
 
@@ -983,7 +1012,7 @@ function playerGin() {
     game.phase = "round-over";
     game.revealCpu = true;
     
-    setMsg("You had Gin! Click New Hand to play again.");
+    log("You had Gin! Click New Hand to play again.");
     
     render();
     updateButtons();
@@ -1125,7 +1154,7 @@ async function cpuGin() {
       const scored = applyScoring({
 	  winner: "cpu",
 	  type: "gin",
-	  pDW,
+	  pDW: pDW, // added data structure
 	  cDW: 0,
 	  who: "cpu"
       });
@@ -1183,10 +1212,10 @@ async function cpuKnock() {
     }
     
     const scored = applyScoring({
-	winner,
+	winner: winner, // added data structure
 	type: finalType,
-	pDW,
-	cDW,
+	pDW: pDW, // added data structure
+	cDW: cDW, // added data structure
 	who: "cpu",
 	layoff: layoffTotal,
 	originalDW: origPDW
