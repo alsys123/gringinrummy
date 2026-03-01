@@ -163,6 +163,22 @@ document.getElementById("btn-backDoor-saveLogFile").onclick = () => {
     downloadLog();
 }
 
+// save log file
+document.getElementById("btn-backDoor-toggleAutoPlay").onclick = () => {
+    toggleAutoPlay();
+}
+
+function toggleAutoPlay() {
+    if (autoPlayer) {
+	autoPlayer = false;
+	return;
+    }
+    if (!autoPlayer) {
+	autoPlayer = true;
+	return;
+    }
+} //toggleAutoPlay
+
 function toggleShowlog() {
     // hide the log
     if (gshowLog)  {

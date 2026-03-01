@@ -1117,7 +1117,6 @@ async function cpuTurn() {
 
     if (autoPlayer) {
 	playerTurn();
-	endPlayerTurn();
     }
     
 }//cpuTurn
@@ -1599,8 +1598,15 @@ window.addEventListener("load", positionCenterArea);
 async function playerTurn() {
 
     log("playerTurn","sys");
+
     if (game.phase === "round-over") return;
 
+    // a button is visible go manual 
+    if (anyActionButtonVisible()) {
+	console.log("a player button is visible");
+	return;
+    }
+    
     const evalPlayer = evaluate(game.player);
     const pDW = evalPlayer.deadwood;
 
@@ -1672,6 +1678,9 @@ async function playerTurn() {
     await sleep(300);
     render();
     updateButtons();
+
+    endPlayerTurn();
+
 }//playerTurn
 
 function playerChooseDiscardIndexWithDifficulty() {

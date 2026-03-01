@@ -2,6 +2,13 @@
 /* ------------------------------
    Rendering
    ------------------------------ */
+function anyActionButtonVisible() {
+    return (
+        document.getElementById("btn-knock").style.visibility !== "hidden" ||
+        document.getElementById("btn-gin").style.visibility !== "hidden" ||
+        document.getElementById("btn-bigGin").style.visibility !== "hidden"
+    );
+}
 
 //__ updateButtons
 function updateButtons() {
