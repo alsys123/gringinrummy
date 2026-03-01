@@ -150,8 +150,11 @@ async function cpuDiscardAnimate(card) {
 //	hover.style.transition = "opacity 0.4s ease, top 0.4s ease";
 	//	hover.style.transition = "opacity 1s ease";
 	// ⭐ Slow, smooth movement (adjust this number)
-	const MOVE_TIME = 0.50; // seconds — make this bigger to slow it down 
+	const MOVE_TIME = 0.25; // seconds — make this bigger to slow it down was 0.50
 
+	//opacity 2s … → fade‑in takes 2 seconds
+	//top 2s … → vertical movement takes 2 seconds
+	//left 2s … → horizontal movement takes 2 seconds
 	hover.style.transition =
 	    "opacity 2s cubic-bezier(0.16, 1, 0.3, 1), " +
 	    "top 2s cubic-bezier(0.16, 1, 0.3, 1), " +
@@ -165,7 +168,7 @@ async function cpuDiscardAnimate(card) {
 	// Remove after fade
 	setTimeout(() => hover.remove(), MOVE_TIME * 1000 + 50); //was 1300
 
-    }, 1000);
+    }, 1000);  // delay start by 1000 second
 }//cpuDiscardAnimate
 
 function showMessageBubble(text) {

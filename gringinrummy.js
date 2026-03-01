@@ -1,3 +1,10 @@
+/* ------------------------------
+   Mainline
+   ------------------------------ */
+
+//
+
+
 //(function() {
   const ranks = [1,2,3,4,5,6,7,8,9,10,11,12,13];
   const suits = ["♣","♦","♥","♠"];
@@ -47,6 +54,9 @@ const cpuDifficulty = {
 // choose difficulty here
 let currentCpuLevel = "hard";
 let cpuLevel = cpuDifficulty[currentCpuLevel];
+
+//let autoPlayer = true;  // for now
+let autoPlayer = false;
 
 const el = {
     msg: document.getElementById("message"),
@@ -614,15 +624,12 @@ function newMatch() {
 
 //__bigGin
 function bigGin() {
-    log("bigGin: .. just coding");
-
-//    console.log("at 0");
+    log("bigGin","sys");
 
     //    ... from GIN!!!
     if (game.turn!=="player" || game.phase!=="await-discard")
 	return; // was draw
 
-//    console.log("at 1");
     
     const pEval = evaluate(game.player);
 //    if (pEval.deadwood !== 0) {
@@ -632,8 +639,6 @@ function bigGin() {
 //    }
     const cEval = evaluate(game.cpu);
     const cDW = cEval.deadwood;
-
-//    console.log("at 2");
 
     const scored = applyScoring({
 	winner: "player",
@@ -648,11 +653,7 @@ function bigGin() {
 
     showHandTally(scored);
 
-    console.log("at 4");
-
     celebrateMatchWin(); // maybe a special one for BIG GIN
-
-        console.log("at 5");
 
     checkMatchEnd();
     game.phase = "round-over";
@@ -776,6 +777,7 @@ function start() {
 
 //__ drawStock
 function drawStock() {
+
     if (game.turn!=="player" || game.phase!=="await-draw") return;
     if (!game.stock.length) return;
     const c = game.stock.pop();
@@ -791,6 +793,7 @@ function drawStock() {
 } //drawStock
     
 function drawDiscard() {
+    
 	if (game.turn!=="player" || game.phase!=="await-draw") return;
 	if (!game.discard.length) return;
 	const c = game.discard.pop();
@@ -1111,7 +1114,13 @@ async function cpuTurn() {
     await sleep(300);
     render();
     updateButtons();
-}
+
+    if (autoPlayer) {
+	playerTurn();
+	endPlayerTurn();
+    }
+    
+}//cpuTurn
 
 function cpuChooseDiscardIndexWithDifficulty() {
     const hand = game.cpu;
@@ -1578,3 +1587,122 @@ function positionCenterArea() {
 }
 
 window.addEventListener("load", positionCenterArea);
+
+
+
+/* ------------------------------
+   Special player automation
+   ------------------------------ */
+
+//
+
+async function playerTurn() {
+
+    log("playerTurn","sys");
+    if (game.phase === "round-over") return;
+
+    const evalPlayer = evaluate(game.player);
+    const pDW = evalPlayer.deadwood;
+
+    // GIN check (always smart)
+    if (pDW === 0) {
+        playerGin();
+        return;
+    }
+
+    // Knock check (difficulty affects willingness)
+    if (pDW <= 7) {
+        if (Math.random() < cpuLevel.knockChance) {
+            playerKnock();
+            return;
+        }
+        // otherwise: CPU "hesitates" and keeps playing
+    }
+
+    let drawn;
+    const topDiscard = game.discard[game.discard.length-1];
+
+    // Decide whether to take discard
+    if (topDiscard) {
+        const hypothetical = [...game.player, topDiscard];
+        const evalWith = evaluate(hypothetical);
+
+        const improvement = evalWith.deadwood + 1 <= pDW;
+
+        if (improvement && Math.random() < cpuLevel.discardTakeChance) {
+            drawn = game.discard.pop();
+            log("Player drew " + prettyCard(drawn) + " from discard.","player");
+            render();
+
+	    //REMOVE FOR PLAYER ... for now!!
+//            animatePlayerTakeFromDiscard(drawn);
+//            await sleep(2000); // was 800
+        }
+    }
+
+    // Otherwise draw stock
+    if (!drawn) {
+        if (!game.stock.length) {
+            stockDepletionResolution();
+            return;
+        }
+        drawn = game.stock.pop();
+        log("Player drew from stock.","player");
+    }
+
+    game.player.push(drawn);
+
+    // Choose discard (difficulty affects mistakes)
+    const idx = playerChooseDiscardIndexWithDifficulty();
+    const [d] = game.player.splice(idx,1);
+
+    //REMOVE FOR PLAYER ... for now!!
+//    cpuDiscardAnimate(d);
+//    await sleep(1000);
+    
+    game.discard.push(d);
+
+    log("Player discarded " + prettyCard(d) + ".","player");
+
+    game.turn = "cpu";
+    game.phase = "await-draw";
+    setMsg("Draw from stock or discard.");
+
+    updateButtons();
+    await sleep(300);
+    render();
+    updateButtons();
+}//playerTurn
+
+function playerChooseDiscardIndexWithDifficulty() {
+    const hand = game.player;
+    const sorted = sortHandByRank(hand);
+    const evalInfo = evaluate(sorted);
+    const meldIds = meldCardIds(sorted, evalInfo);
+
+    let bestIndex = 0;
+    let bestScore = -Infinity;
+
+    for (let i=0;i<sorted.length;i++) {
+        const c = sorted[i];
+        const v = cardValue(c.rank);
+        const isMeld = meldIds.has(c.id);
+        const meldPenalty = isMeld ? -10 : 0;
+        const lowPenalty = (c.rank <= 4 ? -1 : 0);
+
+        const score = v + meldPenalty + lowPenalty;
+        if (score > bestScore) {
+            bestScore = score;
+            bestIndex = i;
+        }
+    }
+
+    // Difficulty: sometimes discard a random card instead
+    if (Math.random() < cpuLevel.discardMistake) {
+        return Math.floor(Math.random() * hand.length);
+    }
+
+    const targetId = sorted[bestIndex].id;
+    const realIndex = hand.findIndex(c => c.id === targetId);
+    return realIndex === -1 ? 0 : realIndex;
+} //playerChooseDiscardIndexWithDifficulty
