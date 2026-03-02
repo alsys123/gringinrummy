@@ -86,26 +86,26 @@ h1 {
 #title:hover { opacity: 0.85; }
 
 
-  #status-bar {
+#status-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
     gap: 8px;
     font-size: 14px;
-  }
+}
 
-  #message {
-      flex: 1;
-      padding: 6px 10px;
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 999px;
-      max-width: 500px;
-      text-align: center;
-  }
+#message {
+    flex: 1;
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 999px;
+    max-width: 500px;
+    text-align: center;
+}
 
-  
-  button {
+
+button {
     border-radius: 999px;
     border: none;
     padding: 6px 12px;
@@ -853,19 +853,20 @@ h1 {
 #back-door {
   position: fixed;
   bottom: 20px;
-  right: 200px;
-
+/*  right: 200px;*/
+  right: 50%;
+  
   flex-wrap: wrap;
   gap: 8px 12px;
 
   background: rgba(0,0,0,0.4);
   padding: 4px 8px;
-  font-size: 8px;   /* affects text, but not buttons */
+  font-size: 12px;   /* affects text, but not buttons */
   border-radius: 8px;
 }
 
 #back-door button {
-  font-size: 8px;   /* this is the important part */
+  font-size: 14px;   /* this is the important part */
   padding: 3px 6px;
 }
 

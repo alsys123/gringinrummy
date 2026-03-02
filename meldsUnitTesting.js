@@ -20,7 +20,11 @@ function upgradeHand(hand) {
 
 //__ testMelds
 function testMelds() {
-    
+
+    // clear out the modal box first
+    document.getElementById("modal-extra").innerHTML = "";
+    document.getElementById("modal-text").innerHTML = "";
+
     let message = "🃏 **Meld Unit Tests**\n\n";
     let passed = 0;
     let total = meldTests.length;
@@ -79,48 +83,3 @@ showMessage(message);
 
 
 
-/*
-  TESTING BEST COMBO and deadwood
-*/
-/*
-function testBestCombos() {
-    
-    let message = "🔥 Best Combo + Deadwood Tests\n\n";
-    let passed = 0;
-    let total = bestComboTests.length;
-    
-    const normalize = arr =>
-    arr.map(m => m.slice().sort((a,b)=>a-b))
-       .sort((a,b)=>a[0]-b[0]);
-
-  for (const t of bestComboTests) {
-
-    const result = bestMeldCombo(t.hand);
-
-    const meldsNorm = normalize(result.melds);
-    const expectedNorm = normalize(t.expectedMelds);
-
-    const meldsPass = JSON.stringify(meldsNorm) === JSON.stringify(expectedNorm);
-      const deadwoodPass = result.deadwood === t.expectedDeadwood;
-      const pass = meldsPass && deadwoodPass;
-      if (pass) passed++;
-
-      message += `**${t.name}**\n`;
-      message += `Hand: ${t.hand.map((c,i)=>`${i}) ${c.rank}${c.suit}`).join("  ")}\n`;
-    message += `Expected melds: ${JSON.stringify(expectedNorm)} ➜ `;
-    message += `Got melds: ${JSON.stringify(meldsNorm)}\n`;
-    message += `Expected deadwood: ${t.expectedDeadwood} ➜ `;
-    message += `Got: ${result.deadwood}  `;
-    message += `**${(meldsPass && deadwoodPass) ? "✅" : "❌"}**\n\n`;
-  }
-
-    const pct = ((passed / total) * 100).toFixed(1);
-    message += `----------------------------------------\n`;
-    message += `Passed: ${passed} / ${total} (${pct}%)\n`;
-    message += `----------------------------------------`;
-
-    
-  showMessage(message);
-}
-
-*/

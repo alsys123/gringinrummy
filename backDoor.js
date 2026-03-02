@@ -31,10 +31,6 @@ function openCloseBackDoor() {
      Save and restore -- file states
   ------------------------------ */
 
-// hooks
-document.getElementById("btn-backDoor-save").onclick = () => {
-    saveGameToFile();
-    }
 
 document.getElementById("btn-backDoor-restore").onclick = () => {
     document.getElementById("load-file").click();
@@ -46,9 +42,6 @@ document.getElementById("load-file").addEventListener("change", (e) => {
     }
 });
 
-document.getElementById("btn-backDoor-testMelds").onclick = () => {
-    testMelds();
-};
 
 
 function saveGameToFile() {
@@ -129,34 +122,11 @@ function openLoadDialog() {
 }
 
   /* ------------------------------
-     Show the CPU cards using the back door
+     Settings
   ------------------------------ */
 
-document.getElementById("btn-backDoor-showCpuCards").onclick = () => {
-    game.revealCpu = !game.revealCpu;
-    render();
-    updateButtons();
-//    console.log("Game object: ", game)
-}
-  /* ------------------------------
-     Let us pick a card deck
-  ------------------------------ */
-
-document.getElementById("btn-backDoor-pickCardDeck").onclick = () => {
-    showDeckSelector();
-}
-
-  /* ------------------------------
-     Show game statistics
-  ------------------------------ */
-
-document.getElementById("btn-backDoor-showStats").onclick = () => {
-    showGameStats();
-}
-
-// save log file
-document.getElementById("btn-backDoor-saveLogFile").onclick = () => {
-    downloadLog();
+document.getElementById("btn-backDoor-settings").onclick = () => {
+    showSettings();
 }
 
 
@@ -206,6 +176,10 @@ function setMsg(t) {
 
 //__showGameStats
 function showGameStats() {
+
+    // clear out the modal box first
+    document.getElementById("modal-extra").innerHTML = "";
+    document.getElementById("modal-text").innerHTML = "";
 
 //    const winnerLine = result.winner
 //	  ? `Result Type: ${result.type}  Result Winner: ${result.winner}\n`
@@ -325,75 +299,67 @@ function formatAllResults(results) {
   ).join("\n");
 }
 
-/*
-//__showDeckSelector
-// select a card deck to use...
-function showDeckSelector() {
-    const extra = document.getElementById("modal-extra");
-    extra.innerHTML = ""; // clear previous content
-
-    const label = document.createElement("label");
-    label.textContent = "Choose a card deck:";
-    label.style.display = "block";
-    label.style.marginBottom = "6px";
-
-    const select = document.createElement("select");
-    select.id = "deck-select";
-    select.style.width = "100%";
-    select.style.padding = "6px";
-    select.style.marginBottom = "12px";
-
-    // Add your deck options here .. picking carddeck
-    const decks = [
-        { value: "na",      label: "--- No Change ---" },
-        { value: "classic", label: "Classic Deck" },
-        { value: "jumbo",   label: "Jumbo Deck" },
-        { value: "simple",   label: "Simple Deck" }
-	
-//        { value: "minimal", label: "Minimalist Deck" },
-//        { value: "casino", label: "Casino Deck" }
-    ];
-
-    decks.forEach(d => {
-        const opt = document.createElement("option");
-        opt.value = d.value;
-        opt.textContent = d.label;
-        select.appendChild(opt);
-    });
-
-    extra.appendChild(label);
-    extra.appendChild(select);
-
-    showMessage("Select a card deck");
-
-    document.getElementById("deck-select").addEventListener("change", (e) => {
-
-	if (e.target.value === "na") return;
-	
-	gCardDeck = e.target.value;
-//	console.log("Changed to:", e.target.value);
-//	start();
-	render();
-	updateButtons();
-    });
-
-}//showDeckSelector
-*/
-// !!!!just for now
-function showDeckSelector() {
-    showSettings();
-}
 
 function showSettings() {
     const extra = document.getElementById("modal-extra");
     extra.innerHTML = ""; // clear the settings
 
     document.getElementById("modal-text").innerHTML = "&nbsp;"; // avoid collapse
+
+    document.querySelector(".modal-content").style.width = "480px";
+
+    
+    // *** These are the Setting components ***    
+    extra.appendChild(buildShowButton("Save Game to file", saveGameToFile));    
+
+    extra.appendChild(
+	buildShowButton("Restore Game State from File", () => {
+            document.getElementById("load-file").click();
+	})
+    );
     
     extra.appendChild(buildDeckSelector());
-    extra.appendChild(buildAutoPlayerToggle());
-    extra.appendChild(buildShowLogToggle()); // ← new worker
-    extra.appendChild(buildSaveLogToggle());
+//    extra.appendChild(buildAutoPlayerToggle());
+
+    extra.appendChild(
+	buildCheckboxToggle(
+            "Auto Player Mode",
+            () => autoPlayer,
+            (v) => autoPlayer = v
+	)
+    );
+    
+//    extra.appendChild(buildShowLogToggle());
+extra.appendChild(
+    buildCheckboxToggle(
+        "Show Log",
+        () => gshowLog,
+        (v) => {
+            gshowLog = v;
+            document.getElementById("log").hidden = !v;
+        }
+    )
+);
+    
+//    extra.appendChild(buildSaveLogButton());
+    extra.appendChild(buildShowButton("Download Log File", downloadLog));
+
+//    extra.appendChild(buildShowCpuCardsToggle());
+    extra.appendChild(
+	buildCheckboxToggle( "Show CPU Cards", () =>
+	    game.revealCpu,
+	    (v) => {
+		game.revealCpu = v;
+		render();
+		updateButtons();
+	    }
+	)
+    );
+    
+//    extra.appendChild(buildUnitTestMeldsButton());
+    extra.appendChild(buildShowButton("Unit Test Melds", testMelds));    
+    extra.appendChild(buildShowButton("Show Game Stats", showGameStats));    
+    
 
     showMessage("Settings");
 }//showSettings
@@ -438,7 +404,7 @@ function buildDeckSelector() {
     return wrapper;
 }//buildDeckSelector
 
-
+/*
 function buildAutoPlayerToggle() {
     const wrapper = document.createElement("div");
     wrapper.style.marginBottom = "16px";
@@ -463,31 +429,26 @@ function buildAutoPlayerToggle() {
     return wrapper;
     
 }//buildAutoPlayerToggle
-
-function buildSaveLogToggle() {
+*/
+/*
+function buildSaveLogButton() {
     const wrapper = document.createElement("div");
     wrapper.style.marginBottom = "16px";
 
-    const label = document.createElement("label");
-    label.textContent = "Save Log File:";
-    label.style.display = "block";
-    label.style.marginBottom = "6px";
+    const button = document.createElement("button");
+    button.textContent = "Download Log File";
+    button.style.padding = "6px 12px";
+    button.style.cursor = "pointer";
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.id = "save-log-toggle";
-    checkbox.checked = game.saveLog === true;
-
-    checkbox.addEventListener("change", () => {
-        game.saveLog = checkbox.checked;
-        console.log("Save Log:", game.saveLog);
+    button.addEventListener("click", () => {
+        downloadLog();
     });
 
-    wrapper.appendChild(label);
-    wrapper.appendChild(checkbox);
+    wrapper.appendChild(button);
     return wrapper;
-}//buildSaveLogToggle
-
+}//buildSaveLogButton
+*/
+/*
 function buildShowLogToggle() {
     const wrapper = document.createElement("div");
     wrapper.style.marginBottom = "16px";
@@ -518,3 +479,113 @@ function buildShowLogToggle() {
 
     return wrapper;
 }//buildShowLogToggle
+*/
+/*
+function buildShowCpuCardsToggle() {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.alignItems = "center";
+    row.style.gap = "8px";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "show-cpu-cards-toggle";
+    checkbox.checked = game.revealCpu === true;
+
+    const text = document.createElement("span");
+    text.textContent = "Show CPU Cards";
+    text.style.color = "black";   // ensures visibility
+
+    checkbox.addEventListener("change", () => {
+        game.revealCpu = checkbox.checked;
+        render();
+        updateButtons();
+    });
+
+    row.appendChild(checkbox);
+    row.appendChild(text);
+    wrapper.appendChild(row);
+
+    return wrapper;
+}//buildShowCpuCardsToggle
+*/
+/*
+function buildUnitTestMeldsButton() {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const button = document.createElement("button");
+    button.textContent = "Unit Test Melds";
+    button.style.padding = "6px 12px";
+    button.style.cursor = "pointer";
+
+    button.addEventListener("click", () => {
+        testMelds();
+    });
+
+    wrapper.appendChild(button);
+    return wrapper;
+}//buildUnitTestMeldsButton
+
+function buildShowGameStatsButton() {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const button = document.createElement("button");
+    button.textContent = "Unit Test Melds";
+    button.style.padding = "6px 12px";
+    button.style.cursor = "pointer";
+
+    button.addEventListener("click", () => {
+        showGameStats();
+    });
+
+    wrapper.appendChild(button);
+    return wrapper;
+}//buildShowGameStatsButton
+*/
+function buildShowButton(label, handler) {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const button = document.createElement("button");
+    button.textContent = label;
+    button.style.padding = "6px 12px";
+    button.style.cursor = "pointer";
+
+    button.addEventListener("click", handler);
+
+    wrapper.appendChild(button);
+    return wrapper;
+}//buildShowButton
+
+function buildCheckboxToggle(label, getValue, setValue) {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.alignItems = "center";
+    row.style.gap = "8px";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = getValue();
+
+    const text = document.createElement("span");
+    text.textContent = label;
+    text.style.color = "black";
+
+    checkbox.addEventListener("change", () => {
+        setValue(checkbox.checked);
+    });
+
+    row.appendChild(checkbox);
+    row.appendChild(text);
+    wrapper.appendChild(row);
+
+    return wrapper;
+}//buildCheckboxToggle
