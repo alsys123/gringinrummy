@@ -652,38 +652,16 @@ h1 {
 }
 
 
-  /*
 #modal-text {
+    display: block; /* forces it onto its own line rev8 */
     color: black;
-    white-space: pre-wrap;
+    /*  font-family: "Courier New", monospace;  */
+    white-space: pre; /* preserves alignment and newlines */
 }
-*/
-#modal-text {
-     display: block; /* forces it onto its own line rev8 */
-    color: black;
-/*  font-family: "Courier New", monospace;  */
-  white-space: pre; /* preserves alignment and newlines */
-}
-/*
-.modal-header {
-  padding: 8px;
-  background: #444;
-  color: white;
-  cursor: move;
-  user-select: none;
-}
-*/
-/*
-.modal-header {
-    cursor: move;
-    touch-action: none;
-    user-select: none;
 
-     padding: 6px 10px;
-    background: #444;
-    color: white;
+#modal-extra {
+    color: black;
 }
-*/
 
 .modal-header {
 /*  display: inline-block;*/     /* shrink to fit text */
@@ -692,7 +670,7 @@ h1 {
   padding: 4px 10px;         /* small pill shape */
   background: lightgrey;       /* light gray */
   border-radius: 6px;
-  margin-bottom: 2px solid black;       /* spacing above content */
+  margin-bottom: 10px;       /* spacing above content */
   cursor: move;              /* optional: looks draggable */
   color: black;
 
@@ -703,19 +681,7 @@ h1 {
   padding-bottom: 6px;
   
 }
-/*
-.resize-handle {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  right: 4px;
-  bottom: 4px;
-  cursor: se-resize;
-  background: rgba(0,0,0,0.2);
-  border-radius: 4px;
-  touch-action: none;
-}
-*/
+
 .resize-handle {
   position: absolute;
   width: 16px;

@@ -154,50 +154,13 @@ document.getElementById("btn-backDoor-showStats").onclick = () => {
     showGameStats();
 }
 
-// toggle log display
-document.getElementById("btn-backDoor-showLog").onclick = () => {
-    toggleShowlog();
-}
 // save log file
 document.getElementById("btn-backDoor-saveLogFile").onclick = () => {
     downloadLog();
 }
 
-// save log file
-document.getElementById("btn-backDoor-toggleAutoPlay").onclick = () => {
-    toggleAutoPlay();
-}
 
-function toggleAutoPlay() {
-    if (autoPlayer) {
-	autoPlayer = false;
-	return;
-    }
-    if (!autoPlayer) {
-	autoPlayer = true;
-	return;
-    }
-} //toggleAutoPlay
-
-function toggleShowlog() {
-    // hide the log
-    if (gshowLog)  {
-	log("hide the log","sys");
-	gshowLog = false;
-	document.getElementById("log").hidden = true;
-	return;
-    }
-
-    // show the log
-    if (!gshowLog) {
-	log("show the log","sys");
-	gshowLog = true;
-	document.getElementById("log").hidden = false;
-	return;
-    }
-
-} //toggleShowlog
-
+//
 function log(message, type = "normal") {
     
     logHistory.push({ message, type, time: new Date().toISOString() });
@@ -362,6 +325,7 @@ function formatAllResults(results) {
   ).join("\n");
 }
 
+/*
 //__showDeckSelector
 // select a card deck to use...
 function showDeckSelector() {
@@ -414,3 +378,143 @@ function showDeckSelector() {
     });
 
 }//showDeckSelector
+*/
+// !!!!just for now
+function showDeckSelector() {
+    showSettings();
+}
+
+function showSettings() {
+    const extra = document.getElementById("modal-extra");
+    extra.innerHTML = ""; // clear the settings
+
+    document.getElementById("modal-text").innerHTML = "&nbsp;"; // avoid collapse
+    
+    extra.appendChild(buildDeckSelector());
+    extra.appendChild(buildAutoPlayerToggle());
+    extra.appendChild(buildShowLogToggle()); // ← new worker
+    extra.appendChild(buildSaveLogToggle());
+
+    showMessage("Settings");
+}//showSettings
+
+function buildDeckSelector() {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const label = document.createElement("label");
+    label.textContent = "Choose a card deck:";
+    label.style.display = "block";
+    label.style.marginBottom = "6px";
+
+    const select = document.createElement("select");
+    select.id = "deck-select";
+    select.style.width = "100%";
+    select.style.padding = "6px";
+
+    const decks = [
+        { value: "na",      label: "--- No Change ---" },
+        { value: "classic", label: "Classic Deck" },
+        { value: "jumbo",   label: "Jumbo Deck" },
+        { value: "simple",  label: "Simple Deck" }
+    ];
+
+    decks.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d.value;
+        opt.textContent = d.label;
+        select.appendChild(opt);
+    });
+
+    select.addEventListener("change", e => {
+        if (e.target.value === "na") return;
+        gCardDeck = e.target.value;
+        render();
+        updateButtons();
+    });
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(select);
+    return wrapper;
+}//buildDeckSelector
+
+
+function buildAutoPlayerToggle() {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const label = document.createElement("label");
+    label.textContent = "Auto Player Mode:";
+    label.style.display = "block";
+    label.style.marginBottom = "6px";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "auto-player-toggle";
+    checkbox.checked = autoPlayer === true;
+
+    checkbox.addEventListener("change", () => {
+        autoPlayer = checkbox.checked;
+//        console.log("Auto Player:", game.autoPlay);
+    });
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(checkbox);
+    return wrapper;
+    
+}//buildAutoPlayerToggle
+
+function buildSaveLogToggle() {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const label = document.createElement("label");
+    label.textContent = "Save Log File:";
+    label.style.display = "block";
+    label.style.marginBottom = "6px";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "save-log-toggle";
+    checkbox.checked = game.saveLog === true;
+
+    checkbox.addEventListener("change", () => {
+        game.saveLog = checkbox.checked;
+        console.log("Save Log:", game.saveLog);
+    });
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(checkbox);
+    return wrapper;
+}//buildSaveLogToggle
+
+function buildShowLogToggle() {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.alignItems = "center";
+    row.style.gap = "8px";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = "show-log-toggle";
+    checkbox.checked = gshowLog === true;
+
+    const text = document.createElement("span");
+    text.textContent = "Show Log";
+    text.style.color = "black";
+
+    checkbox.addEventListener("change", () => {
+        gshowLog = checkbox.checked;
+        document.getElementById("log").hidden = !gshowLog;
+        log(gshowLog ? "show the log" : "hide the log", "sys");
+    });
+
+    row.appendChild(checkbox);
+    row.appendChild(text);
+    wrapper.appendChild(row);
+
+    return wrapper;
+}//buildShowLogToggle
