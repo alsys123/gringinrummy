@@ -40,7 +40,7 @@ async function animateCpuTakeFromStock(card) {
   });
 
   flying.addEventListener("transitionend", () => flying.remove(), { once: true });
-}
+}//animateCpuTakeFromStock
 
 //_animateCpuTakeFromDiscard
 async function animateCpuTakeFromDiscard(card) {
@@ -100,7 +100,7 @@ async function animateCpuTakeFromDiscard(card) {
   flying.addEventListener("transitionend", () => flying.remove());
 }//animateCpuTakeFromDiscard
 
-
+//__cpuDiscardAnimate
 async function cpuDiscardAnimate(card) {
 
     const pile = document.getElementById("discard-top");
@@ -114,7 +114,7 @@ async function cpuDiscardAnimate(card) {
     const hover = document.createElement("div");
     hover.className = "card";   // face-up card
     hover.style.position = "absolute";
-//    hover.style.transition = "all .6s ease"; // ⭐ smooth animation
+    hover.style.transition = "all .6s ease"; // ⭐ smooth animation
 
 //    hover.style.transition = "opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)";
     hover.style.transform = "translateY(-12px) scale(0.97)"; // subtle lift
@@ -150,7 +150,9 @@ async function cpuDiscardAnimate(card) {
 //	hover.style.transition = "opacity 0.4s ease, top 0.4s ease";
 	//	hover.style.transition = "opacity 1s ease";
 	// ⭐ Slow, smooth movement (adjust this number)
-	const MOVE_TIME = 0.25; // seconds — make this bigger to slow it down was 0.50
+	// does not seem to make a difference
+	// this is how long to hover for
+	const MOVE_TIME = 0.50; // seconds — make this bigger to slow it down was 0.50
 
 	//opacity 2s … → fade‑in takes 2 seconds
 	//top 2s … → vertical movement takes 2 seconds
@@ -166,9 +168,9 @@ async function cpuDiscardAnimate(card) {
 //	hover.style.transition = "opacity 0.4s ease";
 //	hover.style.opacity = "0";
 	// Remove after fade
-	setTimeout(() => hover.remove(), MOVE_TIME * 1000 + 50); //was 1300
+	setTimeout(() => hover.remove(), (MOVE_TIME * 1000) + 50); //was 1300
 
-    }, 1000);  // delay start by 1000 second
+    }, 100);  // delay start by 1000 second -- AA
 }//cpuDiscardAnimate
 
 function showMessageBubble(text) {
@@ -289,7 +291,7 @@ function celebrateMatchWin() {
     const field = document.getElementById("star-field");
 
     // spawn 40–60 stars
-    for (let i = 0; i < 2000; i++) {  // was 50
+    for (let i = 0; i < 2500; i++) {  // was 50
         const star = document.createElement("div");
         star.className = "starflash";
 

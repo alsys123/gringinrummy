@@ -496,6 +496,7 @@ function showHandTally(result) {
 	  ? "CPU wins"
 	  : result.winner; // or whatever default you want
 
+/*    
     const tally =
 	  "" + "\n" + "\n" +
 	  `${title}\n\n` +
@@ -504,6 +505,7 @@ function showHandTally(result) {
 	  "\n" +
 	  `${personalWinner} ${result.points} points` + 
 	  pointsThisHandCalc;  // + "\n\n" +
+    */
 //	  `Match Score:\n` +
 //	  `   You: ${matchScore.player} points\n` +
 //	  `   CPU: ${matchScore.cpu} points`;
@@ -511,10 +513,16 @@ function showHandTally(result) {
     //     alert(tally);
 //    showMessage(tally); ... old modal display
     //      showMessage("We have a tally");
+    let gameOverText = "";
+    if (matchScore.player >= matchScore.target ||
+       matchScore.cpu >= matchScore.target ) {
+	gameOverText = "  ** GAME OVER **"
+    }
 
-    
+   
     const tallyText =
-        `<div class="tally-title">${title}</div>
+        `<div class="tally-title">${gameOverText}</div>
+        <div class="tally-title">${title}</div>
          <div class="tally-line">${yourDeadwoodLine}</div>
          <div class="tally-line">${cpuDeadwoodLine}</div>
          <div class="tally-line">${personalWinner} ${result.points} points ${pointsThisHandCalc}</div> `;
@@ -548,8 +556,10 @@ function showTallyArea(tallyText) {
 
 } //showTallyArea
 
+/* original
 //__ checkMatchEnd
 function checkMatchEnd() {
+    
     log("f(checkMatchEnd)","sys");
 
     let message = "";
@@ -570,7 +580,7 @@ function checkMatchEnd() {
 	celebrateMatchWin();
 
 	return;
-    }
+    } //if player win
     
     //??	    resetMatch();
     if (matchScore.cpu >= matchScore.target) {
@@ -584,21 +594,60 @@ function checkMatchEnd() {
 	//??	    resetMatch();
 	showTallyArea(message);
 	return;
-    }
+    } //if cpu win
 
     // else not the match end yet!
     return;
-    /*
-   /// ??? check THIS SEEMS -- REPEATED in error
-   else if (matchScore.cpu >= matchScore.target) {
-   showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
-   
-   }
-    */
 
     
 } //checkMatchEnd
+*/
+
+//__ checkMatchEnd .. version no messaging keep tally
+function checkMatchEnd() {
     
+    log("f(checkMatchEnd)","sys");
+
+//    let message = "";
+//    const tallyb = `<div class="tally-line">`;
+//    const tallye = "</div>";
+
+    if (matchScore.player >= matchScore.target) {
+	//	showMessage(`You win the match! Final score: You ${matchScore.player} — CPU ${matchScore.cpu}`);
+//	message =
+//	    tallyb + `You win the game!` + tallye; // +
+//	    tallyb + `Final score: You ${matchScore.player}` +
+//	    tallyb + ` — CPU ${matchScore.cpu}` + tallye;
+
+	//old	    document.getElementById("btn-new").textContent = "New Game";
+	document.getElementById("btn-newMatch").textContent = "New Game";
+//	showTallyArea(message);
+
+	celebrateMatchWin();
+
+	return;
+    } //if player win
+    
+    //??	    resetMatch();
+    if (matchScore.cpu >= matchScore.target) {
+	//	showMessage(`CPU wins the match! Final score: CPU ${matchScore.cpu} — You ${matchScore.player}`);
+//	message =
+//	    tallyb + `CPU wins the game!` + tallye; // +
+//	    tallyb + `Final score: CPU ${matchScore.cpu}` +
+//	    tallyb + ` — You ${matchScore.player}` + tallye;
+	//old	    document.getElementById("btn-new").textContent = "New Game";
+	document.getElementById("btn-newMatch").textContent = "New Game";
+	//??	    resetMatch();
+//	showTallyArea(message);
+	return;
+    } //if cpu win
+
+    // else not the match end yet!
+    return;
+
+    
+} //checkMatchEnd
+
 //__
 function resetMatch() {
     matchScore.player = 0;
@@ -1100,7 +1149,7 @@ async function cpuTurn() {
     const [d] = game.cpu.splice(idx,1);
 
     cpuDiscardAnimate(d);
-    await sleep(1000);
+    await sleep(100); // 1000 .. must be the same as AA for smooth placement
     
     game.discard.push(d);
 
@@ -1675,9 +1724,11 @@ async function playerTurn() {
     setMsg("Draw from stock or discard.");
 
     updateButtons();
-    await sleep(300);
+    await sleep(300); // was 300
     render();
     updateButtons();
+
+    await sleep(2000); // was 300
 
     endPlayerTurn();
 

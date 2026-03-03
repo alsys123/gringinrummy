@@ -24,13 +24,12 @@ function showMessage(msg) {
      */
 // Scoreboard is clicked
 function scoreBoardDetails() {
-  if (detailedMatchScore.games.length === 0) {
-    showMessage("No games played yet.");
-    return;
-  }
+    if (detailedMatchScore.games.length === 0) {
+	showMessage("No games played yet.");
+	return;
+    }
 
     let out = "--- Detailed Score Board ---" + "\n" + "\n";
-    
 
     let deadwoodThisGame;
     let bonusLine = "";
@@ -45,22 +44,24 @@ function scoreBoardDetails() {
 	// ??? conditions need to be finished.. like for bonus
 
 	
-	if (g.layoff > 0 && g.who === "player" && g.winner === "player" && g.type == "knock") {
+	if (g.layoff > 0 && g.who === "player" && g.winner === "player"
+	    && g.type == "knock") {
 	    bonusLine = `CPU Deadwood is ${g.deadwood.cpu} = ` +
 		`${g.originalDW} - ${g.layoff} layoff` + "\n";
 	}
-	if (g.layoff > 0 && g.who === "cpu" && g.winner === "cpu" && g.type == "knock") {
+	if (g.layoff > 0 && g.who === "cpu" && g.winner === "cpu"
+	    && g.type == "knock") {
 	    bonusLine = `Player Deadwood is ${g.deadwood.player} = ` +
 		`${g.originalDW} - ${g.layoff} layoff` + "\n";
 	}
 	
-	    
-//	if (g.bonus.bonus === 0 && g.layoff === 0 ) {
-//	    bonusLine = "";
-//	} else {
-//	    bonusLine = `Bonus: ${g.bonus.bonus} ${g.bonus.type}   ` +
-//		`Layoffs: ${g.layoff} ` + "\n";
-//	}
+	
+	//	if (g.bonus.bonus === 0 && g.layoff === 0 ) {
+	//	    bonusLine = "";
+	//	} else {
+	//	    bonusLine = `Bonus: ${g.bonus.bonus} ${g.bonus.type}   ` +
+	//		`Layoffs: ${g.layoff} ` + "\n";
+	//	}
 	
 	if (g.winner === "player") {
 	    runningLine = `Running: ${g.accumulated.player} (${lastPlayer} + ${g.pointsThisGame})  vs  ${g.accumulated.cpu}`;
@@ -81,17 +82,17 @@ function scoreBoardDetails() {
 	if (g.type === "undercut") {
 	    whatWho = `( ${g.type} against ${g.who} )`;
 	}
-	out += `Game ${g.gameNumber}: ${g.winner.toUpperCase()} wins! ` +
+	out += `Round ${g.gameNumber}: ${g.winner.toUpperCase()} wins! ` +
 	    whatWho + "\n";
 	
-//	out += `${g.deadwood.player} vs ${g.deadwood.cpu} ➜ ${g.deadwood.diff}` + "\n" ;
+	//	out += `${g.deadwood.player} vs ${g.deadwood.cpu} ➜ ${g.deadwood.diff}` + "\n" ;
 	out += calcLine + "\n" ;
 	out += bonusLine;
 	
 	out += `${g.winner} wins ${g.pointsThisGame} points` + "\n";
 
 	out += runningLine + "\n";
-//	out += `Running: ${g.accumulated.player}  vs  ${g.accumulated.cpu}`;
+	//	out += `Running: ${g.accumulated.player}  vs  ${g.accumulated.cpu}`;
 	
 	out += "\n";
 
@@ -101,7 +102,7 @@ function scoreBoardDetails() {
     }); // for each
     
     showMessage(out);
-}
+}//scoreBoardDetails
 
 // do not really use this anymore
 function formatRow(desc, player, cpu) {
