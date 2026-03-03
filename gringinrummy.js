@@ -316,7 +316,7 @@ function addGameToDetailsScore(winner, type, who, pDW, cDW, newLayoff, originalD
 
 // deadwood calc
 if (winner === "player") {
-    if (type === "gin" || type === "bigGin") {
+    if (type === "gin" || type === "bigGin" || type === "undercut") {
         dDW = cDW;              // player gins → take all CPU deadwood
     } else {
         dDW = cDW - pDW;        // normal knock or undercut win
@@ -324,7 +324,7 @@ if (winner === "player") {
 }
 
 if (winner === "cpu") {
-    if (type === "gin" || type === "bigGin") {
+    if (type === "gin" || type === "bigGin" || type === "undercut") {
         dDW = pDW;              // cpu gins → take all player deadwood
     } else {
         dDW = pDW - cDW;        // normal knock or undercut win
@@ -395,7 +395,7 @@ function showHandTally(result) {
 	    cpu: "CPU knocked."
 	},
 	stock: {
-	    na: "Stock depleted."
+	    none: "Stock depleted."
 	},
 	undercut: {
 	    player: "You knocked.",
@@ -417,8 +417,9 @@ function showHandTally(result) {
 //    if (result.winner === "cpu" && result.who === "cpu" &&
 //	result.type === "knock") {
 //	title = "CPU Knocked and Won!";
-//    }
+    //    }
     
+    // **** calc title ****
     // Stock has no winner
     if (type !== "stock") {
 	title += " " + resultText[winner];
@@ -432,10 +433,10 @@ function showHandTally(result) {
     if(result.who === "cpu" && result.winner === "cpu") {
 	title = "CPU won!";
     }
+    //  ****
     
-//    layoff: layoffTotal,
-//	  OriginalPDW: origPDW
 
+    // **** Deadwood and pointsThisHane lines calc ****.
     yourDeadwoodLine = `Your deadwood: ${result.pDW}`;
     cpuDeadwoodLine  = `CPU deadwood: ${result.cDW}`;
 

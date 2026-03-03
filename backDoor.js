@@ -290,10 +290,10 @@ function showSettings() {
 
     
     // *** These are the Setting components ***    
-    extra.appendChild(buildShowButton("Save 'Game State' to file", saveGameToFile));    
+    extra.appendChild(buildShowButton("Save 'QA Game State' to file", saveGameToFile));    
 
     extra.appendChild(
-	buildShowButton("Restore 'Game State; from File", () => {
+	buildShowButton("Restore 'QA Game State; from File", () => {
             document.getElementById("load-file").click();
 	})
     );

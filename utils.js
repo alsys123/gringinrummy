@@ -28,7 +28,33 @@ function scoreBoardDetails() {
 	showMessage("No rounds played yet.");
 	return;
     }
-
+  const actionText = {
+	bigGin: {
+	    player: "You went BIG Gin!",
+	    cpu: "CPU went BIG Gin!"
+	},
+	gin: {
+	    player: "You went Gin!",
+	    cpu: "CPU went Gin!"
+	},
+	knock: {
+	    player: "You knocked.",
+	    cpu: "CPU knocked."
+	},
+	stock: {
+	    na: "Stock depleted."
+	},
+	undercut: {
+	    player: "You knocked.",
+	    cpu:    "CPU knocked."
+	}
+    };
+    const resultText = {
+	player: "You won the hand.",
+	cpu: "CPU won the hand.",
+	tie: "Deadwood tie."
+    };
+    
     let out = "--- Detailed Score Board ---" + "\n" + "\n";
 
     let deadwoodThisGame;
@@ -39,19 +65,94 @@ function scoreBoardDetails() {
     let runningLine = "";
     
     detailedMatchScore.games.forEach(g => {
+	pointsThisHandCalc = "";
+
+	const actor  = g.who;      // player, cpu, or na
+	const winner = g.winner;  // player, cpu, tie
+	const type   = g.type;      // gin, knock, stock, undercut, bigGin
+    
+	let title = actionText[type][actor];
+
 	bonusLine = "";  // initialize it
 
-	// ??? conditions need to be finished.. like for bonus
+	// **** calc title ****
+	// Stock has no winner
+	if (type !== "stock") {
+	    title += " " + resultText[winner];
+	}
+	if(g.who === "player" && g.winner === "player") {
+	    title = "You WON!";
+	}
+	if(g.who === "cpu" && g.winner === "cpu") {
+	    title = "CPU won!";
+	}
+	//  ****
+	
+	const cDW = g.deadwood.cpu;
+	const pDW = g.deadwood.player;
+	
+	// **** Deadwood and pointsThisHane lines calc ****.
+    yourDeadwoodLine = `Your deadwood: ${pDW}`;
+    cpuDeadwoodLine  = `CPU deadwood: ${cDW}`;
 
+    // about player layoffs ----------
+    if (actor === "cpu" && g.layoff > 0 && type === "knock") {
+	yourDeadwoodLine = `Your deadwood: ${pDW}` +
+	    ` (${g.originalDW} - ${g.layoff} layoffs)`;
+    }
+    
+    if (actor === "cpu" && type === "knock" &&
+	g.winner === "cpu") {
+	pointsThisHandCalc =
+	    " = ( " + `${pDW} - ${cDW}` + " )";
+    }
+
+    // about CPU layoffs -----------
+    if (actor === "player" && g.layoff > 0 && type === "knock") {
+	cpuDeadwoodLine  = `CPU deadwood: ${cDW}` +
+	    ` (${g.originalDW} - ${g.layoff} layoffs)`;
+	pointsThisHandCalc =
+	    " = ( " + `${cDW} - ${pDW}` + " )";
+    } 
+
+    if (actor === "player" && type === "knock" &&
+	g.winner === "player") {
+	pointsThisHandCalc =
+	    " = ( " + `${cDW} - ${pDW}` + " )";
+    } 
+
+    if (actor === "cpu" && g.type === "gin") {
+	pointsThisHandCalc = " = ( " + `${pDW} + 25 Bonus points for gin` + " )";
+    }
+    if (actor === "cpu" && g.type === "undercut") {
+	pointsThisHandCalc = " = ( " + `${cDW} + 10 Bonus points for an undercut` + " )";
+    }
+    
+    if (actor === "player" && g.type === "gin") {
+	pointsThisHandCalc = " = ( " + `${cDW} + 25 Bonus points for gin` + " )";
+    }
+    if (actor === "player" && g.type === "undercut") {
+	pointsThisHandCalc = " = ( " + `${pDW} + 10 Bonus points for an undercut` + " )";
+    }
+
+    //bigGin
+    if (actor === "cpu" && g.type === "bigGin") {
+	pointsThisHandCalc = " = ( " + `${pDW} + 31 Bonus points for BIG Gin` + " )";
+    }
+    if (actor === "player" && g.type === "bigGin") {
+	pointsThisHandCalc = " = ( " + `${cDW} + 31 Bonus points for BIG Gin` + " )";
+    }
+
+	// ****
 	
 	if (g.layoff > 0 && g.who === "player" && g.winner === "player"
 	    && g.type == "knock") {
-	    bonusLine = `CPU Deadwood is ${g.deadwood.cpu} = ` +
+	    bonusLine = `CPU Deadwood is ${cDW} = ` +
 		`${g.originalDW} - ${g.layoff} layoff` + "\n";
 	}
 	if (g.layoff > 0 && g.who === "cpu" && g.winner === "cpu"
 	    && g.type == "knock") {
-	    bonusLine = `Player Deadwood is ${g.deadwood.player} = ` +
+	    bonusLine = `Player Deadwood is ${pDW} = ` +
 		`${g.originalDW} - ${g.layoff} layoff` + "\n";
 	}
 	
@@ -62,22 +163,56 @@ function scoreBoardDetails() {
 	//	    bonusLine = `Bonus: ${g.bonus.bonus} ${g.bonus.type}   ` +
 	//		`Layoffs: ${g.layoff} ` + "\n";
 	//	}
-	
+
+	/* ... leave out for now!
 	if (g.winner === "player") {
 	    runningLine = `Running: ${g.accumulated.player} (${lastPlayer} + ${g.pointsThisGame})  vs  ${g.accumulated.cpu}`;
 	} else {
 	    runningLine = `Running: ${g.accumulated.player}  vs  ${g.accumulated.cpu} (${lastCpu} + ${g.pointsThisGame})`;
 	}
 
-	let calcLine = `${g.deadwood.player} vs ${g.deadwood.cpu} ➜ ${g.deadwood.diff}`;
+	let calcLine = `${pDW} vs ${cDW} ➜ ${g.deadwood.diff}`;
 	if (g.type === "gin" && g.winner === "player") {
 	    calcLine = `${g.deadwood.cpu} + 25 points bonus for GIN`;
 	}
 	if (g.type === "gin" && g.winner === "cpu") {
 	    calcLine = `${g.deadwood.player} + 25 points bonus for GIN`;
 	}
+	*/
+	
+	const personalWinner =
+	  g.winner === "player"
+	  ? "You win"
+	  : g.winner === "cpu"
+	  ? "CPU wins"
+	  : g.winner; // or whatever default you want
 
-	out += "____" + "\n";
+	let gameOverText = "";
+	// not sure what to add here yet!
+//	if (matchScore.player >= matchScore.target ||
+//	    matchScore.cpu >= matchScore.target ) {
+//	    gameOverText = "  ** GAME OVER **"
+//	}
+
+	if (g.winner === "player") {
+	    runningLine = `Running: ${g.accumulated.player} ` +
+		`(${lastPlayer} + ${g.pointsThisGame})  vs  ${g.accumulated.cpu}`;
+	} else {
+	    runningLine = `Running: ${g.accumulated.player}  `
+		+ `vs  ${g.accumulated.cpu} (${lastCpu} + ${g.pointsThisGame})`;
+	}
+	
+	out += "_____"                 + "\n";
+	out += `Round ${g.gameNumber}` + "\n";
+//	out += `${gameOverText}`       + "\n";
+        out += `${title}`              + "\n";
+        out += `${yourDeadwoodLine}`   + "\n";
+        out += `${cpuDeadwoodLine}`    + "\n";
+        out += `${personalWinner} `;
+	out += `${g.pointsThisGame} points ${pointsThisHandCalc} ` + "\n";
+	out += runningLine + "\n";
+
+	/* for now .... leave out
 	let whatWho = `( ${g.type} by ${g.who} )`;
 	if (g.type === "undercut") {
 	    whatWho = `( ${g.type} against ${g.who} )`;
@@ -101,7 +236,7 @@ function scoreBoardDetails() {
 	//	out += `Running: ${g.accumulated.player}  vs  ${g.accumulated.cpu}`;
 	
 	out += "\n";
-
+*/
 	lastPlayer = g.accumulated.player;
 	lastCpu    = g.accumulated.cpu;
 	
