@@ -496,30 +496,12 @@ function showHandTally(result) {
 	  ? "CPU wins"
 	  : result.winner; // or whatever default you want
 
-/*    
-    const tally =
-	  "" + "\n" + "\n" +
-	  `${title}\n\n` +
-	  yourDeadwoodLine + "\n" +
-	  cpuDeadwoodLine  + "\n" +
-	  "\n" +
-	  `${personalWinner} ${result.points} points` + 
-	  pointsThisHandCalc;  // + "\n\n" +
-    */
-//	  `Match Score:\n` +
-//	  `   You: ${matchScore.player} points\n` +
-//	  `   CPU: ${matchScore.cpu} points`;
-    
-    //     alert(tally);
-//    showMessage(tally); ... old modal display
-    //      showMessage("We have a tally");
     let gameOverText = "";
     if (matchScore.player >= matchScore.target ||
        matchScore.cpu >= matchScore.target ) {
 	gameOverText = "  ** GAME OVER **"
     }
 
-   
     const tallyText =
         `<div class="tally-title">${gameOverText}</div>
         <div class="tally-title">${title}</div>
@@ -1568,29 +1550,6 @@ const cpuColors = {
 };
 
 
-/*
-function toggleCPULevel() {
-//    if 
-//    cpuLevel = (cpuLevel % 3) + 1;
-    log(`toggleCPULevel: CPU Level ${cpuLevel}`,"sys");
-    document.getElementById("star-ml").style.color = cpuColors[cpuLevel - 1];
-}
-*/
-
-//let cpuLevel = cpuDifficulty.medium;
-/*
-function toggleCPULevel() {
-    const levels = Object.keys(cpuDifficulty);   // ["easy","medium","hard"]
-    const currentIndex = levels.indexOf(currentCpuLevel);
-    const nextIndex = (currentIndex + 1) % levels.length;
-
-    currentCpuLevel = levels[nextIndex];
-    cpuLevel = cpuDifficulty[currentCpuLevel];   // update active difficulty object
-
-    log(`toggleCPULevel: CPU Level ${currentCpuLevel}`, "sys");
-    document.getElementById("star-ml").style.color = cpuColors[nextIndex];
-    }
-    */
 function toggleCPULevel() {
     const levels = Object.keys(cpuDifficulty);   // ["easy","medium","hard"]
     const currentIndex = levels.indexOf(currentCpuLevel);

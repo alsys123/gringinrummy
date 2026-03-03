@@ -25,7 +25,7 @@ function showMessage(msg) {
 // Scoreboard is clicked
 function scoreBoardDetails() {
     if (detailedMatchScore.games.length === 0) {
-	showMessage("No games played yet.");
+	showMessage("No rounds played yet.");
 	return;
     }
 
@@ -82,8 +82,14 @@ function scoreBoardDetails() {
 	if (g.type === "undercut") {
 	    whatWho = `( ${g.type} against ${g.who} )`;
 	}
-	out += `Round ${g.gameNumber}: ${g.winner.toUpperCase()} wins! ` +
-	    whatWho + "\n";
+	
+	let whoWinsText = `${g.winner} won!`; // default
+	if (g.winner === "player") whoWinsText = `You Won!`;
+
+	out += `Round ${g.gameNumber}: ${whoWinsText}` + whatWho + "\n";
+
+	out += `Your deadwood: ${g.deadwood.player}` + "\n";
+	out += `CPU  deadwood: ${g.deadwood.cpu}` + "\n";
 	
 	//	out += `${g.deadwood.player} vs ${g.deadwood.cpu} ➜ ${g.deadwood.diff}` + "\n" ;
 	out += calcLine + "\n" ;
@@ -254,3 +260,68 @@ function makeModalResizable(modal, handle) {
     }
 }//makeModalResizable
 
+// FROM PRE-utils
+
+// Utils used in any file below.
+
+function runValue(rank) {
+  const map = { A:1, J:11, Q:12, K:13 };
+  return map[rank] ?? Number(rank);
+}
+/*
+function deadwoodValue(rank) {
+  if (rank === "A") return 1;
+  if (["J","Q","K"].includes(rank)) return 10;
+  return Number(rank);
+*/
+function deadwoodValue(rank) {
+  // Normalize numeric ranks to string for comparison
+  const r = typeof rank === "number" ? rank : rank.toUpperCase();
+
+  if (r === 1 || r === "A") return 1;
+  if (r === 11 || r === "J") return 10;
+  if (r === 12 || r === "Q") return 10;
+  if (r === 13 || r === "K") return 10;
+
+  return Number(r);
+}
+
+function logPrintCards(arr) {
+  console.log(
+    arr.map(c => `${c.rank}${c.suit} (run:${c.runValue}, dead:${c.deadwoodValue}, id:${c.id})`)
+       .join("  ")
+  );
+}
+
+function logPrintSet(set) {
+  console.log(
+    [...set].map(c => `${c.rank}${c.suit} (id:${c.id}, run:${c.runValue})`).join("  ")
+  );
+}
+
+
+function consoleLogHand(hand,melds) {
+    //    console.log(melds);
+    //    console.log("-- evaluate -- ");
+    //    console.log(  "\nHand: ", hand.map((c, i) => `${i}:${c.rank}${c.suit}`).join(" "));
+    console.log("\n"); 
+    //    console.log(`Game Turn: ${game.turn}`);
+    console.log(`Hand: ${hand.map((c,i) => `${i}) ${c.rank}${c.suit}`).join(" ")}`  );
+console.log("" +  
+    	    `Hand: ${hand.map((c,i) => `C("${c.rank}","${c.suit}")`).join(",")}`  );
+console.log("VALUES:", hand.map(c => `${c.rank}:${c.runValue}`).join("  "));
+
+console.log("MELDS:", JSON.stringify(melds));
+
+}    
+
+// for melds
+function logBest(Desc, best) {
+    if (!best) return;
+    console.log( 
+	`${Desc} : Best Pattern: ${best.pattern}\n` +
+	    `Melds: ${JSON.stringify(best.melds)}\n` +
+	    `Deadwood: ${JSON.stringify(best.deadwood)}`
+    );
+    
+}

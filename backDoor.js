@@ -199,14 +199,6 @@ function showGameStats() {
     const evalPlayer         = evaluate(game.player);
     const sortedPlayerFinal  = sortHandWithMeldsFirstv2(game.player, evalPlayer.melds);
     const meldPlayerResults  = formatAllResults(allMeldResults);
-/*
-    const playerHand =
-	  sortedPlayerFinal
-	  .slice()
-//	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
-	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`)
-	  .join(", ");
-	  */
 
     const cardsPlayer = sortedPlayerFinal
 	  .slice()
@@ -236,25 +228,13 @@ function showGameStats() {
 	cpuHand += cardsCpu[i] + ", ";
     }
 
-/*    
-    const cpuHand =
-	  sortedCpuFinal
-	  .slice()
-    //	  .map(c => `${c.rank}${c.suit}(r:${c.runValue},d:${c.deadwoodValue},id:${c.id})`)
-	  .map(c => `${c.rank}${c.suit}(${c.runValue},${c.deadwoodValue},${c.id})`)
-	  .join(", ");
-  */  
-    
-    // results of meld and deadwood tes
-    //    solveHand(playerHand);
-    
-    //    console.log("in status: ", allResultsPlayer);
     
     const stats =
 	  `*** Game Statistics ***` + "\n" +
 	  `Game Turn: ${game.turn}   Game Phase: ${game.phase}` + "\n" +
 	  //	  winnerLine +
 	  `\n` +
+	  `CPU Level:  ${currentCpuLevel}` + "\n" +
 	  `Match Score:` + "\n" +
 	  `You: ${matchScore.player}` + "\n" +
 	  `CPU: ${matchScore.cpu}    MatchScore Target: ${matchScore.target}` + "\n" + "\n" +
