@@ -6,3 +6,7 @@ alias pys='python3 -m http.server 8080'
 
 or just run:
 python3 -m http.server 8080
+
+
+git clone git@github.com:alsys123/gringinrummy.git
+

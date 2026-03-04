@@ -344,6 +344,11 @@ if (winner === "cpu") {
 	cPoints = prevCpuPoints + pointsThisGame;
 	pPoints = prevPlayerPoints;
     }
+// tie no points.. this also include stock depletion
+    if (winner === "tie")    {
+	cPoints = prevCpuPoints;
+	pPoints = prevPlayerPoints;
+    }
     
 
 //  const accumulated = {
@@ -375,6 +380,8 @@ function showHandTally(result) {
     log("showHandTally","sys");
     
     pointsThisHandCalc = "";
+    let yourDeadwoodLine = "";
+    let cpuDeadwoodLine  = "";
 
     // ???here i am
     //       console.log("Result: ", result.winner, ". Who: ", result.who);
@@ -395,7 +402,7 @@ function showHandTally(result) {
 	    cpu: "CPU knocked."
 	},
 	stock: {
-	    none: "Stock depleted."
+	    na: "Stock depleted."
 	},
 	undercut: {
 	    player: "You knocked.",
@@ -411,6 +418,8 @@ function showHandTally(result) {
     const actor  = result.who;      // player, cpu, or na
     const winner = result.winner;  // player, cpu, tie
     const type   = result.type;      // gin, knock, stock, undercut, bigGin
+
+//    console.log(actor,winner,type);
     
     let title = actionText[type][actor];
 
@@ -437,9 +446,11 @@ function showHandTally(result) {
     
 
     // **** Deadwood and pointsThisHane lines calc ****.
-    yourDeadwoodLine = `Your deadwood: ${result.pDW}`;
-    cpuDeadwoodLine  = `CPU deadwood: ${result.cDW}`;
-
+    if (type !== "stock") {
+	    yourDeadwoodLine = `Your deadwood: ${result.pDW}`;
+	    cpuDeadwoodLine  = `CPU deadwood: ${result.cDW}`;
+	}
+    
 //    console.log("show it: ", actor, result.layoff, type);
 
     // about player layoffs
@@ -495,7 +506,7 @@ function showHandTally(result) {
 	  ? "You win"
 	  : result.winner === "cpu"
 	  ? "CPU wins"
-	  : result.winner; // or whatever default you want
+	  : "No Winner"; // or whatever default you want
 
     let gameOverText = "";
     if (matchScore.player >= matchScore.target ||
@@ -882,8 +893,8 @@ function stockDepletionResolution() {
     const cDW = cEval.deadwood;
 
     let winner = "tie";
-    if (pDW < cDW) winner = "player";
-    else if (pDW > cDW) winner = "cpu";
+//    if (pDW < cDW) winner = "player";
+//    else if (pDW > cDW) winner = "cpu";
 
     const scored = applyScoring({
 	winner: winner, // added data structure

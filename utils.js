@@ -63,9 +63,14 @@ function scoreBoardDetails() {
     let lastPlayer = 0;
     let lastCpu    = 0;
     let runningLine = "";
-    
+
+    let yourDeadwoodLine = "";
+    let cpuDeadwoodLine  = "";
+
     detailedMatchScore.games.forEach(g => {
 	pointsThisHandCalc = "";
+	yourDeadwoodLine = "";
+	cpuDeadwoodLine  = "";
 
 	const actor  = g.who;      // player, cpu, or na
 	const winner = g.winner;  // player, cpu, tie
@@ -90,13 +95,15 @@ function scoreBoardDetails() {
 	
 	const cDW = g.deadwood.cpu;
 	const pDW = g.deadwood.player;
-	
+			
 	// **** Deadwood and pointsThisHane lines calc ****.
-    yourDeadwoodLine = `Your deadwood: ${pDW}`;
-    cpuDeadwoodLine  = `CPU deadwood: ${cDW}`;
-
-    // about player layoffs ----------
-    if (actor === "cpu" && g.layoff > 0 && type === "knock") {
+	if (type !== "stock") {
+	    yourDeadwoodLine = `Your deadwood: ${pDW}`;
+	    cpuDeadwoodLine  = `CPU deadwood: ${cDW}`;
+	}
+	
+	// about player layoffs ----------
+	if (actor === "cpu" && g.layoff > 0 && type === "knock") {
 	yourDeadwoodLine = `Your deadwood: ${pDW}` +
 	    ` (${g.originalDW} - ${g.layoff} layoffs)`;
     }
