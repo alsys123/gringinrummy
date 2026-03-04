@@ -1577,6 +1577,7 @@ function toggleCPULevel() {
 
     log(`toggleCPULevel: CPU Level ${currentCpuLevel}`, "sys");
     document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
+	showMessage("CPU difficulty level set to "+ currentCpuLevel);
 }
 
 
