@@ -1621,7 +1621,10 @@ window.addEventListener("load", positionCenterArea);
 //
 
 async function playerTurn() {
-
+	
+//discardTakeChance: 1.00,   // always optimal
+ //       knockChance: 1.00,
+    //    discardMistake: 0.00
     log("playerTurn","sys");
 
     if (game.phase === "round-over") return;
@@ -1643,7 +1646,8 @@ async function playerTurn() {
 
     // Knock check (difficulty affects willingness)
     if (pDW <= 7) {
-        if (Math.random() < cpuLevel.knockChance) {
+        if (Math.random() < 1.0) {
+		//	if (Math.random() < cpuLevel.knockChance) {
             playerKnock();
             return;
         }
@@ -1659,8 +1663,8 @@ async function playerTurn() {
         const evalWith = evaluate(hypothetical);
 
         const improvement = evalWith.deadwood + 1 <= pDW;
-
-        if (improvement && Math.random() < cpuLevel.discardTakeChance) {
+//if (improvement && Math.random() < cpuLevel.discardTakeChance) {
+        if (improvement && Math.random() < 1.0) {
             drawn = game.discard.pop();
             log("Player drew " + prettyCard(drawn) + " from discard.","player");
             render();
@@ -1734,7 +1738,8 @@ function playerChooseDiscardIndexWithDifficulty() {
     }
 
     // Difficulty: sometimes discard a random card instead
-    if (Math.random() < cpuLevel.discardMistake) {
+ //   if (Math.random() < cpuLevel.discardMistake) {
+		if (Math.random() < 0.00) {
         return Math.floor(Math.random() * hand.length);
     }
 
