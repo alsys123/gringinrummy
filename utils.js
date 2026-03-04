@@ -192,32 +192,43 @@ function scoreBoardDetails() {
 	  ? "You win"
 	  : g.winner === "cpu"
 	  ? "CPU wins"
-	  : g.winner; // or whatever default you want
+	  : "No Winner"; // or whatever default you want
 
 	let gameOverText = "";
-	// not sure what to add here yet!
-//	if (matchScore.player >= matchScore.target ||
-//	    matchScore.cpu >= matchScore.target ) {
-//	    gameOverText = "  ** GAME OVER **"
-//	}
+	if (g.accumulated.player >= matchScore.target ||
+	    g.accumulated.cpu >= matchScore.target ) {
+	    gameOverText = "  ** GAME OVER **" + "\n";
+	}
 
+	
+	runningLine = "\n" // tie or stock depleted (default)
 	if (g.winner === "player") {
 	    runningLine = `Running: ${g.accumulated.player} ` +
-		`(${lastPlayer} + ${g.pointsThisGame})  vs  ${g.accumulated.cpu}`;
-	} else {
-	    runningLine = `Running: ${g.accumulated.player}  `
-		+ `vs  ${g.accumulated.cpu} (${lastCpu} + ${g.pointsThisGame})`;
+		`(${lastPlayer} + ${g.pointsThisGame})  vs  ${g.accumulated.cpu}` + "\n";
 	}
-	
+	if (g.winner === "cpu") {
+	    runningLine = `Running: ${g.accumulated.player}  `
+		+ `vs  ${g.accumulated.cpu} (${lastCpu} + ${g.pointsThisGame})` + "\n";
+	}	
+
+	let pointDisplay = "";
+	let cpuDeadwoodDisplay = "";
+	let playerDeadwoodDiaplay = "";
+	if (g.winner === "player" || g.winner === "cpu") {
+	    pointDisplay          = `${g.pointsThisGame} points ${pointsThisHandCalc}` + "\n";
+	    playerDeadwoodDiaplay = `${yourDeadwoodLine}` + "\n";	    
+	    cpuDeadwoodDisplay    = `${cpuDeadwoodLine}`  + "\n";
+	}
+
 	out += "_____"                 + "\n";
 	out += `Round ${g.gameNumber}` + "\n";
-//	out += `${gameOverText}`       + "\n";
+	out += `${gameOverText}`;
         out += `${title}`              + "\n";
-        out += `${yourDeadwoodLine}`   + "\n";
-        out += `${cpuDeadwoodLine}`    + "\n";
+        out += `${playerDeadwoodDiaplay}`;
+        out += `${cpuDeadwoodDisplay}`;
         out += `${personalWinner} `;
-	out += `${g.pointsThisGame} points ${pointsThisHandCalc} ` + "\n";
-	out += runningLine + "\n";
+	out += `${pointDisplay}`;
+	out += runningLine;
 
 	/* for now .... leave out
 	let whatWho = `( ${g.type} by ${g.who} )`;

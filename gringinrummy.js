@@ -508,6 +508,11 @@ function showHandTally(result) {
 	  ? "CPU wins"
 	  : "No Winner"; // or whatever default you want
 
+    let pointsLine = "";
+    if (result.winner === "player" || result.winner === "cpu") {
+	pointsLine = `${result.points} points ${pointsThisHandCalc}`;
+    }
+    
     let gameOverText = "";
     if (matchScore.player >= matchScore.target ||
        matchScore.cpu >= matchScore.target ) {
@@ -519,7 +524,7 @@ function showHandTally(result) {
         <div class="tally-title">${title}</div>
          <div class="tally-line">${yourDeadwoodLine}</div>
          <div class="tally-line">${cpuDeadwoodLine}</div>
-         <div class="tally-line">${personalWinner} ${result.points} points ${pointsThisHandCalc}</div> `;
+         <div class="tally-line">${personalWinner} ${pointsLine}</div>`;
     
 //         <div class="tally-line">Match Score:</div>
 //         <div class="tally-line">You: ${matchScore.player} points</div>
@@ -1699,7 +1704,7 @@ async function playerTurn() {
     render();
     updateButtons();
 
-    await sleep(2000); // was 300
+//    await sleep(300); // was 300
 
     endPlayerTurn();
 
