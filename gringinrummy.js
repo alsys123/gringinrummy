@@ -1580,11 +1580,11 @@ function toggleCPULevel() {
     showMessage("CPU difficulty level set to "+ currentCpuLevel);
 
     const el = document.getElementById("star-ml");
-    el.style.width = "200px";
+    el.style.width = "220px";
     el.style.whiteSpace = "normal";
     el.style.overflowWrap = "break-word";
 
-    el.textContent = "Click here to set difficulty \n- Currently set to: "+currentCpuLevel;
+    el.textContent = "Click here to set difficulty "+currentCpuLevel.toUpperCase();
     if (currentCpuLevel === "easy") {
 	Object.assign(el.style, {
 	    color: "white",
