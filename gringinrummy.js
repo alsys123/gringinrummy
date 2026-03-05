@@ -1577,7 +1577,38 @@ function toggleCPULevel() {
 
     log(`toggleCPULevel: CPU Level ${currentCpuLevel}`, "sys");
     document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
-	showMessage("CPU difficulty level set to "+ currentCpuLevel);
+    showMessage("CPU difficulty level set to "+ currentCpuLevel);
+
+    const el = document.getElementById("star-ml");
+    el.style.width = "200px";
+    el.style.whiteSpace = "normal";
+    el.style.overflowWrap = "break-word";
+
+    el.textContent = "Click here to set difficulty \n- Currently set to: "+currentCpuLevel;
+    if (currentCpuLevel === "easy") {
+	Object.assign(el.style, {
+	    color: "white",
+	    backgroundColor: "green",
+	    borderRadius: "8px",
+	    padding: "8px 12px"
+	});
+    }//hard
+    if (currentCpuLevel === "medium") {
+	Object.assign(el.style, {
+	    color: "black",
+	    backgroundColor: "yellow",
+	    borderRadius: "8px",
+	    padding: "8px 12px"
+	});
+    }//hard
+    if (currentCpuLevel === "hard") {
+	Object.assign(el.style, {
+	    color: "white",
+	    backgroundColor: "#b30000",
+	    borderRadius: "8px",
+	    padding: "8px 12px"
+	});
+    }//hard
 }
 
 

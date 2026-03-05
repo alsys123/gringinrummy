@@ -788,7 +788,7 @@ button {
   height: 40px;
   font-size: 24px; /* optional, but harmless now */
 }
-
+/*
 #star-ml {
   cursor: pointer;
   pointer-events: auto;
@@ -796,6 +796,36 @@ button {
   height: 40px;
   font-size: 80px;
   color: red;
+  text-align: center;
+}
+*/
+
+#star-ml {
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 8px 14px;
+  background: yellow;
+  border: 2px solid #d33;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d33;
+  text-align: center;
+  width: fit-content;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+#star-ml:hover {
+  background: #ffe5e5;
+  border-color: #b00;
+  color: #b00;
+  transform: translateY(-1px);
+}
+
+#star-ml:active {
+  transform: translateY(1);
+  background: #ffd6d6;
 }
 
 @keyframes bump {

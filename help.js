@@ -13,6 +13,7 @@ function showHelpViewer(pages) {
 	"About",
 	"How To Play",
 	"Scoring",
+	"Difficulty Levels",
 	"Dialog Boxes",
 	"Developer Tools",
 	"Technical Notes"
@@ -131,7 +132,7 @@ function showHelp() {
 	`
 
 <h2>📘 About This Game</h2>
-<strong>Gin Rummy (v2.1)</strong> is a clean, browser‑based two‑player Gin Rummy game where 
+<strong>Gin Rummy</strong> is a clean, browser‑based two‑player Gin Rummy game where 
 you face a CPU opponent. The interface is designed for clarity, smooth flow, and easy learning.
 
 You can <strong>press the page buttons above</strong> (About / Contents / Text) to switch between 
@@ -264,8 +265,38 @@ display:block; margin: 12px 0;">
   <li>Knocks or goes Gin when appropriate.</li>
 </ul>
 `,
-/* -----------------------------------------------------------
-   PAGE 4 - Dialog Boxes
+
+	/* -----------------------------------------------------------
+	   PAGE 4 — Difficulty Levels
+	   ------------------------------------------------------------ */
+	`<h2>Difficulty Levels</h2>
+
+</p>
+<h3>Easy</h3>
+<p>
+This mode could be called "Beginner Mode".
+</p>
+<p>
+
+This mode plays like a true beginner. The computer often misjudges discards, with less than a 50% chance of choosing an optimal one. It may also throw away cards that could have been useful for melds. Knocking opportunities are sometimes missed, making this level forgiving and ideal for new players learning the flow of the game.
+
+</p>
+<h3>Medium</h3>
+<p>
+
+The computer plays more competently here. It usually selects good discards but still makes occasional mistakes. It may rarely miss a knock or discard a suboptimal card, creating a balanced challenge without feeling punishing. This level suits players who understand the basics and want a fair but beatable opponent.
+
+</p>
+<h3>Hard</h3>
+<p>
+
+This is the default and most challenging mode. The computer aggressively minimizes deadwood, forms the strongest melds available, and avoids discarding useful cards. It never misses a knock opportunity and consistently plays with strategic precision. This level is designed for experienced players who want the toughest possible opponent.
+
+</p>
+`,	
+	
+	/* -----------------------------------------------------------
+   PAGE 5 - Dialog Boxes
 ------------------------------------------------------------ */
 	`
 <h2>Dialog Boxes</h2>
@@ -280,7 +311,7 @@ display:block; margin: 12px 0;">
 
 `,
 /* -----------------------------------------------------------
-   PAGE 5 — Developer Tools:  BACKDOOR
+   PAGE 6 — Developer Tools:  BACKDOOR
 ------------------------------------------------------------ */
 	
 `<h2>🛠️ Developer Tools</h2>
@@ -307,17 +338,28 @@ display:block; margin: 12px 0;">
 <h2>How to open & close the Backdoor</h2>
 <p>To <strong>open</strong> the back too set you double tap the player cards. Double tap a
 different card and do this
-three (maybe four) times.  This will show you a series of buttons below the player's hand.  These
+two or three times.  This will show you a series of buttons below the player's hand.  These
 buttons are described about.
 </p>
 <p>
 To <strong>close</strong> the backdoor, simply double-tap one of the player cards.
 The developer buttons will then
 disapear.
-</p>`,
+</p>
+<h3>The Developer Settings Screen</h3>
+<img src="images/screenShots/settings.jpeg" style="max-width: 600px;
+display:block; margin: 12px 0;">
+<p>
+<strong>Auto Play Mode:</strong> When checked will let you start automatic playing against the computer.
+The player is always using a "hard" strategy; the best one available.  To start 
+the automation, pick the first card and do a discard.  The rest is automated until a button
+needs pressing like "knock" or "gin", for example.
+</p>
+`,
+	
 	
 /* -----------------------------------------------------------
-   PAGE 6 — TECHNICAL Notes
+   PAGE 7 — TECHNICAL Notes
 ------------------------------------------------------------ */
 
 `<h2>🧩 Technical Notes</h2>
@@ -325,6 +367,11 @@ disapear.
   <li>Runs entirely in your browser.</li>
   <li>No installation required.</li>
   <li>All logic implemented in JavaScript modules.</li>
+<br>
+  <li>Version: <strong>v2.2 March 5, 2026</strong></li>
+    <ul>
+      <li>Many changes and ready for production</li>
+    </ul>
   <li>Version: <strong>v2.1 Feb 2026</strong></li>
 </ul>
 
