@@ -804,7 +804,7 @@ button {
   cursor: pointer;
   pointer-events: auto;
   padding: 8px 14px;
-  background: yellow;
+  background: grey;
   border: 2px solid #d33;
   border-radius: 8px;
   font-size: 14px;
