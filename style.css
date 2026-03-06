@@ -965,7 +965,7 @@ button {
 
   /* gold glow */
   box-shadow:
-    0 0 6px #FFD700,
-    0 0 10px #FFEA00,
-    0 0 14px rgba(255, 215, 0, 0.8);
+      0 0 6px #FFD700,
+      0 0 10px #FFEA00,
+      0 0 14px rgba(255, 215, 0, 0.8);
 }

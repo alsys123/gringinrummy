@@ -185,7 +185,7 @@ function showMessageBubble(text) {
     // Position bubble near stock card
     const rect = stock.getBoundingClientRect();
     bubble.style.left = rect.left + window.scrollX - 40 + "px";
-    bubble.style.top  = rect.top  + window.scrollY - 120 + "px";
+    bubble.style.top  = rect.top  + window.scrollY - 0 + "px"; // was -120
 
     let count = 0;
 
@@ -310,10 +310,33 @@ function celebrateMatchWin() {
         // random delay so they don't all flash at once
         star.style.animationDelay = (Math.random() * 5.0) + "s"; // was 0.6
 
+	// multi-color
+// multi-color glow palettes
+const glows = [
+    ["#FFD700", "#FFEA00", "#FFFACD"], // gold
+    ["#FF69B4", "#FF1493", "#FFC0CB"], // pink
+    ["#87CEFA", "#00BFFF", "#E0FFFF"], // blue
+    ["#7CFC00", "#32CD32", "#CCFFCC"], // green
+    ["#FFA500", "#FF8C00", "#FFE5B4"], // orange
+    ["#FF4444", "#FF0000", "#FFB3B3"]  // red
+];
+
+// pick a random palette
+const g = glows[Math.floor(Math.random() * glows.length)];
+
+// apply background + glow
+star.style.background = g[0];
+star.style.boxShadow = `
+    0 0 6px ${g[0]},
+    0 0 10px ${g[1]},
+    0 0 14px ${g[2]}
+`;
+
+	
         field.appendChild(star);
 
         // remove after animation
-        setTimeout(() => star.remove(), 6000);
+        setTimeout(() => star.remove(), 15000);
     }
 }//celebrateMatchWin
 

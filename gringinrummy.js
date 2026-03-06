@@ -707,7 +707,7 @@ function bigGin() {
     game.phase = "round-over";
     game.revealCpu = true;
     
-    setMsg("You had BIG Gin! Click New Hand to play again.");
+    log("You had BIG Gin! Click New Hand to play again.","player");
     
     render();
     updateButtons();
@@ -715,7 +715,7 @@ function bigGin() {
 //    resetMatch();
 //    start();
     //    return; /// nothing for now
-}
+}//bigGin
 
 // conditions where we can let the player claim a big gin - make button visible
 function playerHasBigGin() {
@@ -916,7 +916,7 @@ function stockDepletionResolution() {
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
-    setMsg("Hand over. Click New Hand to play again.");
+    log("Hand over. Stock depleted. Click New Hand to play again.","sys");
 
     render();
     updateButtons();
@@ -1010,7 +1010,7 @@ function playerKnock() {
     //    log(msg);
 
     
-    commonEventEnd(scored,"Hand over. Click New Hand to play again.");
+    commonEventEnd(scored,"Hand over. Player knock. Click New Hand to play again.");
 
     /*
       showHandTally(scored);
@@ -1063,7 +1063,7 @@ function playerGin() {
     game.phase = "round-over";
     game.revealCpu = true;
     
-    log("You had Gin! Click New Hand to play again.");
+    log("You had Gin! Click New Hand to play again.", "player");
     
     render();
     updateButtons();
@@ -1077,7 +1077,7 @@ function commonEventEnd(scored, Message) {
     showHandTally(scored);
     checkMatchEnd();
     game.phase = "round-over";
-    setMsg(Message);
+    log(Message,"sys");
     
     updateButtons();
 
@@ -1229,7 +1229,7 @@ async function cpuGin() {
       showHandTally(scored);
       checkMatchEnd();
       game.phase = "round-over";
-      setMsg("CPU went Gin. Click New Hand to play again.");
+    log("CPU went Gin. Click New Hand to play again.","cpu");
       
       render();
       updateButtons();
@@ -1298,7 +1298,7 @@ async function cpuKnock() {
 
     updateButtons();  //rev8
     
-    setMsg("CPU knocked. Click New Hand to play again.");
+    log("CPU knocked. Click New Hand to play again.","cpu");
     // .. for now    render();
   } //cpuKnock
 
@@ -1577,14 +1577,14 @@ function toggleCPULevel() {
 
     log(`toggleCPULevel: CPU Level ${currentCpuLevel}`, "sys");
     document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
-    showMessage("CPU difficulty level set to "+ currentCpuLevel);
+    showMessage("CPU difficulty level set to: "+ currentCpuLevel.toUpperCase());
 
     const el = document.getElementById("star-ml");
-    el.style.width = "220px";
+    el.style.width = "200px";
     el.style.whiteSpace = "normal";
     el.style.overflowWrap = "break-word";
 
-    el.textContent = "Click here to set difficulty "+currentCpuLevel.toUpperCase();
+    el.textContent = "Change CPU Difficulty "+currentCpuLevel.toUpperCase();
     if (currentCpuLevel === "easy") {
 	Object.assign(el.style, {
 	    color: "white",
@@ -1596,7 +1596,7 @@ function toggleCPULevel() {
     if (currentCpuLevel === "medium") {
 	Object.assign(el.style, {
 	    color: "black",
-	    backgroundColor: "yellow",
+	    backgroundColor: "#ffcc00",
 	    borderRadius: "8px",
 	    padding: "8px 12px"
 	});
@@ -1604,7 +1604,7 @@ function toggleCPULevel() {
     if (currentCpuLevel === "hard") {
 	Object.assign(el.style, {
 	    color: "white",
-	    backgroundColor: "#b30000",
+	    backgroundColor: "#5e1717", //"#9c4647", // "#b30000",
 	    borderRadius: "8px",
 	    padding: "8px 12px"
 	});
@@ -1663,7 +1663,7 @@ async function playerTurn() {
 
     // a button is visible go manual 
     if (anyActionButtonVisible()) {
-	console.log("a player button is visible");
+//	console.log("a player button is visible");
 	return;
     }
     
