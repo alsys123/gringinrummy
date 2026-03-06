@@ -649,6 +649,9 @@ function checkMatchEnd() {
 
 //__
 function resetMatch() {
+
+    log("resetMatch","sys");
+    
     matchScore.player = 0;
     matchScore.cpu = 0;
 
@@ -664,7 +667,8 @@ function resetMatch() {
   ------------------------------ */
 
 function newMatch() {
-    log("newMatch: new game");
+    log("newMatch button Pressed: new game","sys");
+
     resetMatch();
     start();
     //    return; /// nothing for now
@@ -755,7 +759,7 @@ function checkPlayerDeadwoodFitsBigGin() {
 
 function start() {
 
-    log("f(start): new hand or game");
+    log("start: Button New round pressed or came from new game.");
     
     game.deck = createDeck();
     shuffle(game.deck);
@@ -928,6 +932,9 @@ function stockDepletionResolution() {
 
 //__ playerKnock
 function playerKnock() {
+
+    log("Player Knock button pressed", "sys");
+    
     const cEval = evaluate(game.cpu);
     let pEval = evaluate(game.player);
 
@@ -1027,7 +1034,7 @@ function playerKnock() {
 //__playerGin
 function playerGin() {
 
-    log("f(playerGin)");
+    log("playerGin button pressed.", "sys");
 
     if (game.turn !== "player") return;
     if (game.phase !== "await-draw" && game.phase !== "await-discard") return;
@@ -1379,6 +1386,7 @@ function layoffValue(cards) {
 //    add the handlers
 document.getElementById("stock").onclick = () => {
     if (game.turn === "player") {
+	log("draw stock","player");
 	drawStock();
 	//	console.log("stock draw");
     }
@@ -1386,6 +1394,7 @@ document.getElementById("stock").onclick = () => {
 
 document.getElementById("discard-top").onclick = () => {
     if (game.turn === "player") {
+	log("draw discard","player");
         drawDiscard();
 	//	console.log("discard draw");
     }
@@ -1407,6 +1416,11 @@ el.btnBigGin.onclick = bigGin;
 updateScoreboard();
 render();
 updateButtons();
+
+
+  /* ------------------------------
+     More Utils
+  ------------------------------ */
 
 //})();
 
