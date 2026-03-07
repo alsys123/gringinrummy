@@ -452,7 +452,9 @@ function celebrateMatchWin_iPad() {
     }
 }//celebrateMatchWin_iPad
 
+
 function celebrateMatchWin_iPad_starburst() {
+    injectIpadStarburstCSS();
 
     const region = document.getElementById("star-ipad-region");
 
