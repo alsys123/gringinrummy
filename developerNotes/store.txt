@@ -45,3 +45,49 @@
     0 0 12px #FFEA00,
     0 0 20px rgba(255, 215, 0, 0.8);
 }
+
+
+.starflash {
+  position: absolute;
+  width: 10px;   /* smaller size */
+  height: 10px;
+  background: #FFD700; /* gold base */
+  clip-path: polygon(  .. too slow on ipad
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  opacity: 0;
+  animation: starFlash 0.8s ease-out forwards;
+
+  /* gold glow */
+  box-shadow:
+      0 0 6px #FFD700,
+      0 0 10px #FFEA00,
+      0 0 14px rgba(255, 215, 0, 0.8);
+}
+for ipad:
+.starflash {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: starFlash 0.8s ease-out forwards;
+}
+
+#star-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999999;
+}

@@ -287,11 +287,12 @@ function markCPULayoffCards(layoffCards) {
     }
 }
 
-function celebrateMatchWin() {
+
+async function celebrateMatchWin() {
     const field = document.getElementById("star-field");
 
     // spawn 40–60 stars
-    for (let i = 0; i < 2500; i++) {  // was 50
+    for (let i = 0; i < 1500; i++) {  // was 50 .. try 300
         const star = document.createElement("div");
         star.className = "starflash";
 
@@ -326,7 +327,9 @@ const g = glows[Math.floor(Math.random() * glows.length)];
 
 // apply background + glow
 star.style.background = g[0];
-star.style.boxShadow = `
+//star.style.background = `radial-gradient(circle, ${g[0]} 0%, transparent 70%)`; //.. ipad?
+
+	star.style.boxShadow = `
     0 0 6px ${g[0]},
     0 0 10px ${g[1]},
     0 0 14px ${g[2]}
@@ -337,6 +340,70 @@ star.style.boxShadow = `
 
         // remove after animation
         setTimeout(() => star.remove(), 15000);
-    }
-}//celebrateMatchWin
 
+    }
+    
+}//celebrateMatchWin
+    
+
+/* not really...
+// for ipad
+function celebrateMatchWin() {
+    const canvas = document.getElementById("star-canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = [
+        ["#FFD700", "#FFEA00", "#FFFACD"],
+        ["#FF69B4", "#FF1493", "#FFC0CB"],
+        ["#87CEFA", "#00BFFF", "#E0FFFF"],
+        ["#7CFC00", "#32CD32", "#CCFFCC"],
+        ["#FFA500", "#FF8C00", "#FFE5B4"],
+        ["#FF4444", "#FF0000", "#FFB3B3"]
+    ];
+
+    for (let i = 0; i < 300; i++) {
+        const g = colors[Math.floor(Math.random() * colors.length)];
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: 2 + Math.random() * 4,
+            life: 0,
+            maxLife: 40 + Math.random() * 40,
+            color: g[0],
+            glow: g[1]
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach(p => {
+            p.life++;
+
+            const alpha = 1 - p.life / p.maxLife;
+            if (alpha <= 0) return;
+
+            ctx.globalAlpha = alpha;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = p.glow;
+            ctx.fillStyle = p.color;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        ctx.globalAlpha = 1;
+
+        if (particles.some(p => p.life < p.maxLife)) {
+            requestAnimationFrame(animate);
+        }
+    }
+
+    animate();
+}
+*/

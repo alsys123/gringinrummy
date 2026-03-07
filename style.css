@@ -924,24 +924,6 @@ button {
   border-radius: 4px;
 }
 
-#star-field {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;   /* stars don't block clicks */
-  overflow: hidden;
-  z-index: 999999;        /* above everything */
-}
-
-
-@keyframes starFlash {
-  0%   { opacity: 0; transform: scale(0.2); }
-  40%  { opacity: 1; transform: scale(1.8); }
-  100% { opacity: 0; transform: scale(0.1); }
-}
-
 
 .starflash {
   position: absolute;
@@ -968,4 +950,10 @@ button {
       0 0 6px #FFD700,
       0 0 10px #FFEA00,
       0 0 14px rgba(255, 215, 0, 0.8);
+}
+
+@keyframes starFlash {
+  0%   { opacity: 0; transform: scale(0.2); }
+  40%  { opacity: 1; transform: scale(1.8); }
+  100% { opacity: 0; transform: scale(0.1); }
 }
