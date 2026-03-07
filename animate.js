@@ -514,6 +514,9 @@ function celebrateMatchWin_iPad_starburst() {
         // remove after animation
         setTimeout(() => star.remove(), 3500);
     }
+	
+	document.getElementById("ipad-starburst-style")?.remove();
+
 }
 
 /*
