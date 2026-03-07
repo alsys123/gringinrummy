@@ -360,6 +360,41 @@ star.style.background = g[0];
     
 }//celebrateMatchWin
     
+function injectIpadStarburstCSS() {
+    if (document.getElementById("ipad-starburst-style")) return;
+
+    const css = `
+#star-ipad-region {
+  position: fixed;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 999999;
+}
+
+.starburst-ipad {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  animation: ipadBurst 2.5s ease-out forwards;
+}
+
+@keyframes ipadBurst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy));
+  }
+}
+`;
+
+    const style = document.createElement("style");
+    style.id = "ipad-starburst-style";
+    style.textContent = css;
+    document.head.appendChild(style);
+}
 
 function celebrateMatchWin_iPad() {
 
