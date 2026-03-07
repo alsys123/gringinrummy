@@ -1,0 +1,544 @@
+{
+  "game": {
+    "deck": [],
+    "stock": [
+      {
+        "rank": 5,
+        "suit": "♠",
+        "runValue": 5,
+        "deadwoodValue": 5,
+        "id": "♠5"
+      },
+      {
+        "rank": 13,
+        "suit": "♠",
+        "runValue": 13,
+        "deadwoodValue": 10,
+        "id": "♠13"
+      },
+      {
+        "rank": 8,
+        "suit": "♠",
+        "runValue": 8,
+        "deadwoodValue": 8,
+        "id": "♠8"
+      },
+      {
+        "rank": 2,
+        "suit": "♠",
+        "runValue": 2,
+        "deadwoodValue": 2,
+        "id": "♠2"
+      },
+      {
+        "rank": 1,
+        "suit": "♥",
+        "runValue": 1,
+        "deadwoodValue": 1,
+        "id": "♥1"
+      },
+      {
+        "rank": 7,
+        "suit": "♠",
+        "runValue": 7,
+        "deadwoodValue": 7,
+        "id": "♠7"
+      },
+      {
+        "rank": 8,
+        "suit": "♣",
+        "runValue": 8,
+        "deadwoodValue": 8,
+        "id": "♣8"
+      },
+      {
+        "rank": 1,
+        "suit": "♠",
+        "runValue": 1,
+        "deadwoodValue": 1,
+        "id": "♠1"
+      },
+      {
+        "rank": 2,
+        "suit": "♦",
+        "runValue": 2,
+        "deadwoodValue": 2,
+        "id": "♦2"
+      },
+      {
+        "rank": 5,
+        "suit": "♣",
+        "runValue": 5,
+        "deadwoodValue": 5,
+        "id": "♣5"
+      },
+      {
+        "rank": 9,
+        "suit": "♥",
+        "runValue": 9,
+        "deadwoodValue": 9,
+        "id": "♥9"
+      },
+      {
+        "rank": 3,
+        "suit": "♥",
+        "runValue": 3,
+        "deadwoodValue": 3,
+        "id": "♥3"
+      },
+      {
+        "rank": 4,
+        "suit": "♣",
+        "runValue": 4,
+        "deadwoodValue": 4,
+        "id": "♣4"
+      },
+      {
+        "rank": 10,
+        "suit": "♣",
+        "runValue": 10,
+        "deadwoodValue": 10,
+        "id": "♣10"
+      },
+      {
+        "rank": 3,
+        "suit": "♠",
+        "runValue": 3,
+        "deadwoodValue": 3,
+        "id": "♠3"
+      },
+      {
+        "rank": 11,
+        "suit": "♦",
+        "runValue": 11,
+        "deadwoodValue": 10,
+        "id": "♦11"
+      },
+      {
+        "rank": 12,
+        "suit": "♠",
+        "runValue": 12,
+        "deadwoodValue": 10,
+        "id": "♠12"
+      },
+      {
+        "rank": 10,
+        "suit": "♠",
+        "runValue": 10,
+        "deadwoodValue": 10,
+        "id": "♠10"
+      },
+      {
+        "rank": 7,
+        "suit": "♥",
+        "runValue": 7,
+        "deadwoodValue": 7,
+        "id": "♥7"
+      },
+      {
+        "rank": 2,
+        "suit": "♣",
+        "runValue": 2,
+        "deadwoodValue": 2,
+        "id": "♣2"
+      },
+      {
+        "rank": 9,
+        "suit": "♠",
+        "runValue": 9,
+        "deadwoodValue": 9,
+        "id": "♠9"
+      },
+      {
+        "rank": 12,
+        "suit": "♦",
+        "runValue": 12,
+        "deadwoodValue": 10,
+        "id": "♦12"
+      }
+    ],
+    "discard": [
+      {
+        "rank": 6,
+        "suit": "♠",
+        "runValue": 6,
+        "deadwoodValue": 6,
+        "id": "♠6"
+      },
+      {
+        "rank": 10,
+        "suit": "♦",
+        "runValue": 10,
+        "deadwoodValue": 10,
+        "id": "♦10"
+      },
+      {
+        "rank": 12,
+        "suit": "♥",
+        "runValue": 12,
+        "deadwoodValue": 10,
+        "id": "♥12"
+      },
+      {
+        "rank": 12,
+        "suit": "♣",
+        "runValue": 12,
+        "deadwoodValue": 10,
+        "id": "♣12"
+      },
+      {
+        "rank": 8,
+        "suit": "♦",
+        "runValue": 8,
+        "deadwoodValue": 8,
+        "id": "♦8"
+      },
+      {
+        "rank": 9,
+        "suit": "♦",
+        "runValue": 9,
+        "deadwoodValue": 9,
+        "id": "♦9"
+      },
+      {
+        "rank": 10,
+        "suit": "♥",
+        "runValue": 10,
+        "deadwoodValue": 10,
+        "id": "♥10"
+      },
+      {
+        "rank": 8,
+        "suit": "♥",
+        "runValue": 8,
+        "deadwoodValue": 8,
+        "id": "♥8"
+      },
+      {
+        "rank": 7,
+        "suit": "♦",
+        "runValue": 7,
+        "deadwoodValue": 7,
+        "id": "♦7"
+      },
+      {
+        "rank": 9,
+        "suit": "♣",
+        "runValue": 9,
+        "deadwoodValue": 9,
+        "id": "♣9"
+      }
+    ],
+    "player": [
+      {
+        "rank": 11,
+        "suit": "♥",
+        "runValue": 11,
+        "deadwoodValue": 10,
+        "id": "♥11"
+      },
+      {
+        "rank": 1,
+        "suit": "♣",
+        "runValue": 1,
+        "deadwoodValue": 1,
+        "id": "♣1"
+      },
+      {
+        "rank": 13,
+        "suit": "♦",
+        "runValue": 13,
+        "deadwoodValue": 10,
+        "id": "♦13"
+      },
+      {
+        "rank": 13,
+        "suit": "♥",
+        "runValue": 13,
+        "deadwoodValue": 10,
+        "id": "♥13"
+      },
+      {
+        "rank": 5,
+        "suit": "♥",
+        "runValue": 5,
+        "deadwoodValue": 5,
+        "id": "♥5"
+      },
+      {
+        "rank": 11,
+        "suit": "♠",
+        "runValue": 11,
+        "deadwoodValue": 10,
+        "id": "♠11"
+      },
+      {
+        "rank": 11,
+        "suit": "♣",
+        "runValue": 11,
+        "deadwoodValue": 10,
+        "id": "♣11"
+      },
+      {
+        "rank": 3,
+        "suit": "♦",
+        "runValue": 3,
+        "deadwoodValue": 3,
+        "id": "♦3"
+      },
+      {
+        "rank": 13,
+        "suit": "♣",
+        "runValue": 13,
+        "deadwoodValue": 10,
+        "id": "♣13"
+      },
+      {
+        "rank": 1,
+        "suit": "♦",
+        "runValue": 1,
+        "deadwoodValue": 1,
+        "id": "♦1"
+      }
+    ],
+    "cpu": [
+      {
+        "rank": 4,
+        "suit": "♦",
+        "runValue": 4,
+        "deadwoodValue": 4,
+        "id": "♦4"
+      },
+      {
+        "rank": 4,
+        "suit": "♥",
+        "runValue": 4,
+        "deadwoodValue": 4,
+        "id": "♥4"
+      },
+      {
+        "rank": 7,
+        "suit": "♣",
+        "runValue": 7,
+        "deadwoodValue": 7,
+        "id": "♣7"
+      },
+      {
+        "rank": 6,
+        "suit": "♣",
+        "runValue": 6,
+        "deadwoodValue": 6,
+        "id": "♣6"
+      },
+      {
+        "rank": 4,
+        "suit": "♠",
+        "runValue": 4,
+        "deadwoodValue": 4,
+        "id": "♠4"
+      },
+      {
+        "rank": 6,
+        "suit": "♦",
+        "runValue": 6,
+        "deadwoodValue": 6,
+        "id": "♦6"
+      },
+      {
+        "rank": 2,
+        "suit": "♥",
+        "runValue": 2,
+        "deadwoodValue": 2,
+        "id": "♥2"
+      },
+      {
+        "rank": 3,
+        "suit": "♣",
+        "runValue": 3,
+        "deadwoodValue": 3,
+        "id": "♣3"
+      },
+      {
+        "rank": 6,
+        "suit": "♥",
+        "runValue": 6,
+        "deadwoodValue": 6,
+        "id": "♥6"
+      },
+      {
+        "rank": 5,
+        "suit": "♦",
+        "runValue": 5,
+        "deadwoodValue": 5,
+        "id": "♦5"
+      }
+    ],
+    "turn": "player",
+    "phase": "round-over",
+    "drawn": null,
+    "revealCpu": true
+  },
+  "matchScore": {
+    "player": 84,
+    "cpu": 27,
+    "target": 100
+  },
+  "detailedMatchScore": {
+    "games": [
+      {
+        "gameNumber": 1,
+        "winner": "cpu",
+        "type": "undercut",
+        "who": "player",
+        "deadwood": {
+          "player": 9,
+          "cpu": 8,
+          "diff": 9
+        },
+        "bonus": {
+          "bonus": 10,
+          "type": "undercut"
+        },
+        "layoff": 8,
+        "pointsThisGame": 19,
+        "accumulated": {
+          "player": 0,
+          "cpu": 19
+        },
+        "originalDW": 16
+      },
+      {
+        "gameNumber": 2,
+        "winner": "cpu",
+        "type": "knock",
+        "who": "cpu",
+        "deadwood": {
+          "player": 8,
+          "cpu": 5,
+          "diff": 3
+        },
+        "bonus": {
+          "bonus": 0,
+          "type": "knock"
+        },
+        "layoff": 4,
+        "pointsThisGame": 3,
+        "accumulated": {
+          "player": 0,
+          "cpu": 22
+        },
+        "originalDW": 12
+      },
+      {
+        "gameNumber": 3,
+        "winner": "player",
+        "type": "knock",
+        "who": "player",
+        "deadwood": {
+          "player": 1,
+          "cpu": 23,
+          "diff": 22
+        },
+        "bonus": {
+          "bonus": 0,
+          "type": "knock"
+        },
+        "layoff": 4,
+        "pointsThisGame": 22,
+        "accumulated": {
+          "player": 22,
+          "cpu": 22
+        },
+        "originalDW": 27
+      },
+      {
+        "gameNumber": 4,
+        "winner": "player",
+        "type": "knock",
+        "who": "player",
+        "deadwood": {
+          "player": 9,
+          "cpu": 36,
+          "diff": 27
+        },
+        "bonus": {
+          "bonus": 0,
+          "type": "knock"
+        },
+        "layoff": 0,
+        "pointsThisGame": 27,
+        "accumulated": {
+          "player": 49,
+          "cpu": 22
+        },
+        "originalDW": 36
+      },
+      {
+        "gameNumber": 5,
+        "winner": "player",
+        "type": "knock",
+        "who": "player",
+        "deadwood": {
+          "player": 10,
+          "cpu": 38,
+          "diff": 28
+        },
+        "bonus": {
+          "bonus": 0,
+          "type": "knock"
+        },
+        "layoff": 0,
+        "pointsThisGame": 28,
+        "accumulated": {
+          "player": 77,
+          "cpu": 22
+        },
+        "originalDW": 38
+      },
+      {
+        "gameNumber": 6,
+        "winner": "cpu",
+        "type": "knock",
+        "who": "cpu",
+        "deadwood": {
+          "player": 6,
+          "cpu": 1,
+          "diff": 5
+        },
+        "bonus": {
+          "bonus": 0,
+          "type": "knock"
+        },
+        "layoff": 5,
+        "pointsThisGame": 5,
+        "accumulated": {
+          "player": 77,
+          "cpu": 27
+        },
+        "originalDW": 11
+      },
+      {
+        "gameNumber": 7,
+        "winner": "player",
+        "type": "knock",
+        "who": "player",
+        "deadwood": {
+          "player": 10,
+          "cpu": 17,
+          "diff": 7
+        },
+        "bonus": {
+          "bonus": 0,
+          "type": "knock"
+        },
+        "layoff": 0,
+        "pointsThisGame": 7,
+        "accumulated": {
+          "player": 84,
+          "cpu": 27
+        },
+        "originalDW": 17
+      }
+    ]
+  }
+}
