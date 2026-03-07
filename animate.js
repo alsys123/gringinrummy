@@ -288,7 +288,22 @@ function markCPULayoffCards(layoffCards) {
 }
 
 
+
+  // working copy
 async function celebrateMatchWin() {
+
+    // do something different for ipad
+const isIpad = navigator.userAgent.includes("iPad") ||
+                   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    if (isIpad) {
+        // iPad‑specific version
+        celebrateMatchWin_iPad();
+//	celebrateMatchWin_iPad_starburst
+        return;
+    }
+
+    
     const field = document.getElementById("star-field");
 
     // spawn 40–60 stars
@@ -346,17 +361,23 @@ star.style.background = g[0];
 }//celebrateMatchWin
     
 
-/* not really...
-// for ipad
-function celebrateMatchWin() {
-    const canvas = document.getElementById("star-canvas");
-    const ctx = canvas.getContext("2d");
+function celebrateMatchWin_iPad() {
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const region = document.getElementById("star-ipad-region");
 
-    const particles = [];
-    const colors = [
+    // region size (200×200px)
+    const regionW = 500;
+    const regionH = 500;
+
+    // center region
+    region.style.width = regionW + "px";
+    region.style.height = regionH + "px";
+    region.style.left = (window.innerWidth - regionW) / 2 + "px";
+    region.style.top = (window.innerHeight - regionH) / 2 + "px";
+//    star.style.animationDelay = (Math.random() * 4.0) + "s";
+
+    // color palettes (same as desktop)
+    const glows = [
         ["#FFD700", "#FFEA00", "#FFFACD"],
         ["#FF69B4", "#FF1493", "#FFC0CB"],
         ["#87CEFA", "#00BFFF", "#E0FFFF"],
@@ -365,45 +386,152 @@ function celebrateMatchWin() {
         ["#FF4444", "#FF0000", "#FFB3B3"]
     ];
 
-    for (let i = 0; i < 300; i++) {
-        const g = colors[Math.floor(Math.random() * colors.length)];
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: 2 + Math.random() * 4,
-            life: 0,
-            maxLife: 40 + Math.random() * 40,
-            color: g[0],
-            glow: g[1]
-        });
+    for (let i = 0; i < 40; i++) {
+
+        const star = document.createElement("div");
+        star.className = "starflash-ipad";
+
+        // random point inside region
+        const x = Math.random() * regionW;
+        const y = Math.random() * regionH;
+
+        star.style.left = x + "px";
+        star.style.top = y + "px";
+
+        // random size
+        const size = 14 + Math.random() * 26;
+        star.style.width = size + "px";
+        star.style.height = size + "px";
+
+        // random color
+        const g = glows[Math.floor(Math.random() * glows.length)];
+
+        // iPad-safe glow using radial-gradient (no box-shadow)
+        star.style.background = `radial-gradient(circle, ${g[0]} 0%, transparent 130%)`;
+	star.style.animationDelay = (Math.random() * 3) + "s";
+
+        region.appendChild(star);
+
+        // cleanup
+        setTimeout(() => star.remove(), 10000);
     }
+}//celebrateMatchWin_iPad
 
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+function celebrateMatchWin_iPad_starburst() {
 
-        particles.forEach(p => {
-            p.life++;
+    const region = document.getElementById("star-ipad-region");
 
-            const alpha = 1 - p.life / p.maxLife;
-            if (alpha <= 0) return;
+    const regionW = 250;
+    const regionH = 250;
 
-            ctx.globalAlpha = alpha;
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = p.glow;
-            ctx.fillStyle = p.color;
+    region.style.width = regionW + "px";
+    region.style.height = regionH + "px";
+    region.style.left = (window.innerWidth - regionW) / 2 + "px";
+    region.style.top = (window.innerHeight - regionH) / 2 + "px";
 
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-        });
+    const glows = [
+        ["#FFD700", "#FFEA00"],
+        ["#FF69B4", "#FFC0CB"],
+        ["#87CEFA", "#E0FFFF"],
+        ["#7CFC00", "#CCFFCC"],
+        ["#FFA500", "#FFE5B4"],
+        ["#FF4444", "#FFB3B3"]
+    ];
 
-        ctx.globalAlpha = 1;
+    for (let i = 0; i < 40; i++) {
 
-        if (particles.some(p => p.life < p.maxLife)) {
-            requestAnimationFrame(animate);
-        }
+        const star = document.createElement("div");
+        star.className = "starburst-ipad";
+
+        // center of region
+        const cx = regionW / 2;
+        const cy = regionH / 2;
+
+        star.style.left = cx + "px";
+        star.style.top = cy + "px";
+
+        // bigger stars
+        const size = 12 + Math.random() * 20;
+        star.style.width = size + "px";
+        star.style.height = size + "px";
+
+        // random glow color
+        const g = glows[Math.floor(Math.random() * glows.length)];
+        star.style.background = `radial-gradient(circle, ${g[0]} 0%, transparent 90%)`;
+
+        // random outward direction
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 120 + Math.random() * 120; // how far it travels
+
+        const dx = Math.cos(angle) * distance + "px";
+        const dy = Math.sin(angle) * distance + "px";
+
+        star.style.setProperty("--dx", dx);
+        star.style.setProperty("--dy", dy);
+
+        // optional delay for richer burst
+        star.style.animationDelay = (Math.random() * 0.8) + "s";
+
+        region.appendChild(star);
+
+        // remove after animation
+        setTimeout(() => star.remove(), 3500);
     }
+}
 
-    animate();
+/*
+//ipad
+async function celebrateMatchWin() {
+
+    const region = document.getElementById("star-center-region");
+
+    const regionW = 200;
+    const regionH = 200;
+
+    region.style.width = regionW + "px";
+    region.style.height = regionH + "px";
+    region.style.left = (window.innerWidth - regionW) / 2 + "px";
+    region.style.top = (window.innerHeight - regionH) / 2 + "px";
+
+    for (let i = 0; i < 25; i++) {
+
+        const star = document.createElement("div");
+        star.className = "starflash";
+
+        // random point INSIDE region
+        const x = Math.random() * regionW;
+        const y = Math.random() * regionH;
+
+        star.style.left = x + "px";
+        star.style.top = y + "px";
+
+        const size = 6 + Math.random() * 10;
+        star.style.width = size + "px";
+        star.style.height = size + "px";
+
+        star.style.animationDelay = (Math.random() * 5.0) + "s";
+
+        const glows = [
+            ["#FFD700", "#FFEA00", "#FFFACD"],
+            ["#FF69B4", "#FF1493", "#FFC0CB"],
+            ["#87CEFA", "#00BFFF", "#E0FFFF"],
+            ["#7CFC00", "#32CD32", "#CCFFCC"],
+            ["#FFA500", "#FF8C00", "#FFE5B4"],
+            ["#FF4444", "#FF0000", "#FFB3B3"]
+        ];
+
+        const g = glows[Math.floor(Math.random() * glows.length)];
+
+        star.style.background = g[0];
+        star.style.boxShadow = `
+            0 0 6px ${g[0]},
+            0 0 10px ${g[1]},
+            0 0 14px ${g[2]}
+        `;
+
+        region.appendChild(star);
+
+        setTimeout(() => star.remove(), 15000);
+    }
 }
 */
