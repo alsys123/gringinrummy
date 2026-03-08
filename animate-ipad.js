@@ -3,17 +3,20 @@
 
 async function celebrateMatchWin_iPad_starburstLoop() {
 
-    celebrateMatchIpad_v3();
-    return;
+    celebrateMatchWin_canvasStarburst_v7();
 
-    for (let i = 0; i < 3; i++) {
-	celebrateMatchWin_iPad_starburst_v2();
-	await sleep(2000);
-	
-    }
+//    for (let i = 0; i < 3; i++) {
+//	celebrateMatchWin_iPad_starburst_v2();
+//    celebrateMatchWin_canvasStarburst_v4(); // works
+//    celebrateMatchWin_canvasStarburst_v5(); // stars shooting out
+//	await sleep(2000);
+//	
+//    }
 
+    
 }//celebrateMatchWin_iPad_starburstLoop
 
+/*
 // for the ipad on a win
 function celebrateMatchWin_iPad_starburst_v1() {
     injectIpadStarburstCSS_v2();
@@ -142,8 +145,9 @@ function celebrateMatchWin_iPad_starburst_v1() {
     // ── cleanup style tag after everything finishes ───────────────────────
     setTimeout(() => document.getElementById("ipad-starburst-style")?.remove(), 4000);
 }//v1
+*/
 
-
+/*
 function celebrateMatchWin_iPad_starburst_v2() {
     injectIpadStarburstCSS_v2();
 
@@ -277,7 +281,8 @@ function celebrateMatchWin_iPad_starburst_v2() {
 
     setTimeout(() => document.getElementById("ipad-starburst-style")?.remove(), 4000);
 }//v2
-
+*/
+/*
 function injectIpadStarburstCSS_v2() {
     if (document.getElementById("ipad-starburst-style")) return;
 
@@ -313,7 +318,7 @@ function injectIpadStarburstCSS_v2() {
     radial-gradient(circle at 20% 50%, var(--core) 0%, transparent 60%),
     radial-gradient(circle at 50% 50%, var(--mid) 0%, transparent 70%);
   border-radius: 50%;
-  background-size: 100% 100%;   /* ⭐ REQUIRED FOR SAFARI */
+  background-size: 100% 100%;   
 }
 
 @keyframes ipadBurst {
@@ -334,7 +339,8 @@ function injectIpadStarburstCSS_v2() {
     style.textContent = css;
     document.head.appendChild(style);
 }
-
+*/
+/*
 function celebrateMatchIpad_v3() {
     const field = document.getElementById("star-field");
 
@@ -391,3 +397,423 @@ star.style.background = g[0];
     }
     
 }//celebrateMatchIpad_v3
+*/
+/*
+// this one works!
+function celebrateMatchWin_canvasStarburst_v4() {
+    const canvas = document.getElementById("starburst-canvas");
+    const ctx = canvas.getContext("2d");
+
+    // full screen
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = "fixed";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "999999";
+    canvas.style.display = "block";
+
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+
+    const colors = [
+        "#FFD700", "#FF69B4", "#87CEFA",
+        "#7CFC00", "#FFA500", "#FF4444"
+    ];
+
+    const particles = [];
+    const count = 80;
+
+    for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 3 + Math.random() * 4;
+        const size = 3 + Math.random() * 4;
+
+        particles.push({
+            x: cx,
+            y: cy,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            life: 0,
+            maxLife: 50 + Math.random() * 30
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let alive = false;
+
+        for (const p of particles) {
+            p.life++;
+            if (p.life >= p.maxLife) continue;
+
+            alive = true;
+
+            // simple motion
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // slight gravity
+            p.vy += 0.03;
+
+            const t = p.life / p.maxLife;
+            const alpha = 1 - t;
+
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.globalAlpha = 1;
+
+        if (alive) {
+            requestAnimationFrame(draw);
+        } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = "none";
+        }
+    }
+
+    requestAnimationFrame(draw);
+}//v4
+*/
+/*
+function celebrateMatchWin_canvasStarburst_v5() {
+    const canvas = document.getElementById("starburst-canvas");
+    const ctx = canvas.getContext("2d");
+
+    // full screen
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = "fixed";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "999999";
+    canvas.style.display = "block";
+
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+
+    const colors = [
+        "#FFD700", "#FF69B4", "#87CEFA",
+        "#7CFC00", "#FFA500", "#FF4444"
+    ];
+
+    const particles = [];
+    const count = 80;
+
+    for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 3 + Math.random() * 4;
+        const size = 6 + Math.random() * 10;
+
+        particles.push({
+            x: cx,
+            y: cy,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            life: 0,
+            maxLife: 50 + Math.random() * 30,
+            rotation: Math.random() * Math.PI * 2,
+            rotationSpeed: (Math.random() - 0.5) * 0.1
+        });
+    }
+
+    function drawStar(ctx, x, y, radius, rotation, color, alpha) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = color;
+
+        ctx.beginPath();
+        const spikes = 5;
+        const outer = radius;
+        const inner = radius * 0.45;
+
+        for (let i = 0; i < spikes * 2; i++) {
+            const r = (i % 2 === 0) ? outer : inner;
+            const a = (Math.PI / spikes) * i;
+            ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let alive = false;
+
+        for (const p of particles) {
+            p.life++;
+            if (p.life >= p.maxLife) continue;
+
+            alive = true;
+
+            // motion
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.03;
+
+            // rotation
+            p.rotation += p.rotationSpeed;
+
+            // flashing effect
+            const t = p.life / p.maxLife;
+            const flash = 0.5 + Math.sin(p.life * 0.3) * 0.5; // 0–1 pulsing
+            const alpha = (1 - t) * flash;
+
+            drawStar(ctx, p.x, p.y, p.size, p.rotation, p.color, alpha);
+        }
+
+        if (alive) {
+            requestAnimationFrame(draw);
+        } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = "none";
+        }
+    }
+
+    requestAnimationFrame(draw);
+}//v5
+*/
+/*
+function celebrateMatchWin_canvasStarburst_v6() {
+    const canvas = document.getElementById("starburst-canvas");
+    const ctx = canvas.getContext("2d");
+
+    // full screen
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = "fixed";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "999999";
+    canvas.style.display = "block";
+
+    const colors = [
+        "#FFD700", "#FF69B4", "#87CEFA",
+        "#7CFC00", "#FFA500", "#FF4444"
+    ];
+
+    const particles = [];
+    const count = 120;   // more stars for full-screen sparkle
+
+    let running = true;   // ⭐ controls whether stars keep respawning
+
+    // stop after 5 seconds
+    setTimeout(() => {
+        running = false;
+    }, 5000);
+
+    // create random stars anywhere on screen
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: 6 + Math.random() * 12,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            life: 0,
+            maxLife: 40 + Math.random() * 40,
+            rotation: Math.random() * Math.PI * 2,
+            rotationSpeed: (Math.random() - 0.5) * 0.05
+        });
+    }
+
+    function drawStar(ctx, x, y, radius, rotation, color, alpha) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = color;
+
+        ctx.beginPath();
+        const spikes = 5;
+        const outer = radius;
+        const inner = radius * 0.45;
+
+        for (let i = 0; i < spikes * 2; i++) {
+            const r = (i % 2 === 0) ? outer : inner;
+            const a = (Math.PI / spikes) * i;
+            ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let alive = false;
+
+        for (const p of particles) {
+            p.life++;
+
+            if (p.life >= p.maxLife) {
+                // respawn a new star in a new random location
+                p.x = Math.random() * canvas.width;
+                p.y = Math.random() * canvas.height;
+                p.life = 0;
+                p.maxLife = 40 + Math.random() * 40;
+                p.size = 6 + Math.random() * 12;
+                p.color = colors[Math.floor(Math.random() * colors.length)];
+                p.rotation = Math.random() * Math.PI * 2;
+            }
+
+            alive = true;
+
+            // rotation
+            p.rotation += p.rotationSpeed;
+
+            // flashing effect
+            const t = p.life / p.maxLife;
+            const flash = 0.5 + Math.sin(p.life * 0.25) * 0.5; // twinkle
+            const alpha = (1 - t) * flash;
+
+            drawStar(ctx, p.x, p.y, p.size, p.rotation, p.color, alpha);
+        }
+
+        if (alive) {
+            requestAnimationFrame(draw);
+        } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = "none";
+        }
+    }
+
+    requestAnimationFrame(draw);
+}//v6
+*/
+
+function celebrateMatchWin_canvasStarburst_v7() {
+    const canvas = document.getElementById("starburst-canvas");
+    const ctx = canvas.getContext("2d");
+
+    // full screen
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = "fixed";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "999999";
+    canvas.style.display = "block";
+
+    const colors = [
+        "#FFD700", "#FF69B4", "#87CEFA",
+        "#7CFC00", "#FFA500", "#FF4444"
+    ];
+
+    const particles = [];
+    const count = 120;
+
+    let running = true;
+
+    // stop spawning after 5 seconds
+    setTimeout(() => {
+        running = false;
+    }, 5000);
+
+    // initial stars
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: 6 + Math.random() * 12,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            life: 0,
+            maxLife: 40 + Math.random() * 40,
+            rotation: Math.random() * Math.PI * 2,
+            rotationSpeed: (Math.random() - 0.5) * 0.05,
+            dead: false
+        });
+    }
+
+    function drawStar(ctx, x, y, radius, rotation, color, alpha) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = color;
+
+        ctx.beginPath();
+        const spikes = 5;
+        const outer = radius;
+        const inner = radius * 0.45;
+
+        for (let i = 0; i < spikes * 2; i++) {
+            const r = (i % 2 === 0) ? outer : inner;
+            const a = (Math.PI / spikes) * i;
+            ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let alive = false;
+
+        for (const p of particles) {
+            if (p.dead) continue;
+
+            p.life++;
+
+            if (p.life >= p.maxLife) {
+                if (running) {
+                    // respawn
+                    p.x = Math.random() * canvas.width;
+                    p.y = Math.random() * canvas.height;
+                    p.life = 0;
+                    p.maxLife = 40 + Math.random() * 40;
+                    p.size = 6 + Math.random() * 12;
+                    p.color = colors[Math.floor(Math.random() * colors.length)];
+                    p.rotation = Math.random() * Math.PI * 2;
+                } else {
+                    // mark as dead
+                    p.dead = true;
+                    continue;
+                }
+            }
+
+            alive = true;
+
+            p.rotation += p.rotationSpeed;
+
+            const t = p.life / p.maxLife;
+            const flash = 0.5 + Math.sin(p.life * 0.25) * 0.5;
+            const alpha = (1 - t) * flash;
+
+            drawStar(ctx, p.x, p.y, p.size, p.rotation, p.color, alpha);
+        }
+
+        // stop when all stars are dead AND no respawning
+        if (!alive && !running) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = "none";
+            return;
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    requestAnimationFrame(draw);
+}//v7

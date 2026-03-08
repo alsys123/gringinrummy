@@ -1454,9 +1454,9 @@ const w = window.innerWidth;
     tl.style.left = (w * margin)-20 + "px";
   tl.style.top  = (h * margin) + "px";
 
-  // Top-right
-  tr.style.left = (w * (1 - margin))-30 + "px";
-  tr.style.top  = (h * margin) + 20 + "px";
+  // Top-right -- help button
+  tr.style.left = (w * (1 - margin))-30 + "px"; 
+  tr.style.top  = (h * margin) + 175 + "px"; // was 20
 
   // Bottom-left
   bl.style.left = (w * margin) + "px";
@@ -1466,9 +1466,9 @@ const w = window.innerWidth;
   br.style.left = (w * (1 - margin)) + "px";
   br.style.top  = (h * (1 - margin)) + "px";
 
-      // Bottom-left
-    ml.style.left = (w * margin) + "px";
-  ml.style.top  = (h * 0.7) + "px";
+      // Bottom-left .. star_ml
+    ml.style.left = (w * margin)-20 + "px";
+  ml.style.top  = (h * 0.15) + "px";
 //    ml.style.top  = (h * (1 - margin)) + "px";
 
   // Mid-left (50% down, 5% in)

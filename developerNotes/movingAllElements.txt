@@ -38,3 +38,12 @@ g) deadwood diplay  - in style.css
 h) backdoor buttons - in style.css
    #back-door
 
+i) location of Change Difficulty - gringrinrummy.js
+      // Bottom-left .. star_ml
+    ml.style.left = (w * margin)-20 + "px";
+  ml.style.top  = (h * 0.15) + "px";
+
+j) help button - in gringinrummy.js
+  // Top-right -- help button
+  tr.style.left = (w * (1 - margin))-30 + "px"; 
+  tr.style.top  = (h * margin) + 175 + "px"; // was 20
