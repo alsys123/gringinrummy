@@ -297,12 +297,13 @@ const isIpad = navigator.userAgent.includes("iPad") ||
                    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
     if (isIpad) {
-        // iPad‑specific version
-        celebrateMatchWin_iPad();
-//	celebrateMatchWin_iPad_starburst
+	celebrateMatchWin_iPad_starburstLoop();
         return;
     }
 
+    /// for testing
+//   celebrateMatchWin_iPad_starburstLoop();
+//    return;
     
     const field = document.getElementById("star-field");
 
@@ -360,42 +361,7 @@ star.style.background = g[0];
     
 }//celebrateMatchWin
     
-function injectIpadStarburstCSS() {
-    if (document.getElementById("ipad-starburst-style")) return;
-
-    const css = `
-#star-ipad-region {
-  position: fixed;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 999999;
-}
-
-.starburst-ipad {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0;
-  animation: ipadBurst 2.5s ease-out forwards;
-}
-
-@keyframes ipadBurst {
-  0% {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(var(--dx), var(--dy));
-  }
-}
-`;
-
-    const style = document.createElement("style");
-    style.id = "ipad-starburst-style";
-    style.textContent = css;
-    document.head.appendChild(style);
-}
-
+/*
 function celebrateMatchWin_iPad() {
 
     const region = document.getElementById("star-ipad-region");
@@ -518,7 +484,7 @@ function celebrateMatchWin_iPad_starburst() {
 	document.getElementById("ipad-starburst-style")?.remove();
 
 }
-
+*/
 /*
 //ipad
 async function celebrateMatchWin() {
