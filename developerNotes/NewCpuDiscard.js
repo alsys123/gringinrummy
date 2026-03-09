@@ -1,4 +1,4 @@
-function cpuChooseDiscardIndex_Difficult() {
+function cpuChooseDiscardIndex_DifficultV2() {
     const hand = game.cpu;
     const sorted = sortHandByRank(hand);
     const evalInfo = evaluate(sorted);

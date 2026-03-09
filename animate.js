@@ -69,7 +69,7 @@ async function animateCpuTakeFromDiscard(card) {
 
   // 4. Animate transform + opacity
   flying.style.transition =
-    "transform 3000ms ease-in-out, opacity 800ms ease-in-out";
+    "transform 1500ms ease-in-out, opacity 800ms ease-in-out"; //was 3000ms -- 800ms
 
   // 5. Next frame → animate toward CPU
   requestAnimationFrame(() => {
