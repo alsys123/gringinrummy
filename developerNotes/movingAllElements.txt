@@ -24,13 +24,13 @@ e) player cards -  in render.js
     const PLAYER_SHIFT_X = -50;   // move left
     const PLAYER_SHIFT_Y = 10;    
 
-f) middle card stack -  gringinrummy.js
+f) middle card stack -  positionCenterArea -- gringinrummy.js 
 
     center.style.marginLeft = -(w * 0.10) + "px";
     center.style.marginTop  = (h * 0.15) + "px";
 
 
-g) deadwood diplay  - in style.css
+g) deadwood display  - in style.css
 
   #deadwood-info ...
     margin-left: -175px; 

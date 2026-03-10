@@ -1,9 +1,89 @@
 /* ------------------------------
    Animate
    ------------------------------ */
+async function animateCpuTakeFromStock_shrink_v2(card) {
+  const stockElem = el.stock;
+  const start = stockElem.getBoundingClientRect();
+
+  const flying = cardBack();
+  flying.style.position = "fixed";
+  flying.style.left = start.left + "px";
+  flying.style.top = start.top + "px";
+  flying.style.zIndex = 9999;
+  flying.style.opacity = "1";
+  flying.style.transformOrigin = "center center";
+
+  document.body.appendChild(flying);
+  void flying.offsetWidth;
+
+  // Step 1: tiny lift + slight rotate (makes the shrink more readable)
+  flying.style.transition = "transform 200ms ease-out";
+  flying.style.transform = "translateY(-2px) rotate(-5deg)";
+
+  // Step 2: visible shrink + fade
+  setTimeout(() => {
+    flying.style.transition = "transform 180ms ease-in, opacity 180ms ease-in";
+    flying.style.transform = "translateY(-2px) scale(0.75) rotate(0deg)";
+    flying.style.opacity = "0";
+  }, 130);
+
+  flying.addEventListener("transitionend", () => flying.remove(), { once: true });
+}
+
+async function animateCpuTakeFromStock_shrink(card) {
+  const stockElem = el.stock;
+  const start = stockElem.getBoundingClientRect();
+
+  const flying = cardBack();
+  flying.style.position = "fixed";
+  flying.style.left = start.left + "px";
+  flying.style.top = start.top + "px";
+  flying.style.zIndex = 9999;
+  flying.style.opacity = "1";
+  flying.style.transformOrigin = "center center";
+
+  document.body.appendChild(flying);
+  void flying.offsetWidth;
+
+  flying.style.transition = "transform 120ms ease-out, opacity 120ms ease-out";
+  flying.style.transform = "scale(0.85)";
+  flying.style.opacity = "0";
+
+  flying.addEventListener("transitionend", () => flying.remove(), { once: true });
+}
+
+async function animateCpuTakeFromStock_micro(card) {
+  const stockElem = el.stock;
+  const start = stockElem.getBoundingClientRect();
+
+  const flying = cardBack();
+  flying.style.position = "fixed";
+  flying.style.left = start.left + "px";
+  flying.style.top = start.top + "px";
+  flying.style.zIndex = 9999;
+  flying.style.opacity = "1";
+  flying.style.transformOrigin = "center center";
+
+  document.body.appendChild(flying);
+  void flying.offsetWidth;
+
+  // micro-lift
+  flying.style.transition = "transform 120ms ease-out";
+  flying.style.transform = "translateY(-8px) rotate(-2deg)";
+
+  // snap-disappear
+  setTimeout(() => {
+    flying.style.transition = "transform 100ms ease-in, opacity 100ms ease-in";
+    flying.style.transform = "translateY(-4px) scale(0.6) rotate(0deg)";
+    flying.style.opacity = "0";
+  }, 130);
+
+  flying.addEventListener("transitionend", () => flying.remove(), { once: true });
+}
+
 
 //
-async function animateCpuTakeFromStock(card) {
+async function animateCpuTakeFromStock_v1(card) {
   const stockElem = el.stock;
   const cpuHandElem = el.cpu;
 
@@ -40,7 +120,7 @@ async function animateCpuTakeFromStock(card) {
   });
 
   flying.addEventListener("transitionend", () => flying.remove(), { once: true });
-}//animateCpuTakeFromStock
+}//animateCpuTakeFromStock_v1
 
 //_animateCpuTakeFromDiscard
 async function animateCpuTakeFromDiscard(card) {

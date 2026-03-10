@@ -239,6 +239,7 @@ function updateScoreboard() {
     }, 300);
 
 //    document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
+    showCPUlevel(currentCpuLevel);
 
 } //updateScoreboard
     
@@ -821,7 +822,8 @@ function start() {
     document.getElementById("tally-area").style.display = "none";
     document.getElementById("tally-area").innerHTML = "";
 
-    document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
+//    document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
+    showCPUlevel(currentCpuLevel);
 
     render();
     updateButtons();
@@ -1336,6 +1338,9 @@ const w = window.innerWidth;
   const bl = document.getElementById("star-bl");
   const br = document.getElementById("star-br");
   const ml = document.getElementById("star-ml");
+  const mla = document.getElementById("star-mla");
+  const mlb = document.getElementById("star-mlb");
+  const mlc = document.getElementById("star-mlc");
 //  const ml = document.getElementById("star-midleft");
 
   // Top-left
@@ -1354,15 +1359,24 @@ const w = window.innerWidth;
   br.style.left = (w * (1 - margin)) + "px";
   br.style.top  = (h * (1 - margin)) + "px";
 
-      // Bottom-left .. star_ml
+    // Bottom-left .. star_ml
     ml.style.left = (w * margin)-20 + "px";
-  ml.style.top  = (h * 0.15) + "px";
-//    ml.style.top  = (h * (1 - margin)) + "px";
+    ml.style.top  = (h * 0.15) + "px";
 
+    // *** NOTE: this is also reset below
+    mla.style.left = (w * margin)-15 + "px";
+    mla.style.top  = (h * 0.20) + 10 + "px";
+    mlb.style.left = (w * margin)+40 + "px";
+    mlb.style.top  = (h * 0.20) + 10 + "px";
+    mlc.style.left = (w * margin)+120 + "px";
+    mlc.style.top  = (h * 0.20) + 10 + "px";
+
+    //    ml.style.top  = (h * (1 - margin)) + "px";
+    
   // Mid-left (50% down, 5% in)
 //  ml.style.left = (w * margin) + "px";
 //  ml.style.top  = (h * 0.5) + "px";
-}
+}//layoutStars
 
 window.addEventListener("load", layoutStars);
 window.addEventListener("resize", layoutStars);
@@ -1478,42 +1492,84 @@ function toggleCPULevel() {
     cpuLevel = cpuDifficulty[currentCpuLevel];
 
     log(`toggleCPULevel: CPU Level ${currentCpuLevel}`, "sys");
-    document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
-    showMessage("CPU difficulty level set to: "+ currentCpuLevel.toUpperCase());
+    showCPUlevel(currentCpuLevel);
+    
+}
 
-    const el = document.getElementById("star-ml");
-    el.style.width = "200px";
-    el.style.whiteSpace = "normal";
-    el.style.overflowWrap = "break-word";
+function showCPUlevel(currentCpuLevel) {
+//    document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
+//    showMessage("CPU difficulty level set to: "+ currentCpuLevel.toUpperCase());
 
-    el.textContent = "Change CPU Difficulty "+currentCpuLevel.toUpperCase();
+//    const el = document.getElementById("star-ml");
+    const mla = document.getElementById("star-mla");
+    const mlb = document.getElementById("star-mlb");
+    const mlc = document.getElementById("star-mlc");
+//    el.style.width = "200px";
+//    el.style.whiteSpace = "normal";
+//    el.style.overflowWrap = "break-word";
+//
+    //    el.textContent = "Change CPU Difficulty "+currentCpuLevel.toUpperCase();
+//    cleanupOptionSelect(mla);
+//    cleanupOptionSelect(mlb);
+//    cleanupOptionSelect(mlc);
+//    mla.style.removeProperty("color");
+//    mla.style.removeProperty("backgroundColor");
+//    mla.style.removeProperty("borderRadius");
+    //    mla.style.removeProperty("padding");
+
+    // **** RESET everything first ****
+    mla.removeAttribute("style");
+    mlb.removeAttribute("style");
+    mlc.removeAttribute("style");
+    const h = window.innerHeight;
+    const w = window.innerWidth;
+    const margin = 0.05;   // 5%
+    mla.style.left = (w * margin)-15 + "px";
+    mla.style.top  = (h * 0.20) + 10 + "px";
+    mlb.style.left = (w * margin)+40 + "px";
+    mlb.style.top  = (h * 0.20) + 10 +"px";
+    mlc.style.left = (w * margin)+120 + "px";
+    mlc.style.top  = (h * 0.20) + 10 + "px";
+
+
+    
     if (currentCpuLevel === "easy") {
-	Object.assign(el.style, {
+	Object.assign(mla.style, {
 	    color: "white",
 	    backgroundColor: "green",
 	    borderRadius: "8px",
-	    padding: "8px 12px"
+	    padding: "8px 12px",
+	    transform: "translate(-6px, -4px)"
 	});
-    }//hard
+    }//easy
     if (currentCpuLevel === "medium") {
-	Object.assign(el.style, {
+	Object.assign(mlb.style, {
 	    color: "black",
 	    backgroundColor: "#ffcc00",
 	    borderRadius: "8px",
-	    padding: "8px 12px"
+	    padding: "8px 12px",
+	    transform: "translate(-6px, -4px)"
 	});
-    }//hard
+    }//medium
     if (currentCpuLevel === "hard") {
-	Object.assign(el.style, {
+	Object.assign(mlc.style, {
 	    color: "white",
 	    backgroundColor: "#5e1717", //"#9c4647", // "#b30000",
 	    borderRadius: "8px",
-	    padding: "8px 12px"
+	    padding: "8px 12px",
+	    transform: "translate(-6px, -4px)"
 	});
     }//hard
 }
 
+//
+function cleanupOptionSelect(element) {
+    element.style.removeProperty("color");
+    element.style.removeProperty("backgroundColor");
+    element.style.removeProperty("borderRadius");
+    element.style.removeProperty("padding");
 
+}
 
 //function openHelpModal() {
 //    showMessage("Coming soon!");
@@ -1542,6 +1598,7 @@ function positionCenterArea() {
     center.style.marginTop  = (h * 0.40) + "px";
     }
 
+	// ?? next .... maybe add a section for deadwood count ???? 
 }
 
 window.addEventListener("load", positionCenterArea);

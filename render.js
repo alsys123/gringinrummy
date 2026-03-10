@@ -65,6 +65,9 @@ function updateButtons() {
 	hideItr("btn-new");
 	hideItr("btn-newMatch");
 	hideItr("star-ml");
+	hideItr("star-mla");
+	hideItr("star-mlb");
+	hideItr("star-mlc");
 	
 	return;
     }
@@ -88,6 +91,9 @@ function updateButtons() {
 	hideItr("btn-new");
 	hideItr("btn-newMatch");
 	hideItr("star-ml");
+	hideItr("star-mla");
+	hideItr("star-mlb");
+	hideItr("star-mlc");
 
 	return;
     }
@@ -115,6 +121,9 @@ function updateButtons() {
 	hideItr("btn-new");
 	hideItr("btn-newMatch");
 	hideItr("star-ml");
+	hideItr("star-mla");
+	hideItr("star-mlb");
+	hideItr("star-mlc");
 
     // If match is over → show New Match
     if (matchOverFlag && game.phase === "round-over") {
@@ -122,12 +131,18 @@ function updateButtons() {
 //	document.getElementById("star-ml").style.display = ""; // allow level change
 	showItr("btn-newMatch");
 	showItr("star-ml");
+	showItr("star-mla");
+	showItr("star-mlb");
+	showItr("star-mlc");
 	return;
     }
     // If match is over → show New Match -- we are idle at the beginning
     if (matchOverFlag && game.phase === "idle") {
 	showItr("btn-newMatch");
 	showItr("star-ml");
+	showItr("star-mla");
+	showItr("star-mlb");
+	showItr("star-mlc");
 	return;
     }
     // If match is NOT over → show New Game but we are idle

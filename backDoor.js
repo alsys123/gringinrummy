@@ -92,7 +92,8 @@ function loadGameFromFile(file) {
     document.getElementById("tally-area").style.display = "none";
     document.getElementById("tally-area").innerHTML = "";
 
-    document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
+//    document.getElementById("star-ml").style.color = cpuColors[currentCpuLevel];
+    showCPUlevel(currentCpuLevel);
 
 	    
 	    updateScoreboard();

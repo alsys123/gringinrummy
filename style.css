@@ -815,7 +815,7 @@ button {
   user-select: none;
   transition: all 0.15s ease;
 }
-
+/*
 #star-ml:hover {
   background: #ffe5e5;
   border-color: #b00;
@@ -826,6 +826,26 @@ button {
 #star-ml:active {
   transform: translateY(1);
   background: #ffd6d6;
+}
+*/
+
+#star-mla {
+  position: absolute;
+  font-size: 16px;     /* adjust as needed */
+  color: white;         /* or whatever theme you want */
+  pointer-events: none;
+}
+#star-mlb {
+  position: absolute;
+  font-size: 16px;     /* adjust as needed */
+  color: white;         /* or whatever theme you want */
+  pointer-events: none;
+}
+#star-mlc {
+  position: absolute;
+  font-size: 16px;     /* adjust as needed */
+  color: white;         /* or whatever theme you want */
+  pointer-events: none;
 }
 
 @keyframes bump {
