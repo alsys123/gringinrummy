@@ -69,8 +69,8 @@ async function cpuTurnStratA() {
 //	animateCpuTakeFromStock-v1(drawn);
 //	animateCpuTakeFromStock_micro(drawn);
 //	animateCpuTakeFromStock_shrink(drawn);
-	animateCpuTakeFromStock_shrink_v2(drawn);
-	await sleep(500);
+//	animateCpuTakeFromStock_shrink_v2(drawn);
+//	await sleep(500);
     }
 
     game.cpu.push(drawn);
