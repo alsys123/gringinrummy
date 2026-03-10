@@ -293,14 +293,14 @@ function markCPULayoffCards(layoffCards) {
 async function celebrateMatchWin() {
 
     // do something different for ipad
-const isIpad = navigator.userAgent.includes("iPad") ||
-                   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
+    const isIpad = navigator.userAgent.includes("iPad") ||
+          (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    
     if (isIpad) {
 	celebrateMatchWin_iPad_starburstLoop();
         return;
     }
-
+    
     /// for testing
 //   celebrateMatchWin_iPad_starburstLoop();
 //    return;

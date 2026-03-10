@@ -727,7 +727,7 @@ function celebrateMatchWin_canvasStarburst_v7() {
     // stop spawning after 5 seconds
     setTimeout(() => {
         running = false;
-    }, 5000);
+    }, 10000); // was 5000
 
     // initial stars
     for (let i = 0; i < count; i++) {
