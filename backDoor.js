@@ -236,6 +236,7 @@ function showGameStats() {
 	  //	  winnerLine +
 	  `\n` +
 	  `CPU Level:  ${currentCpuLevel}` + "\n" +
+	  `CPU Strategy: ${cpuStrategy}` + "\n" +
 	  `Match Score:` + "\n" +
 	  `You: ${matchScore.player}` + "\n" +
 	  `CPU: ${matchScore.cpu}    MatchScore Target: ${matchScore.target}` + "\n" + "\n" +
@@ -302,6 +303,8 @@ function showSettings() {
     extra.appendChild(buildDeckSelector());
 //    extra.appendChild(buildAutoPlayerToggle());
 
+    extra.appendChild(buildCPUStrategySelector());
+    
     extra.appendChild(
 	buildCheckboxToggle(
             "Auto Player Mode",
@@ -350,7 +353,7 @@ function buildDeckSelector() {
     wrapper.style.marginBottom = "16px";
 
     const label = document.createElement("label");
-    label.textContent = "Choose a card deck:";
+    label.textContent = `Choose a card deck (currently: ${gCardDeck}):`;
     label.style.display = "block";
     label.style.marginBottom = "6px";
 
@@ -384,6 +387,48 @@ function buildDeckSelector() {
     wrapper.appendChild(select);
     return wrapper;
 }//buildDeckSelector
+
+function buildCPUStrategySelector() {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const label = document.createElement("label");
+    label.textContent = `Choose a CPU Strategy (currently: ${cpuStrategy}):`;
+    label.style.display = "block";
+    label.style.marginBottom = "6px";
+
+    const select = document.createElement("select");
+    select.id = "deck-select";
+    select.style.width = "100%";
+    select.style.padding = "6px";
+
+    const decks = [
+        { value: "na", label: " --- No Change ---" },
+        { value: "a",  label: "a: Original (default) strategy" },
+        { value: "b",  label: "b: Pick the best melds" },
+        { value: "c",  label: "c: Same as b but do not always discard higest card" }
+    ];
+
+    decks.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d.value;
+        opt.textContent = d.label;
+        select.appendChild(opt);
+    });
+
+    select.addEventListener("change", e => {
+        if (e.target.value === "na") return;
+
+        cpuStrategy = e.target.value;
+
+        render();
+        updateButtons();
+    });
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(select);
+    return wrapper;
+}//buildCpuStrategySelector
 
 /*
 function buildAutoPlayerToggle() {

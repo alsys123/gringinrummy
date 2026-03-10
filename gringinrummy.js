@@ -54,6 +54,7 @@ const cpuDifficulty = {
 // choose difficulty here
 let currentCpuLevel = "hard";
 let cpuLevel = cpuDifficulty[currentCpuLevel];
+let cpuStrategy = "a";
 
 //let autoPlayer = true;  // for now
 let autoPlayer = false;

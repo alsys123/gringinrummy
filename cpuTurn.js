@@ -3,7 +3,13 @@
    ------------------------------ */
 
 function cpuTurn() {
-    cpuTurnStratA();
+    const strategies = {
+	a: cpuTurnStratA,
+	b: cpuTurnStratB,
+	c: cpuTurnStratC
+    };
+    
+    strategies[cpuStrategy]?.();
 }
 
 
