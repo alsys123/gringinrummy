@@ -478,3 +478,9 @@ function logBest(Desc, best) {
     );
     
 }
+
+
+function dei(Element) {
+    const Id = document.getElementById(Element);
+    return Id;
+} //dei

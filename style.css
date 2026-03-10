@@ -804,12 +804,12 @@ button {
   cursor: pointer;
   pointer-events: auto;
   padding: 8px 14px;
-  background: #0b5137;
-  border: 2px solid #d33;
+  background: gold;        /* #0b5137; */
+/*  border: 2px solid #d33; */
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
-  color: white;
+  color: black;  /* white; */
   text-align: center;
   width: fit-content;
   user-select: none;

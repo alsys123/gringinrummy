@@ -383,12 +383,7 @@ function showHandTally(result) {
     pointsThisHandCalc = "";
     let yourDeadwoodLine = "";
     let cpuDeadwoodLine  = "";
-
-    // ???here i am
-    //       console.log("Result: ", result.winner, ". Who: ", result.who);
-
-    //    const actor = result.who;
-    
+   
     const actionText = {
 	bigGin: {
 	    player: "You went BIG Gin!",
@@ -1588,15 +1583,19 @@ function positionCenterArea() {
 
     // for iphone or portrait mode - reset them
     const iw = window.innerWidth;
-// tablet portait mode
+    // tablet portait mode
 	if (iw <= 850) {
     center.style.marginLeft = +(w * 0.1) + "px";
     center.style.marginTop  = (h * 0.30) + "px";
     }
     if (iw <= 500) {
-    center.style.marginLeft = +(w * 0.1) + "px";
-    center.style.marginTop  = (h * 0.40) + "px";
-    }
+	center.style.marginLeft = +(w * 0.1) + "px";
+	center.style.marginTop  = (h * 0.40) + "px";
+
+	dei("deadwood-info").style.marginLeft = +(w * 0.10) + "px";
+//	dei("deadwood-info").marginTop = (h * 0.40) + "px";
+	    
+    } // iphone
 
 	// ?? next .... maybe add a section for deadwood count ???? 
 }

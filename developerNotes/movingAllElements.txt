@@ -30,10 +30,10 @@ f) middle card stack -  positionCenterArea -- gringinrummy.js
     center.style.marginTop  = (h * 0.15) + "px";
 
 
-g) deadwood display  - in style.css
-
-  #deadwood-info ...
-    margin-left: -175px; 
+g) deadwood display  positionCenterArea in gringinrummy.js
+-- also in style.css
+   #deadwood-info ...
+      margin-left: -175px; 
   
 h) backdoor buttons - in style.css
    #back-door
