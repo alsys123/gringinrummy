@@ -153,7 +153,7 @@ async function cpuTurnStratB() {
     }
 
     // Knock check (difficulty affects willingness)
-    if (cDW <= 7) {
+    if (cDW <= 10) {
         if (Math.random() < cpuLevel.knockChance) {
             cpuKnock();
             return;
@@ -164,7 +164,7 @@ async function cpuTurnStratB() {
     let drawn;
     const topDiscard = game.discard[game.discard.length-1];
 
-    // Decide whether to take discard
+    // Decide whether to take discard only if it lowers your deadwood
     if (topDiscard) {
         const hypothetical = [...game.cpu, topDiscard];
         const evalWith = evaluate(hypothetical);
@@ -195,7 +195,7 @@ async function cpuTurnStratB() {
     // Choose discard (difficulty affects mistakes)
     // randonly take v1 or v2
 //    const idx = cpuChooseDiscardIndexWithDifficultyV1();
-    const idx = getCpuDiscardStratB();
+    const idx = getCpuDiscardStratB(drawn);
     
 //    const idx = Math.random() < 0.5
 //	  ? cpuChooseDiscardIndexWithDifficultyV1()
@@ -225,7 +225,165 @@ async function cpuTurnStratB() {
     
 }//cpuTurn strat B
 
+function getCpuDiscardStratB(drew) {
+    const hand = game.cpu;
+    const sorted = sortHandByRank(hand);
+    const evalInfo = evaluate(sorted);
+    const meldIds = meldCardIds(sorted, evalInfo);
 
+    let bestIndex = 0;
+    let bestScore = -Infinity;
+
+    for (let i = 0; i < sorted.length; i++) {
+        const c = sorted[i];
+
+        // 🚫 Never discard the card we just drew
+        if (c.id === drew.id) continue;
+
+        // 🚫 Never discard a card that is part of a meld
+        if (meldIds.has(c.id)) continue;
+
+        const v = cardValue(c.rank);
+
+        // --- Rank potential ---
+        let rankPotential = 0;
+        for (const other of sorted) {
+            if (other !== c && other.rank === c.rank) {
+                rankPotential += 6;
+            }
+        }
+
+        // --- Run potential ---
+        let runPotential = 0;
+        for (const other of sorted) {
+            if (other !== c && other.suit === c.suit) {
+                const diff = Math.abs(other.rank - c.rank);
+                if (diff === 1) runPotential += 5;
+                if (diff === 2) runPotential += 2;
+            }
+        }
+
+        // --- High card penalty only if useless ---
+        const highPenalty =
+            (c.rank >= 10 && rankPotential === 0 && runPotential === 0)
+                ? -2
+                : 0;
+
+        // --- Low card penalty ---
+        const lowPenalty = (c.rank <= 4 ? -1 : 0);
+
+        // --- Final score ---
+        const score =
+            v +
+            lowPenalty +
+            highPenalty +
+            rankPotential +
+            runPotential;
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestIndex = i;
+        }
+    }
+
+    // Difficulty: sometimes make a mistake
+    if (Math.random() < cpuLevel.discardMistake) {
+        let idx;
+        do {
+            idx = Math.floor(Math.random() * hand.length);
+        } while (
+            hand[idx].id === drew.id ||     // don't discard drawn card
+            meldIds.has(hand[idx].id)       // don't discard meld card
+        );
+        return idx;
+    }
+
+    const targetId = sorted[bestIndex].id;
+    const realIndex = hand.findIndex(c => c.id === targetId);
+    return realIndex === -1 ? 0 : realIndex;
+}
+
+/*
+function getCpuDiscardStratB(drew) {
+    const hand = game.cpu;
+    const sorted = sortHandByRank(hand);
+    const evalInfo = evaluate(sorted);
+    const meldIds = meldCardIds(sorted, evalInfo);
+
+    let bestIndex = 0;
+    let bestScore = -Infinity;
+
+    for (let i = 0; i < sorted.length; i++) {
+        const c = sorted[i];
+
+        // 🚫 Do NOT discard the card we just drew
+        if (c.id === drew.id) {
+            continue;
+        }
+
+        const v = cardValue(c.rank);
+        const isMeld = meldIds.has(c.id);
+
+        // --- Rank potential ---
+        let rankPotential = 0;
+        for (const other of sorted) {
+            if (other !== c && other.rank === c.rank) {
+                rankPotential += 6;
+            }
+        }
+
+        // --- Run potential ---
+        let runPotential = 0;
+        for (const other of sorted) {
+            if (other !== c && other.suit === c.suit) {
+                const diff = Math.abs(other.rank - c.rank);
+                if (diff === 1) runPotential += 5;
+                if (diff === 2) runPotential += 2;
+            }
+        }
+
+        // --- High card penalty only if useless ---
+        const highPenalty =
+            (c.rank >= 10 && rankPotential === 0 && runPotential === 0)
+                ? -2
+                : 0;
+
+        // --- Original penalties ---
+        const meldPenalty = isMeld ? -12 : 0;
+        const lowPenalty = (c.rank <= 4 ? -1 : 0);
+
+        // --- Final score ---
+        const score =
+            v +
+            meldPenalty +
+            lowPenalty +
+            highPenalty +
+            rankPotential +
+            runPotential;
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestIndex = i;
+        }
+    }
+
+    // Difficulty: sometimes make a mistake
+    if (Math.random() < cpuLevel.discardMistake) {
+        // But still don't discard the drawn card
+        let idx;
+        do {
+            idx = Math.floor(Math.random() * hand.length);
+        } while (hand[idx].id === drew.id);
+        return idx;
+    }
+
+    const targetId = sorted[bestIndex].id;
+    const realIndex = hand.findIndex(c => c.id === targetId);
+    return realIndex === -1 ? 0 : realIndex;
+}//getCpuDiscardStratB
+*/
+
+/*
 function getCpuDiscardStratB() {
     const hand = game.cpu;
     const sorted = sortHandByRank(hand);
@@ -293,7 +451,7 @@ function getCpuDiscardStratB() {
     const realIndex = hand.findIndex(c => c.id === targetId);
     return realIndex === -1 ? 0 : realIndex;
 }//discard Strat B
-
+*/
 
     // ********* Strategy C ***********
 
