@@ -282,7 +282,7 @@ function showMessageBubble(text) {
 	setTimeout(() => {
 	    bubble.style.opacity = 0;
 	    bubble.style.transform = "scale(0.5)";
-	}, 2000);
+	}, 2000); // was 2000
 
 /*	
 	setTimeout(() => {

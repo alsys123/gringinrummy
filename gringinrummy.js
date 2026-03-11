@@ -251,6 +251,8 @@ function updateScoreboard() {
 
 //__applyScoring
 function applyScoring(result) {
+
+    //    await sleep(10000); // test
     
     if (result.winner === "tie") {
 	result.points = 0;
@@ -884,7 +886,7 @@ function endPlayerTurn() {
     game.turn = "cpu";
     game.phase = "await-draw";
 
-    setMsg("CPU thinking...");
+    log("CPU thinking...","cpu");
 
     render();
     updateButtons(); //rev8
@@ -1096,19 +1098,22 @@ function commonEventEnd(scored, Message) {
 
 
 //__ cpuGin
-async function cpuGin() {
-    const pEval = evaluate(game.player);
-    const pDW = pEval.deadwood;
+async function cpuGin() {  
 
-      const scored = applyScoring({
+    log("CPU went Gin.","cpu");
+    
+    const pEval = evaluate(game.player);
+
+    const pDW = pEval.deadwood;
+    
+    const scored = applyScoring({
 	  winner: "cpu",
 	  type: "gin",
 	  pDW: pDW, // added data structure
 	  cDW: 0,
 	  who: "cpu"
       });
-      
-      log("CPU went Gin.","cpu");
+
 
 //      game.revealCpu = "true";  ........... here i am .. revealing CPU cards
 
@@ -1116,12 +1121,15 @@ async function cpuGin() {
 
       game.revealCpu = true;
 
-      showMessageBubble("GIN!");  
-      await sleep(2000);
+    showMessageBubble("GIN!");  
 
-      showHandTally(scored);
-      checkMatchEnd();
-      game.phase = "round-over";
+//    await sleep(2000); ... ? having this on caused star-mla to be visible for a 2 sec
+
+    showHandTally(scored);
+    checkMatchEnd();
+
+    game.phase = "round-over";
+
     log("CPU went Gin. Click New Hand to play again.","cpu");
       
       render();
@@ -1183,7 +1191,7 @@ async function cpuKnock() {
     //    commonEventEnd(scored,"CPU knocked. Click New Hand to play again.");
 
     showMessageBubble("Knock. Knock");  
-    await sleep(2000);
+//    await sleep(2000); ... shows star_mla..???
 
     showHandTally(scored);
     checkMatchEnd();
@@ -1738,3 +1746,21 @@ function playerChooseDiscardIndexWithDifficulty() {
     const realIndex = hand.findIndex(c => c.id === targetId);
     return realIndex === -1 ? 0 : realIndex;
 } //playerChooseDiscardIndexWithDifficulty
+
+
+/*
+// ***** OBSERVER FUNCTION FOR TESTING IF AN ELEMENT BEFORE VISIBLE *****
+// test when an elememt before visible
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+	log("Element - star-mla - became visible!","sys");
+    } else {
+	log("Element - star-mla - is no longer visible.","sys");
+    }
+  });
+});
+
+// Start watching the element
+observer.observe(document.getElementById("star-mla"));
+*/

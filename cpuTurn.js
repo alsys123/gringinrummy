@@ -17,6 +17,7 @@ function cpuTurn() {
 
 async function cpuTurnStratA() {
 
+
     log("cpuTurn - strategy A","sys");
     if (game.phase === "round-over") return;
 
