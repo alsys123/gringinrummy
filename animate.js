@@ -372,22 +372,25 @@ function markCPULayoffCards(layoffCards) {
   // working copy
 async function celebrateMatchWin() {
 
+    log("celebrateMatchWin","player");
+
     // do something different for ipad
-    const isIpad = navigator.userAgent.includes("iPad") ||
-          (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-    
-    if (isIpad) {
+//    const isIpad = navigator.userAgent.includes("iPad") ||
+//          (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    // **** Idea: Use this for PC and ipad and everything
+//    if (isIpad) {
 	celebrateMatchWin_iPad_starburstLoop();
-        return;
-    }
+//        return;
+//    }
 
    
-    log("celebrateMatchWin","player");
+
     
     /// for testing
 //   celebrateMatchWin_iPad_starburstLoop();
 //    return;
-    
+    /*
     const field = document.getElementById("star-field");
 
     // spawn 40–60 stars
@@ -441,6 +444,7 @@ star.style.background = g[0];
         setTimeout(() => star.remove(), 15000);
 
     }
+*/
     
 }//celebrateMatchWin
     

@@ -34,20 +34,20 @@ let gshowLog  = false;
 const logHistory = [];
 
 const cpuDifficulty = {
-    easy: {
-        discardTakeChance: 0.40,   // 40% chance to take a good discard
-        knockChance: 0.50,         // knocks only half the time
-        discardMistake: 0.50       // 50% chance to discard a worse card
+    hard: {
+        discardTakeChance: 1.00,   // always optimal
+        knockChance: 1.00,
+        discardMistake: 0.00
     },
     medium: {
         discardTakeChance: 0.70,
         knockChance: 0.80,
         discardMistake: 0.25
     },
-    hard: {
-        discardTakeChance: 1.00,   // always optimal
-        knockChance: 1.00,
-        discardMistake: 0.00
+    easy: {
+        discardTakeChance: 0.40,   // 40% chance to take a good discard
+        knockChance: 0.50,         // knocks only half the time
+        discardMistake: 0.50       // 50% chance to discard a worse card
     }
 };
 
@@ -1341,11 +1341,7 @@ const w = window.innerWidth;
   const tr = document.getElementById("star-tr");
   const bl = document.getElementById("star-bl");
   const br = document.getElementById("star-br");
-  const ml = document.getElementById("star-ml");
-  const mla = document.getElementById("star-mla");
-  const mlb = document.getElementById("star-mlb");
-  const mlc = document.getElementById("star-mlc");
-//  const ml = document.getElementById("star-midleft");
+
 
   // Top-left
     tl.style.left = (w * margin)-20 + "px";
@@ -1363,10 +1359,18 @@ const w = window.innerWidth;
   br.style.left = (w * (1 - margin)) + "px";
   br.style.top  = (h * (1 - margin)) + "px";
 
+    
+    const ml = document.getElementById("star-ml");
+    //  const ml = document.getElementById("star-midleft");
+
     // Bottom-left .. star_ml
-    ml.style.left = (w * margin)-20 + "px";
+    ml.style.left = (w * margin)-5 + "px";
     ml.style.top  = (h * 0.15) + "px";
 
+    /*
+    const mla = document.getElementById("star-mla");
+    const mlb = document.getElementById("star-mlb");
+    const mlc = document.getElementById("star-mlc");
     // *** NOTE: this is also reset below
     mla.style.left = (w * margin)-15 + "px";
     mla.style.top  = (h * 0.20) + 10 + "px";
@@ -1374,7 +1378,8 @@ const w = window.innerWidth;
     mlb.style.top  = (h * 0.20) + 10 + "px";
     mlc.style.left = (w * margin)+120 + "px";
     mlc.style.top  = (h * 0.20) + 10 + "px";
-
+    */
+    
     //    ml.style.top  = (h * (1 - margin)) + "px";
     
   // Mid-left (50% down, 5% in)
@@ -1492,12 +1497,40 @@ function toggleCPULevel() {
     const currentIndex = levels.indexOf(currentCpuLevel);
     const nextIndex = (currentIndex + 1) % levels.length;
 
+    // if we are moving from 3 to 1 and cpuStrategy is 'a'
+    // set strategy to 'd'
+    //  else strategy to 'a'
+    if (currentIndex === 2 && cpuStrategy === "a") {
+	cpuStrategy = "d";
+    } else if (currentIndex === 2 && cpuStrategy === "d") {
+	cpuStrategy = "a";
+    }
+	
     currentCpuLevel = levels[nextIndex];
     cpuLevel = cpuDifficulty[currentCpuLevel];
 
-    log(`toggleCPULevel: CPU Level ${currentCpuLevel}`, "sys");
+    log(`toggleCPULevel: CPU Strategy & Level ${cpuStrategy} & ${currentCpuLevel}`,
+	"sys");
+
     showCPUlevel(currentCpuLevel);
     
+}
+
+// used in updateButtons
+function hideDifficultyCluster() {
+	hideItr("star-ml");
+	hideItr("star-mla");
+	hideItr("star-mlb");
+	hideItr("star-mlc");
+	hideItr("star-mlx");
+}
+
+function showDifficultyCluster() {
+	showItr("star-ml");
+	showItr("star-mla");
+	showItr("star-mlb");
+	showItr("star-mlc");
+	showItr("star-mlx");
 }
 
 function showCPUlevel(currentCpuLevel) {
@@ -1525,22 +1558,54 @@ function showCPUlevel(currentCpuLevel) {
     mla.removeAttribute("style");
     mlb.removeAttribute("style");
     mlc.removeAttribute("style");
+    dei("star-mlx").removeAttribute("style");
+
     const h = window.innerHeight;
     const w = window.innerWidth;
     const margin = 0.05;   // 5%
-    mla.style.left = (w * margin)-15 + "px";
+    mla.style.left = (w * margin)+30 + "px";
     mla.style.top  = (h * 0.20) + 10 + "px";
-    mlb.style.left = (w * margin)+40 + "px";
+    mlb.style.left = (w * margin)+80 + "px";
     mlb.style.top  = (h * 0.20) + 10 +"px";
-    mlc.style.left = (w * margin)+120 + "px";
+    mlc.style.left = (w * margin)+140 + "px";
     mlc.style.top  = (h * 0.20) + 10 + "px";
 
     mla.style.fontSize = "10px";
     mlb.style.fontSize = "10px";
     mlc.style.fontSize = "10px";
 
+    dei("star-mlx").style.left = (w * margin)-20 + "px";
+    dei("star-mlx").style.top  = (h * 0.20) + 20 + "px";
+    dei("star-mlx").style.fontSize = "10px";
 
     const fontSize = "15px";
+
+    if (cpuStrategy === "a") {
+	dei("star-mlx").textContent = "Basic ⮕";
+	
+	Object.assign(dei("star-mlx").style, {
+	    color: "white",
+	    backgroundColor: "black",
+//	    borderRadius: "8px",
+//	    padding: "8px 12px",
+//	    transform: "translate(-6px, -4px)",
+	    fontSize: "9px"
+	});
+    }
+
+    if (cpuStrategy === "d") {
+	dei("star-mlx").textContent = "Ultra ⮕";
+
+	Object.assign(dei("star-mlx").style, {
+	    color: "white",
+	    backgroundColor: "darkBlue",
+//	    borderRadius: "8px",
+//	    padding: "8px 12px",
+//	    transform: "translate(-6px, -4px)",
+	    fontSize: "14px"   
+	});
+    }
+    
     if (currentCpuLevel === "easy") {
 	Object.assign(mla.style, {
 	    color: "white",

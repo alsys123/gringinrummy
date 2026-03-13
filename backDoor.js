@@ -229,6 +229,9 @@ function showGameStats() {
 	cpuHand += cardsCpu[i] + ", ";
     }
 
+    let strategyText = "";
+    if (cpuStrategy === "a") strategyText = "Basic";
+    if (cpuStrategy === "d") strategyText = "Ultra";
     
     const stats =
 	  `*** Game Statistics ***` + "\n" +
@@ -236,7 +239,7 @@ function showGameStats() {
 	  //	  winnerLine +
 	  `\n` +
 	  `CPU Level:  ${currentCpuLevel}` + "\n" +
-	  `CPU Strategy: ${cpuStrategy}` + "\n" +
+	  `CPU Strategy: ${strategyText} (${cpuStrategy})` + "\n" +
 	  `Match Score:` + "\n" +
 	  `You: ${matchScore.player}` + "\n" +
 	  `CPU: ${matchScore.cpu}    MatchScore Target: ${matchScore.target}` + "\n" + "\n" +
@@ -304,6 +307,8 @@ function showSettings() {
 //    extra.appendChild(buildAutoPlayerToggle());
 
     extra.appendChild(buildCPUStrategySelector());
+
+    extra.appendChild(buildCelebrationTester());
     
     extra.appendChild(
 	buildCheckboxToggle(
@@ -430,6 +435,55 @@ function buildCPUStrategySelector() {
     wrapper.appendChild(select);
     return wrapper;
 }//buildCpuStrategySelector
+
+function buildCelebrationTester() {
+    const wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "16px";
+
+    const label = document.createElement("label");
+    label.textContent = `Choose a Celebration Style to Test}):`;
+    label.style.display = "block";
+    label.style.marginBottom = "6px";
+
+    const select = document.createElement("select");
+    select.id = "deck-select";
+    select.style.width = "100%";
+    select.style.padding = "6px";
+
+    const decks = [
+        { value: "na", label: " --- No Change ---" },
+        { value: "a",  label: "a: Balloons" },
+        { value: "b",  label: "b: Balloons and Confetti" },
+        { value: "c",  label: "c: Balloons popping with Confetti" },
+        { value: "d",  label: "d: Starburst" },
+        { value: "e",  label: "e: Fireworks" },
+        { value: "f",  label: "f: Lightning" },
+        { value: "g",  label: "g: Butterflies" }
+	    ];
+    
+    decks.forEach(d => {
+        const opt = document.createElement("option");
+        opt.value = d.value;
+        opt.textContent = d.label;
+        select.appendChild(opt);
+    });
+
+    select.addEventListener("change", e => {
+        if (e.target.value === "na") return;
+
+	if (e.target.value === "a") celebrateMatchWin_canvasBalloons_v1();
+	if (e.target.value === "b") celebrateMatchWin_canvasBalloons_v2();
+	if (e.target.value === "c") celebrateMatchWin_canvasBalloons_v3();
+	if (e.target.value === "d") celebrateMatchWin_canvasStarburst_v7();
+	if (e.target.value === "e") celebrateMatchWin_fireworks();
+	if (e.target.value === "f") celebrateMatchWin_canvasLightning_v1();
+	if (e.target.value === "g") celebrateMatchWin_canvasButterflies_v1();
+    });
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(select);
+    return wrapper;
+}//buildCelebrationTester
 
 /*
 function buildAutoPlayerToggle() {
