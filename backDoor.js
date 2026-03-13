@@ -458,7 +458,9 @@ function buildCelebrationTester() {
         { value: "d",  label: "d: Starburst" },
         { value: "e",  label: "e: Fireworks" },
         { value: "f",  label: "f: Lightning" },
-        { value: "g",  label: "g: Butterflies" }
+        { value: "g",  label: "g: Butterflies" },
+        { value: "h",  label: "h: Butterflies v2" },
+        { value: "h",  label: "i: Butterflies v3" }
 	    ];
     
     decks.forEach(d => {
@@ -478,6 +480,8 @@ function buildCelebrationTester() {
 	if (e.target.value === "e") celebrateMatchWin_fireworks();
 	if (e.target.value === "f") celebrateMatchWin_canvasLightning_v1();
 	if (e.target.value === "g") celebrateMatchWin_canvasButterflies_v1();
+	if (e.target.value === "h") celebrateMatchWin_canvasButterflies_v2();
+	if (e.target.value === "i") celebrateMatchWin_canvasButterflies_v3();
     });
 
     wrapper.appendChild(label);

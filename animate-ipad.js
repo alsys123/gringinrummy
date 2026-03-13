@@ -1571,94 +1571,6 @@ function celebrateMatchWin_canvasLightning_v1() {
     requestAnimationFrame(draw);
 }
 
-function createButterflySpeciesCanvases() {
-    const species = [];
-
-    // 8 mixed natural + vibrant palettes (top → bottom)
-    const palettes = [
-        ["#b7e3ff", "#5aa7e8"], // sky blue
-        ["#e8c8ff", "#a06ad9"], // lavender
-        ["#ffd4c2", "#ff8b5c"], // peach
-        ["#fff7b3", "#f2d23c"], // soft yellow
-        ["#caffea", "#4ecf9f"], // mint green
-        ["#b3e5ff", "#3ca7ff"], // vibrant blue
-        ["#ffc2d9", "#ff4f7a"], // coral pink
-        ["#d7c6ff", "#7a5cff"]  // violet
-    ];
-
-    for (let i = 0; i < 8; i++) {
-        const c = document.createElement("canvas");
-        c.width = 96;
-        c.height = 96;
-        const ctx = c.getContext("2d");
-
-        const [topColor, bottomColor] = palettes[i];
-
-        // Vertical gradient
-        const grad = ctx.createLinearGradient(0, 0, 0, 96);
-        grad.addColorStop(0, topColor);
-        grad.addColorStop(1, bottomColor);
-
-        ctx.fillStyle = grad;
-
-        // Draw angled 3/4 asymmetrical wings
-        ctx.save();
-        ctx.translate(48, 48);
-
-        // Near wing (larger, closer)
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(40, -20, 50, -40, 20, -45);
-        ctx.bezierCurveTo(45, -10, 35, 20, 5, 25);
-        ctx.closePath();
-        ctx.fill();
-
-        // Far wing (smaller, slightly darker)
-        ctx.fillStyle = shadeColor(bottomColor, -20);
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(-30, -15, -35, -35, -10, -40);
-        ctx.bezierCurveTo(-30, -5, -20, 15, 0, 20);
-        ctx.closePath();
-        ctx.fill();
-
-        // Body
-        ctx.fillStyle = "#333";
-        ctx.beginPath();
-        ctx.ellipse(0, 10, 4, 14, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Head
-        ctx.beginPath();
-        ctx.arc(0, -2, 4, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Antennae
-        ctx.strokeStyle = "#333";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, -4);
-        ctx.quadraticCurveTo(8, -16, 4, -22);
-        ctx.moveTo(0, -4);
-        ctx.quadraticCurveTo(-8, -16, -4, -22);
-        ctx.stroke();
-
-        ctx.restore();
-
-        species.push(c);
-    }
-
-    return species;
-
-    // Utility: darken a hex color
-    function shadeColor(hex, percent) {
-        const num = parseInt(hex.replace("#", ""), 16);
-        const r = Math.max(0, Math.min(255, (num >> 16) + percent));
-        const g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + percent));
-        const b = Math.max(0, Math.min(255, (num & 0x0000FF) + percent));
-        return `rgb(${r},${g},${b})`;
-    }
-}
 
 function celebrateMatchWin_canvasButterflies_v1() {
 
@@ -1675,41 +1587,39 @@ function celebrateMatchWin_canvasButterflies_v1() {
     canvas.style.display = "block";
 
     let running = true;
-    setTimeout(() => running = false, 9000);
+    setTimeout(() => running = false, CelebrationLength);
 
     // ------------------------------------------------------------
     // 8 SPECIES — soft gradient placeholders (replace later)
     // ------------------------------------------------------------
-    const speciesImages = createButterflySpeciesCanvases();
 
-/*
+//    const speciesImages = createButterflySpeciesCanvases();
+
     const speciesImages = [];
 
-    const speciesBase64 = [
-        // Species 1 — soft blue
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAA...",
-        // Species 2 — pastel pink
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAA...",
-        // Species 3 — lavender
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAA...",
-        // Species 4 — soft yellow
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAA...",
-        // Species 5 — mint green
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAA...",
-        // Species 6 — sky blue
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAA...",
-        // Species 7 — peach
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAA...",
-        // Species 8 — violet
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAA..."
+    const paths = [
+	"images/butterflies/b1.png",
+	"images/butterflies/b2.png",
+	"images/butterflies/b3.png",
+	"images/butterflies/b4.png",
+	"images/butterflies/b5.png",
+	"images/butterflies/b6.png",
+	"images/butterflies/b7.png",
+	"images/butterflies/b8.png",
+	"images/butterflies/b9.png",
+	"images/butterflies/b10.png",
+	"images/butterflies/b11.png",
+	"images/butterflies/b12.png",
+	"images/butterflies/b13.png",
+	"images/butterflies/b14.png"
     ];
+    
+for (const p of paths) {
+    const img = new Image();
+    img.src = p;
+    speciesImages.push(img);
+}
 
-    for (let i = 0; i < speciesBase64.length; i++) {
-        const img = new Image();
-        img.src = speciesBase64[i];
-        speciesImages.push(img);
-    }
-*/
     
     // ------------------------------------------------------------
     // BUTTERFLY CREATION
@@ -1821,7 +1731,401 @@ function celebrateMatchWin_canvasButterflies_v1() {
             drawButterfly(b);
         }
 
-        if (!alive && !running) {
+        if (!running) {
+            canvas.style.display = "none";
+            return;
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    requestAnimationFrame(draw);
+}
+
+function celebrateMatchWin_canvasButterflies_v2() {
+
+    const canvas = document.getElementById("starburst-canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = "fixed";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "999999";
+    canvas.style.display = "block";
+
+    let running = true;
+    setTimeout(() => running = false, CelebrationLength);
+
+    // ------------------------------------------------------------
+    // LOAD PNG SPECIES
+    // ------------------------------------------------------------
+    const speciesImages = [];
+    const paths = [
+        "images/butterflies/b1.png",
+        "images/butterflies/b2.png",
+        "images/butterflies/b3.png",
+        "images/butterflies/b4.png",
+        "images/butterflies/b5.png",
+        "images/butterflies/b6.png",
+        "images/butterflies/b7.png",
+        "images/butterflies/b8.png",
+        "images/butterflies/b9.png",
+        "images/butterflies/b10.png",
+        "images/butterflies/b11.png",
+        "images/butterflies/b12.png",
+        "images/butterflies/b13.png",
+        "images/butterflies/b14.png",
+        "images/butterflies/b15.png",
+        "images/butterflies/b16.png",
+        "images/butterflies/b17.png",
+        "images/butterflies/b18.png",
+        "images/butterflies/b19.png",
+        "images/butterflies/b20.png"
+    ];
+
+    for (const p of paths) {
+        const img = new Image();
+        img.src = p;
+        speciesImages.push(img);
+    }
+
+    // ------------------------------------------------------------
+    // CREATE BUTTERFLIES
+    // ------------------------------------------------------------
+    const butterflies = [];
+    const count = 80;
+
+    function makeButterfly() {
+        const sp = Math.floor(Math.random() * speciesImages.length);
+
+        return {
+            species: sp,
+            img: speciesImages[sp],
+
+            x: Math.random() * canvas.width,
+            y: canvas.height + Math.random() * 200,
+
+            vx: (Math.random() - 0.5) * 1,
+            vy: -1 - Math.random() * 1.5,
+
+            flap: Math.random() * Math.PI * 2,
+            flapSpeed: 0.15 + Math.random() * 0.1,
+
+            rot: (Math.random() - 0.5) * 0.2,
+
+            size: 40 + Math.random() * 40,
+            depth: 0.4 + Math.random() * 0.6,
+
+            flutterTime: 0,
+            hoverTime: 0
+        };
+    }
+
+    for (let i = 0; i < count; i++) {
+        butterflies.push(makeButterfly());
+    }
+
+    // ------------------------------------------------------------
+    // DRAW BUTTERFLY
+    // ------------------------------------------------------------
+    function drawButterfly(b) {
+        const s = b.size * b.depth;
+
+        const flapScale = 1 + Math.sin(b.flap) * 0.25;
+        const tilt = Math.sin(b.flap * 0.5) * 0.15;
+
+        ctx.save();
+        ctx.translate(b.x, b.y);
+        ctx.rotate(b.rot + tilt);
+        ctx.scale(flapScale, 1);
+
+        ctx.drawImage(b.img, -s / 2, -s / 2, s, s);
+
+        ctx.restore();
+    }
+
+    // ------------------------------------------------------------
+    // UPDATE MOTION (with hover + landing)
+    // ------------------------------------------------------------
+    function updateButterfly(b) {
+
+        // Wing flap
+        b.flap += b.flapSpeed;
+
+        // HOVER / LANDING BEHAVIOR
+        if (b.hoverTime > 0) {
+            b.hoverTime--;
+
+            // Slow flapping while hovering
+            b.flap += b.flapSpeed * 0.2;
+
+            // Gentle bobbing
+            b.y += Math.sin(b.flap * 0.3) * 0.2;
+
+            return;
+        } 
+        else if (Math.random() < 0.004) {
+            // Hover for 1–3 seconds
+            b.hoverTime = 60 + Math.random() * 120;
+
+            // 20% chance to "land" lower
+            if (Math.random() < 0.2) {
+                b.y = canvas.height - 150 + Math.random() * 80;
+            }
+        }
+
+        // S-curve drifting
+        b.x += Math.sin(b.flap * 0.3) * 1.2 * b.depth;
+
+        // Vertical bobbing
+        b.y += b.vy + Math.sin(b.flap * 0.2) * 0.5;
+
+        // Flutter bursts
+        if (b.flutterTime > 0) {
+            b.flutterTime--;
+            b.x += (Math.random() - 0.5) * 4;
+            b.y += (Math.random() - 0.5) * 4;
+        } 
+        else if (Math.random() < 0.005) {
+            b.flutterTime = 10 + Math.random() * 10;
+        }
+
+        // Drift
+        b.x += b.vx * b.depth;
+        b.y += b.vy * b.depth;
+
+        // Respawn only if animation is still running
+        if (running && (b.y < -200 || b.x < -200 || b.x > canvas.width + 200)) {
+            const idx = butterflies.indexOf(b);
+            butterflies[idx] = makeButterfly();
+        }
+    }
+
+    // ------------------------------------------------------------
+    // MAIN LOOP
+    // ------------------------------------------------------------
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (const b of butterflies) {
+            updateButterfly(b);
+            drawButterfly(b);
+        }
+
+        // STOP CONDITION
+        if (!running) {
+            canvas.style.display = "none";
+            return;
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    requestAnimationFrame(draw);
+}
+
+function celebrateMatchWin_canvasButterflies_v3() {
+
+    const canvas = document.getElementById("starburst-canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = "fixed";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "999999";
+    canvas.style.display = "block";
+
+    let running = true;
+    let fadeOut = false;
+    let fadeOutStart = null;
+
+    // CelebrationLength is defined outside this function
+    setTimeout(() => {
+        running = false;
+        fadeOut = true;
+    }, CelebrationLength);
+
+    // ------------------------------------------------------------
+    // LOAD PNG SPECIES
+    // ------------------------------------------------------------
+    const speciesImages = [];
+    const paths = [
+        "images/butterflies/b1.png",
+        "images/butterflies/b2.png",
+        "images/butterflies/b3.png",
+        "images/butterflies/b4.png",
+        "images/butterflies/b5.png",
+        "images/butterflies/b6.png",
+        "images/butterflies/b7.png",
+        "images/butterflies/b8.png",
+        "images/butterflies/b9.png",
+        "images/butterflies/b10.png",
+        "images/butterflies/b11.png",
+        "images/butterflies/b12.png",
+        "images/butterflies/b13.png",
+        "images/butterflies/b14.png",
+	"images/butterflies/b15.png",
+        "images/butterflies/b16.png",
+        "images/butterflies/b17.png",
+        "images/butterflies/b18.png",
+        "images/butterflies/b19.png",
+        "images/butterflies/b20.png"
+
+    ];
+
+    for (const p of paths) {
+        const img = new Image();
+        img.src = p;
+        speciesImages.push(img);
+    }
+
+    // ------------------------------------------------------------
+    // CREATE BUTTERFLIES
+    // ------------------------------------------------------------
+    const butterflies = [];
+    const count = 80;
+
+    function makeButterfly() {
+        const sp = Math.floor(Math.random() * speciesImages.length);
+
+        return {
+            species: sp,
+            img: speciesImages[sp],
+
+            x: Math.random() * canvas.width,
+            y: canvas.height + Math.random() * 200,
+
+            vx: (Math.random() - 0.5) * 1,
+            vy: -1 - Math.random() * 1.5,
+
+            flap: Math.random() * Math.PI * 2,
+            flapSpeed: 0.15 + Math.random() * 0.1,
+
+            rot: (Math.random() - 0.5) * 0.2,
+
+            size: 40 + Math.random() * 40,
+            depth: 0.4 + Math.random() * 0.6,
+
+            flutterTime: 0,
+            hoverTime: 0
+        };
+    }
+
+    for (let i = 0; i < count; i++) {
+        butterflies.push(makeButterfly());
+    }
+
+    // ------------------------------------------------------------
+    // DRAW BUTTERFLY
+    // ------------------------------------------------------------
+    function drawButterfly(b) {
+        const s = b.size * b.depth;
+
+        const flapScale = 1 + Math.sin(b.flap) * 0.25;
+        const tilt = Math.sin(b.flap * 0.5) * 0.15;
+
+        ctx.save();
+        ctx.translate(b.x, b.y);
+        ctx.rotate(b.rot + tilt);
+        ctx.scale(flapScale, 1);
+
+        ctx.drawImage(b.img, -s / 2, -s / 2, s, s);
+
+        ctx.restore();
+    }
+
+    // ------------------------------------------------------------
+    // UPDATE MOTION (with hover + fade-out)
+    // ------------------------------------------------------------
+    function updateButterfly(b) {
+
+        // Fade-out: butterflies drift upward and shrink
+        if (fadeOut) {
+            b.vy -= 0.05;          // accelerate upward
+            b.depth *= 0.998;      // shrink
+	    b.hoverTime = 0;
+	    b.flutterTime = 0;
+            if (b.depth < 0.03) {   // remove when tiny
+                const idx = butterflies.indexOf(b);
+                butterflies.splice(idx, 1);
+                return;
+            }
+	    // Hard timeout: remove after 6 seconds of fade-out
+	    if (!fadeOutStart) fadeOutStart = performance.now();
+	    if (performance.now() - fadeOutStart > 6000) {
+		const idx = butterflies.indexOf(b);
+		butterflies.splice(idx, 1);
+		return;
+	    }
+	    return;
+        }//fadeout
+
+        // Wing flap
+        b.flap += b.flapSpeed;
+
+        // Hover / landing behavior
+        if (b.hoverTime > 0) {
+            b.hoverTime--;
+
+            b.flap += b.flapSpeed * 0.2; // slow flap
+            b.y += Math.sin(b.flap * 0.3) * 0.2; // gentle bob
+
+            return;
+        } 
+        else if (!fadeOut && Math.random() < 0.004) {
+            b.hoverTime = 60 + Math.random() * 120; // 1–3 seconds
+
+            if (Math.random() < 0.2) {
+                b.y = canvas.height - 150 + Math.random() * 80; // landing
+            }
+        }
+
+        // S-curve drifting
+        b.x += Math.sin(b.flap * 0.3) * 1.2 * b.depth;
+
+        // Vertical bobbing
+        b.y += b.vy + Math.sin(b.flap * 0.2) * 0.5;
+
+        // Flutter bursts
+        if (b.flutterTime > 0) {
+            b.flutterTime--;
+            b.x += (Math.random() - 0.5) * 4;
+            b.y += (Math.random() - 0.5) * 4;
+        } 
+        else if (!fadeOut && Math.random() < 0.005) {
+            b.flutterTime = 10 + Math.random() * 10;
+        }
+
+        // Drift
+        b.x += b.vx * b.depth;
+        b.y += b.vy * b.depth;
+
+        // Respawn only while running
+        if (!fadeOut && (b.y < -200 || b.x < -200 || b.x > canvas.width + 200)) {
+            const idx = butterflies.indexOf(b);
+            butterflies[idx] = makeButterfly();
+        }
+    }
+
+    // ------------------------------------------------------------
+    // MAIN LOOP
+    // ------------------------------------------------------------
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (const b of butterflies) {
+            updateButterfly(b);
+            drawButterfly(b);
+        }
+
+        // End when all butterflies are gone
+        if (fadeOut && butterflies.length === 0) {
             canvas.style.display = "none";
             return;
         }
