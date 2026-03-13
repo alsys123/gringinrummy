@@ -3,8 +3,10 @@
 
 async function celebrateMatchWin_iPad_starburstLoop() {
 
-    celebrateMatchWin_canvasStarburst_v7();
+    //    celebrateMatchWin_canvasStarburst_v7(); // this one is good, as well!!
 
+    celebrateMatchWin_fireworks();
+    
 //    for (let i = 0; i < 3; i++) {
 //	celebrateMatchWin_iPad_starburst_v2();
 //    celebrateMatchWin_canvasStarburst_v4(); // works
@@ -701,6 +703,9 @@ function celebrateMatchWin_canvasStarburst_v6() {
 */
 
 function celebrateMatchWin_canvasStarburst_v7() {
+
+    log("celebrateMatchWin_canvasStarburst_v7", "player");
+    
     const canvas = document.getElementById("starburst-canvas");
     const ctx = canvas.getContext("2d");
 
@@ -817,3 +822,130 @@ function celebrateMatchWin_canvasStarburst_v7() {
 
     requestAnimationFrame(draw);
 }//v7
+
+function celebrateMatchWin_fireworks() {
+
+    const canvas = document.getElementById("starburst-canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = "fixed";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "999999";
+    canvas.style.display = "block";
+
+    const colors = ["#FF4444", "#FFD700", "#7CFC00", "#87CEFA", "#FF69B4", "#FFA500"];
+
+    const fireworks = [];
+    let running = true;
+
+    // stop spawning after 6 seconds
+    setTimeout(() => running = false, 15000); // was 6000
+
+    function spawnFirework() {
+        const x = Math.random() * canvas.width;
+        const y = canvas.height + 20; // start below screen
+        const targetY = 100 + Math.random() * (canvas.height * 0.4);
+
+        fireworks.push({
+            x,
+            y,
+            vx: 0,
+            vy: -6 - Math.random() * 3,
+            targetY,
+            exploded: false,
+            particles: [],
+            color: colors[Math.floor(Math.random() * colors.length)]
+        });
+    }
+
+    function explode(fw) {
+        const count = 40 + Math.random() * 40;
+
+        for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2) * (i / count);
+            const speed = 2 + Math.random() * 3;
+
+            fw.particles.push({
+                x: fw.x,
+                y: fw.y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 0,
+                maxLife: 40 + Math.random() * 40,
+                color: fw.color
+            });
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (running && Math.random() < 0.08) {
+            spawnFirework();
+        }
+
+        let alive = false;
+
+        for (const fw of fireworks) {
+
+            // Launch phase
+            if (!fw.exploded) {
+                fw.x += fw.vx;
+                fw.y += fw.vy;
+
+                // draw launch comet
+                ctx.globalAlpha = 1;
+                ctx.fillStyle = fw.color;
+                ctx.beginPath();
+                ctx.arc(fw.x, fw.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (fw.y <= fw.targetY) {
+                    fw.exploded = true;
+                    explode(fw);
+                }
+
+                alive = true;
+                continue;
+            }
+
+            // Explosion particles
+            for (const p of fw.particles) {
+                if (p.life >= p.maxLife) continue;
+
+                p.life++;
+                alive = true;
+
+                // physics
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.03; // gravity
+
+                const t = p.life / p.maxLife;
+                const alpha = 1 - t;
+
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = p.color;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        if (!alive && !running) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = "none";
+            return;
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    requestAnimationFrame(draw);
+}//celebrateMatchWin_fireworks
+

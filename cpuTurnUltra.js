@@ -17,7 +17,7 @@
    ENTRY POINT
    ------------- */
 
-async function cpuTurnUltimate() {
+async function cpuTurnUltra() {
     log("cpuTurn - ULTIMATE","sys");
     if (game.phase === "round-over") return;
 

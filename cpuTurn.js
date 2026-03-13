@@ -6,7 +6,8 @@ function cpuTurn() {
     const strategies = {
 	a: cpuTurnStratA,
 	b: cpuTurnStratB,
-	c: cpuTurnStratC
+	c: cpuTurnStratC,
+	d: cpuTurnUltra
     };
     
     strategies[cpuStrategy]?.();

@@ -1535,15 +1535,20 @@ function showCPUlevel(currentCpuLevel) {
     mlc.style.left = (w * margin)+120 + "px";
     mlc.style.top  = (h * 0.20) + 10 + "px";
 
+    mla.style.fontSize = "10px";
+    mlb.style.fontSize = "10px";
+    mlc.style.fontSize = "10px";
 
-    
+
+    const fontSize = "15px";
     if (currentCpuLevel === "easy") {
 	Object.assign(mla.style, {
 	    color: "white",
 	    backgroundColor: "green",
 	    borderRadius: "8px",
 	    padding: "8px 12px",
-	    transform: "translate(-6px, -4px)"
+	    transform: "translate(-6px, -4px)",
+	    fontSize: fontSize
 	});
     }//easy
     if (currentCpuLevel === "medium") {
@@ -1552,7 +1557,8 @@ function showCPUlevel(currentCpuLevel) {
 	    backgroundColor: "#ffcc00",
 	    borderRadius: "8px",
 	    padding: "8px 12px",
-	    transform: "translate(-6px, -4px)"
+	    transform: "translate(-6px, -4px)",
+	    fontSize: fontSize
 	});
     }//medium
     if (currentCpuLevel === "hard") {
@@ -1561,7 +1567,8 @@ function showCPUlevel(currentCpuLevel) {
 	    backgroundColor: "#5e1717", //"#9c4647", // "#b30000",
 	    borderRadius: "8px",
 	    padding: "8px 12px",
-	    transform: "translate(-6px, -4px)"
+	    transform: "translate(-6px, -4px)",
+	    fontSize: fontSize
 	});
     }//hard
 }

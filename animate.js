@@ -380,6 +380,9 @@ async function celebrateMatchWin() {
 	celebrateMatchWin_iPad_starburstLoop();
         return;
     }
+
+   
+    log("celebrateMatchWin","player");
     
     /// for testing
 //   celebrateMatchWin_iPad_starburstLoop();

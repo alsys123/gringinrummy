@@ -406,7 +406,8 @@ function buildCPUStrategySelector() {
         { value: "na", label: " --- No Change ---" },
         { value: "a",  label: "a: Original (default) strategy" },
         { value: "b",  label: "b: Pick the best melds" },
-        { value: "c",  label: "c: Same as b but do not always discard higest card" }
+        { value: "c",  label: "c: Same as b but do not always discard higest card" },
+        { value: "d",  label: "d: Ultra" }
     ];
 
     decks.forEach(d => {
