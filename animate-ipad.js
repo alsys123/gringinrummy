@@ -6,13 +6,14 @@ const CelebrationLength = 15000; // 15 seconds
 async function celebrateMatchWin_iPad_starburstLoop() {
 
     const celebrationEffects = [
-    celebrateMatchWin_canvasBalloons_v1,
-    celebrateMatchWin_canvasBalloons_v2,
-    celebrateMatchWin_canvasBalloons_v3,
-    celebrateMatchWin_canvasStarburst_v7,
-    celebrateMatchWin_fireworks
-//    celebrateMatchWin_canvasLightning_v1
-];
+	celebrateMatchWin_canvasBalloons_v1,
+	celebrateMatchWin_canvasBalloons_v2,
+	celebrateMatchWin_canvasBalloons_v3,
+	celebrateMatchWin_canvasStarburst_v7,
+	celebrateMatchWin_fireworks,
+	celebrateMatchWin_canvasButterflies_v3	
+	//    celebrateMatchWin_canvasLightning_v1
+    ];
 
     const randomIndex = Math.floor(Math.random() * celebrationEffects.length);
 
@@ -1948,6 +1949,9 @@ canvas.width = canvas.width;   // full internal reset
     let fadeOut = false;
     let fadeOutStart = null;
 
+    const edgeMarginOnFade = 150;
+    const edgeMargin        = 50;
+
     // CelebrationLength is defined outside this function
     setTimeout(() => {
         running = false;
@@ -1996,8 +2000,6 @@ canvas.width = canvas.width;   // full internal reset
     // ------------------------------------------------------------
     // CREATE BUTTERFLIES
     // ------------------------------------------------------------
-    const butterflies = [];
-    const count = 80; // was 80;
 
     function makeButterfly() {
         const sp = Math.floor(Math.random() * speciesImages.length);
@@ -2023,7 +2025,60 @@ canvas.width = canvas.width;   // full internal reset
             flutterTime: 0,
             hoverTime: 0
         };
-    }//makeButterfly
+    }//makeButterfly v1
+
+    /*
+function makeButterfly() {
+    const sp = Math.floor(Math.random() * speciesImages.length);
+
+    // Decide spawn direction
+    const r = Math.random();
+    let x, y, vx, vy;
+
+    if (r < 0.1) {
+        // 10% spawn from LEFT
+        x = -100;
+        y = Math.random() * canvas.height * 0.7 + canvas.height * 0.3;
+        vx = 1 + Math.random() * 1.5;   // move right
+        vy = -0.5 - Math.random() * 1;  // slight upward drift
+    }
+    else if (r < 0.2) {
+        // 10% spawn from RIGHT
+        x = canvas.width + 100;
+        y = Math.random() * canvas.height * 0.7 + canvas.height * 0.3;
+        vx = -1 - Math.random() * 1.5;  // move left
+        vy = -0.5 - Math.random() * 1;  // slight upward drift
+    }
+    else {
+        // 80% spawn from BOTTOM (your original behavior)
+        x = Math.random() * canvas.width;
+        y = canvas.height + Math.random() * 200;
+        vx = (Math.random() - 0.5) * 1;
+        vy = -1 - Math.random() * 1.5;
+    }
+
+    return {
+        species: sp,
+        img: speciesImages[sp],
+
+        x, y,
+        vx, vy,
+
+        flap: Math.random() * Math.PI * 2,
+        flapSpeed: 0.15 + Math.random() * 0.1,
+
+        rot: (Math.random() - 0.5) * 0.2,
+
+        size: 40 + Math.random() * 40,
+        depth: 0.4 + Math.random() * 0.6,
+
+        flutterTime: 0,
+        hoverTime: 0
+    };
+}//makeButterfly v2
+*/
+    const butterflies = [];
+    const count = 80; // was 80;
 
     // one time call to create the initial butterflies
     for (let i = 0; i < count; i++) {
@@ -2087,17 +2142,53 @@ if (fadeOut) {
     b.hoverTime = 0;
     b.flutterTime = 0;
 
+    b.flap += b.flapSpeed;   // keep wings flapping
+/*
+    // FORCE simple upward motion
+    b.vx = 0;
+//    b.vy = -3;  // strong upward speed
+b.vy = -2 - Math.random() * 2;   // upward flutter speed
+
+    // Move butterfly
+    b.y += b.vy;
+
     // Increase upward velocity
 //    b.vy -= 0.1;   // fly upward faster
-b.vy = Math.min(b.vy - 0.1, -2);   // always at least -2 (strong upward)
+//b.vy = Math.min(b.vy - 0.1, -2);   // always at least -2 (strong upward)
+//b.vy = -3 - Math.random() * 1.5;  // -3 to -4.5
 
     // Optional: slight sideways drift for natural motion
-    b.x += (Math.random() - 0.5) * 1;
-
+//    b.x += (Math.random() - 0.5) * 0.5;  // was 1
+b.x += (Math.random() - 0.5) * 4;   // flutter left/right
+    */
+    // Decide escape direction
+    if (b.x < edgeMarginOnFade) {
+        // Flutter LEFT
+        b.vx = -3 - Math.random() * 2;
+        b.x += b.vx;
+        b.y -= 1 + Math.random() * 1;   // slight upward drift
+    }
+    else if (b.x > canvas.width - edgeMargin) {
+        // Flutter RIGHT
+        b.vx = 3 + Math.random() * 2;
+        b.x += b.vx;
+        b.y -= 1 + Math.random() * 1;
+    }
+    else {
+        // Flutter UP
+        b.vy = -2 - Math.random() * 2;
+        b.y += b.vy;
+        b.x += (Math.random() - 0.5) * 4;  // sideways flutter
+    }
+	
     // Remove butterfly only when it leaves the screen
     if (b.y < -200 || b.x < -200 || b.x > canvas.width + 200) {
         const idx = butterflies.indexOf(b);
         butterflies.splice(idx, 1);
+
+//	log("One is removed. We now have: "+butterflies.length,"sys");
+
+
         return;
     }
 
@@ -2144,20 +2235,31 @@ b.vy = Math.min(b.vy - 0.1, -2);   // always at least -2 (strong upward)
         b.x += b.vx * b.depth;
         b.y += b.vy * b.depth;
 
-	/* do not respawn??
+	// nudge them left or right so they exit tht way
+	if (!fadeOut) {    
+	    // Encourage sideways exit if near edges
+	    if (b.x < edgeMargin) {
+		b.vx -= 0.2;   // drift left
+	    }
+	    else if (b.x > canvas.width - edgeMargin) {
+		b.vx += 0.2;   // drift right
+	    }
+	}
+	
+	// **** do not respawn??
         // Respawn only while running
         if (allowRespawn && !fadeOut &&
 	    (b.y < -200 || b.x < -200 || b.x > canvas.width + 200)) {
 
-	    log("Respawn","sys");
+//	    log("Respawn","sys");
 	    
             const idx = butterflies.indexOf(b);
             butterflies[idx] = makeButterfly();
 
-	    log("--> just made "+idx,"sys");
+//	    log("--> just made "+idx,"sys");
+//	log("Spawned. We now have: "+butterflies.length,"sys");
 
             }
-	*/
 	
     }
 
@@ -2176,7 +2278,7 @@ b.vy = Math.min(b.vy - 0.1, -2);   // always at least -2 (strong upward)
         // End when all butterflies are gone
         if (fadeOut && butterflies.length === 0) {
 
-	    log("All butterflies are gone","sys");
+//	    log("All butterflies are gone","sys");
 	    
 	    ctx.clearRect(0, 0, canvas.width, canvas.height);
 	    canvas.width = canvas.width;   // full internal reset
