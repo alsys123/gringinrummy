@@ -460,7 +460,7 @@ function buildCelebrationTester() {
         { value: "f",  label: "f: Lightning" },
         { value: "g",  label: "g: Butterflies" },
         { value: "h",  label: "h: Butterflies v2" },
-        { value: "h",  label: "i: Butterflies v3" }
+        { value: "i",  label: "i: Butterflies v3" }
 	    ];
     
     decks.forEach(d => {

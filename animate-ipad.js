@@ -10,8 +10,8 @@ async function celebrateMatchWin_iPad_starburstLoop() {
     celebrateMatchWin_canvasBalloons_v2,
     celebrateMatchWin_canvasBalloons_v3,
     celebrateMatchWin_canvasStarburst_v7,
-    celebrateMatchWin_fireworks,
-    celebrateMatchWin_canvasLightning_v1
+    celebrateMatchWin_fireworks
+//    celebrateMatchWin_canvasLightning_v1
 ];
 
     const randomIndex = Math.floor(Math.random() * celebrationEffects.length);
@@ -1234,7 +1234,7 @@ function celebrateMatchWin_canvasBalloons_v2() {
 }
 
 function celebrateMatchWin_canvasBalloons_v3() {
-
+    
     const canvas = document.getElementById("starburst-canvas");
     const ctx = canvas.getContext("2d");
 
@@ -1932,6 +1932,9 @@ function celebrateMatchWin_canvasButterflies_v3() {
     const canvas = document.getElementById("starburst-canvas");
     const ctx = canvas.getContext("2d");
 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+canvas.width = canvas.width;   // full internal reset
+
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     canvas.style.position = "fixed";
@@ -1950,6 +1953,12 @@ function celebrateMatchWin_canvasButterflies_v3() {
         running = false;
         fadeOut = true;
     }, CelebrationLength);
+//    }, 30000);
+
+    let allowRespawn = true;
+    setTimeout(() => allowRespawn = false, CelebrationLength * 0.5); // stop halfway
+//    setTimeout(() => allowRespawn = false, CelebrationLength * 0.1); 
+//    setTimeout(() => allowRespawn = false, 2000); 
 
     // ------------------------------------------------------------
     // LOAD PNG SPECIES
@@ -1976,7 +1985,6 @@ function celebrateMatchWin_canvasButterflies_v3() {
         "images/butterflies/b18.png",
         "images/butterflies/b19.png",
         "images/butterflies/b20.png"
-
     ];
 
     for (const p of paths) {
@@ -1989,7 +1997,7 @@ function celebrateMatchWin_canvasButterflies_v3() {
     // CREATE BUTTERFLIES
     // ------------------------------------------------------------
     const butterflies = [];
-    const count = 1; // was 80;
+    const count = 80; // was 80;
 
     function makeButterfly() {
         const sp = Math.floor(Math.random() * speciesImages.length);
@@ -2015,8 +2023,9 @@ function celebrateMatchWin_canvasButterflies_v3() {
             flutterTime: 0,
             hoverTime: 0
         };
-    }
+    }//makeButterfly
 
+    // one time call to create the initial butterflies
     for (let i = 0; i < count; i++) {
         butterflies.push(makeButterfly());
     }
@@ -2045,6 +2054,8 @@ function celebrateMatchWin_canvasButterflies_v3() {
     // ------------------------------------------------------------
     function updateButterfly(b) {
 
+	
+	/*
         // Fade-out: butterflies drift upward and shrink
         if (fadeOut) {
             b.vy -= 0.05;          // accelerate upward
@@ -2056,15 +2067,42 @@ function celebrateMatchWin_canvasButterflies_v3() {
                 butterflies.splice(idx, 1);
                 return;
             }
+
 	    // Hard timeout: remove after 6 seconds of fade-out
 	    if (!fadeOutStart) fadeOutStart = performance.now();
+
 	    if (performance.now() - fadeOutStart > 6000) {
 		const idx = butterflies.indexOf(b);
 		butterflies.splice(idx, 1);
 		return;
-	    }
+		}
+		
 	    return;
         }//fadeout
+	*/
+	// Fade-out: butterflies fly upward and leave the screen
+if (fadeOut) {
+
+    // Disable hover and flutter
+    b.hoverTime = 0;
+    b.flutterTime = 0;
+
+    // Increase upward velocity
+//    b.vy -= 0.1;   // fly upward faster
+b.vy = Math.min(b.vy - 0.1, -2);   // always at least -2 (strong upward)
+
+    // Optional: slight sideways drift for natural motion
+    b.x += (Math.random() - 0.5) * 1;
+
+    // Remove butterfly only when it leaves the screen
+    if (b.y < -200 || b.x < -200 || b.x > canvas.width + 200) {
+        const idx = butterflies.indexOf(b);
+        butterflies.splice(idx, 1);
+        return;
+    }
+
+    return; // IMPORTANT: skip normal movement + respawn
+}//fadeOut
 
         // Wing flap
         b.flap += b.flapSpeed;
@@ -2106,11 +2144,21 @@ function celebrateMatchWin_canvasButterflies_v3() {
         b.x += b.vx * b.depth;
         b.y += b.vy * b.depth;
 
+	/* do not respawn??
         // Respawn only while running
-        if (!fadeOut && (b.y < -200 || b.x < -200 || b.x > canvas.width + 200)) {
+        if (allowRespawn && !fadeOut &&
+	    (b.y < -200 || b.x < -200 || b.x > canvas.width + 200)) {
+
+	    log("Respawn","sys");
+	    
             const idx = butterflies.indexOf(b);
             butterflies[idx] = makeButterfly();
-        }
+
+	    log("--> just made "+idx,"sys");
+
+            }
+	*/
+	
     }
 
     // ------------------------------------------------------------
@@ -2124,12 +2172,19 @@ function celebrateMatchWin_canvasButterflies_v3() {
             drawButterfly(b);
         }
 
+	
         // End when all butterflies are gone
         if (fadeOut && butterflies.length === 0) {
+
+	    log("All butterflies are gone","sys");
+	    
+	    ctx.clearRect(0, 0, canvas.width, canvas.height);
+	    canvas.width = canvas.width;   // full internal reset
             canvas.style.display = "none";
             return;
         }
 
+	
         requestAnimationFrame(draw);
     }
 
