@@ -50,7 +50,7 @@ async function cpuTurnUltra() {
     }
 
     // --- 4. Knock check (difficulty affects willingness) ---
-    if (cDW <= 10) {
+    if (cDW <= 7) {
         if (Math.random() < cpuLevel.knockChance) {
             cpuKnock();
             return;
