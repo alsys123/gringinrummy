@@ -1689,8 +1689,7 @@ window.addEventListener("load", positionCenterArea);
    Special player automation
    ------------------------------ */
 
-//
-
+// when autoPlayer is on
 async function playerTurn() {
 	
 //discardTakeChance: 1.00,   // always optimal

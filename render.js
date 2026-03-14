@@ -15,18 +15,9 @@ function updateButtons() {
     
     log(`Update Buttons phase: ${game.phase} who: ${game.turn}`, "sys");
 
-
-//    console.log("in updateButtons .. flags: game.phase, matchScore.player, matchScore.cpu,game.turn ==> ",
-//		game.phase,
-//		matchScore.player,
-//		matchScore.cpu, game.turn   );
-
     const t = game.turn === "player";
     const p = game.phase;
 
-//    document.getElementById("btn-knock").style.visibility = "hidden";  // hide
-//    document.getElementById("btn-gin").style.visibility = "hidden";
-//    document.getElementById("btn-bigGin").style.visibility = "hidden";
     hideItk("btn-knock");
     hideItk("btn-gin");
     hideItk("btn-bigGin");
@@ -38,18 +29,14 @@ function updateButtons() {
 	
 	const evalPlayer = evaluate(game.player);
 
-//	console.log(checkBigGinFlag,`. and deadwood: ${evalPlayer.deadwood}`);	
-
 	if (evalPlayer.deadwood <= 10 && checkBigGinFlag )
-//	    document.getElementById("btn-bigGin").style.visibility = "visible"; // show
 	showItk("btn-bigGin");
 
 	if (evalPlayer.deadwood === 0)
-//	    document.getElementById("btn-gin").style.visibility = "visible"; // show
-	showItk("btn-gin");
-	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
-//	    document.getElementById("btn-knock").style.visibility = "visible";
-	showItk("btn-knock");
+	    showItk("btn-gin");
+	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0) {
+	    showItk("btn-knock");
+	}	
 
 	// do we have 11 cards and 1 deadwood .. this is GIN
 	const pEval = evaluate(game.player);
@@ -58,16 +45,9 @@ function updateButtons() {
 	    showItk("btn-gin");
 	}
 
-	// hide
-//	document.getElementById("btn-new").style.display = "none";
-//	document.getElementById("btn-newMatch").style.display = "none";
 	hideItr("btn-new");
 	hideItr("btn-newMatch");
 	hideDifficultyCluster();
-//	hideItr("star-ml");
-//	hideItr("star-mla");
-//	hideItr("star-mlb");
-//	hideItr("star-mlc");
 	
 	return;
     }
@@ -78,23 +58,16 @@ function updateButtons() {
 	const evalPlayer = evaluate(game.player);
 	
 	if (evalPlayer.deadwood === 0) 
-//	    document.getElementById("btn-gin").style.visibility = "visible";
-	showItk("btn-gin");
+	    showItk("btn-gin");
     
 	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
-//	    document.getElementById("btn-knock").style.visibility = "visible";
-	showItk("btn-knock");
-	// hide
-//	document.getElementById("btn-new").style.display = "none";
-//	document.getElementById("btn-newMatch").style.display = "none";
+	    showItk("btn-knock");
+
+	
 	hideItr("btn-new");
 	hideItr("btn-newMatch");
 	hideDifficultyCluster();
-//	hideItr("star-ml");
-//	hideItr("star-mla");
-//	hideItr("star-mlb");
-//	hideItr("star-mlc");
-
+	
 	return;
     }
 
@@ -105,108 +78,51 @@ function updateButtons() {
     const playerWon = matchScore.player >= matchScore.target;
     const cpuWon = matchScore.cpu >= matchScore.target;
     
-//    const matchOverFlag = playerWon || cpuWon;
     const matchOverFlag =
 	  playerWon || cpuWon || (matchScore.player === 0 && matchScore.cpu === 0);
     
-//    console.log("flag: ", game.phase,
-//		matchOverFlag,
-//		matchScore.player,playerWon,
-//		matchScore.cpu,   cpuWon);
-
-    // Hide both by default
-//    document.getElementById("btn-new").style.display = "none";
-//    document.getElementById("btn-newMatch").style.display = "none";
 	hideItr("btn-new");
 	hideItr("btn-newMatch");
 	hideDifficultyCluster();
-//	hideItr("star-ml");
-//	hideItr("star-mla");
-//	hideItr("star-mlb");
-//	hideItr("star-mlc");
 
     // If match is over → show New Match
     if (matchOverFlag && game.phase === "round-over") {
-//	document.getElementById("btn-newMatch").style.display = "";
 	showItr("btn-newMatch");
 	showDifficultyCluster();
-//	showItr("star-ml");
-//	showItr("star-mla");
-//	showItr("star-mlb");
-//	showItr("star-mlc");
 	return;
     }
     // If match is over → show New Match -- we are idle at the beginning
     if (matchOverFlag && game.phase === "idle") {
 	showItr("btn-newMatch");
 	showDifficultyCluster();
-//	showItr("star-ml");
-//	showItr("star-mla");
-//	showItr("star-mlb");
-//	showItr("star-mlc");
 	return;
     }
     // If match is NOT over → show New Game but we are idle
     if (!matchOverFlag && game.phase === "idle") {
-//	document.getElementById("btn-new").style.display = "";
 	showItr("btn-new");
-
-//	console.log("show New Game - !matchOverFlag",);
-	
 	return;
     }
-
-// rev8
-    // match is not over but the round is over
-//    if (game.turn === "cpu" && game.phase === "await-draw") {
-//	document.getElementById("btn-new").style.display = "";
-//
-//	console.log("show New Game - !matchOverFlag",);
-//	
-//	return;
-    //    }
     
     // match is not over but the round is over
     if (game.turn === "cpu" && game.phase === "round-over") {
-//	document.getElementById("btn-new").style.display = "";
 	showItr("btn-new");
-
-//	console.log("show New Game - !matchOverFlag",);
-	
 	return;
     }
 
     // match is not over but the round is over
     if (!matchOverFlag && game.phase === "round-over") {
-//	document.getElementById("btn-new").style.display = "";
 	showItr("btn-new");
-
-//	console.log("show New Game - !matchOverFlag",);
-	
 	return;
     }
 
-/*    
-    //game.phase could be await draw 
-    if (!matchOverFlag ) {
-	document.getElementById("btn-new").style.display = "";  // New Game
-	console.log("set new GAME!");
-    }
-
-    if (game.phase === "round-over" && matchOverFlag ) {
-	document.getElementById("btn-newMatch").style.display = ""; // New Match
-//	console.log("new match");
-    }
-*/
-    
-// hide by default
-//	document.getElementById("btn-knock").style.visibility = "hidden";
-//	document.getElementById("btn-gin").style.visibility = "hidden";
-//	document.getElementById("btn-bigGin").style.visibility = "hidden";
     hideItk("btn-knock");
     hideItk("btn-gin");
     hideItk("btn-bigGin");
-	    
+
+//    if (autoPlayer) {
+//	playerTurn();   // auto-advance
+//    }
+    
 } // updateButtons
 
 
