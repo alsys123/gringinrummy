@@ -1989,7 +1989,7 @@ function celebrateMatchWin_canvasButterflies_v3() {
     // CREATE BUTTERFLIES
     // ------------------------------------------------------------
     const butterflies = [];
-    const count = 80;
+    const count = 1; // was 80;
 
     function makeButterfly() {
         const sp = Math.floor(Math.random() * speciesImages.length);
