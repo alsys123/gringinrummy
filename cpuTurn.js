@@ -55,7 +55,7 @@ async function cpuTurnStratA() {
             log("CPU drew " + prettyCard(drawn) + " from discard.","cpu");
             render();
             animateCpuTakeFromDiscard(drawn);
-            await sleep(2000); // was 800
+            await sleep(1000); // was 800 .. 2000
         }
     }
 

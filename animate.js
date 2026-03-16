@@ -265,7 +265,7 @@ function showMessageBubble(text) {
     // Position bubble near stock card
     const rect = stock.getBoundingClientRect();
     bubble.style.left = rect.left + window.scrollX - 40 + "px";
-    bubble.style.top  = rect.top  + window.scrollY - 0 + "px"; // was -120
+    bubble.style.top  = rect.top  + window.scrollY - 50 + "px"; // was -120
 
     let count = 0;
 

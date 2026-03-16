@@ -11,7 +11,6 @@ function celebrateMatchWin() {
     const celebrationEffects = [
 	celebrateMatchWin_canvasBalloons_v1,
 	celebrateMatchWin_canvasBalloons_v2,
-	celebrateMatchWin_canvasBalloons_v3,
 	celebrateMatchWin_canvasStarburst_v7,
 	celebrateMatchWin_fireworks,
 	celebrateMatchWin_canvasButterflies_v3	

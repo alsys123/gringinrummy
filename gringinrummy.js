@@ -1190,7 +1190,7 @@ async function cpuKnock() {
 
     //    commonEventEnd(scored,"CPU knocked. Click New Hand to play again.");
 
-    showMessageBubble("Knock. Knock");  
+    showMessageBubble("Knock  Knock");  
 //    await sleep(2000); ... shows star_mla..???
 
     showHandTally(scored);
