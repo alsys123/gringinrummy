@@ -34,10 +34,16 @@ function updateButtons() {
 
 	if (evalPlayer.deadwood === 0)
 	    showItk("btn-gin");
+
 	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0) {
 	    showItk("btn-knock");
 	}	
 
+	// new. If we have 11 cards. We are ready to discard but enough to knock
+	if (game.player.length === 11 && evalPlayer.deadwood <= 20) {
+	    showItk("btn-knock");
+	}
+	
 	// do we have 11 cards and 1 deadwood .. this is GIN
 	const pEval = evaluate(game.player);
 	const deadwoodCards = pEval.deadwoodCards;
@@ -45,6 +51,8 @@ function updateButtons() {
 	    showItk("btn-gin");
 	}
 
+	log(`--- Deadwood: ${evalPlayer.deadwood}. Number of cards: ${game.player.length}`,"sys");
+	
 	hideItr("btn-new");
 	hideItr("btn-newMatch");
 	hideDifficultyCluster();
@@ -55,14 +63,12 @@ function updateButtons() {
     /// try this one out .. if play and awaiting to draw
     if (t && p === "await-draw") {
 
-	// see if thia fixes button diaply too early ?
-	const evalPlayer = evaluate(game.player);
-	
-	if (evalPlayer.deadwood === 0) 
-	   showItk("btn-gin");
-    
-	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
-		 showItk("btn-knock");
+//	// see if thia fixes button diaply too early ?
+//	const evalPlayer = evaluate(game.player);
+//	if (evalPlayer.deadwood === 0) 
+//	   showItk("btn-gin");
+//    	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
+//		 showItk("btn-knock");
 
 	
 	hideItr("btn-new");
