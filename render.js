@@ -55,13 +55,14 @@ function updateButtons() {
     /// try this one out .. if play and awaiting to draw
     if (t && p === "await-draw") {
 
-	const evalPlayer = evaluate(game.player);
-	
-	if (evalPlayer.deadwood === 0) 
-	    showItk("btn-gin");
-    
-	if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
-	    showItk("btn-knock");
+	// see if thia fixes button diaply too early ?
+	//const evalPlayer = evaluate(game.player);
+	//
+	//if (evalPlayer.deadwood === 0) 
+	//    showItk("btn-gin");
+    //
+	//if (evalPlayer.deadwood <= 10 && evalPlayer.deadwood > 0)
+	//   showItk("btn-knock");
 
 	
 	hideItr("btn-new");
