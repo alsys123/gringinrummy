@@ -39,11 +39,14 @@ function updateButtons() {
 	    showItk("btn-knock");
 	}	
 
-	// new. If we have 11 cards. We are ready to discard but enough to knock
-	if (game.player.length === 11 && evalPlayer.deadwood <= 20) {
+//	// new. If we have 11 cards. We are ready to discard but enough to knock
+//	if (game.player.length === 11 && evalPlayer.deadwood <= 20) {
+//	    showItk("btn-knock");
+//	}
+	if (game.player.length === 11 && checkKnock(evalPlayer)) {
 	    showItk("btn-knock");
 	}
-	
+
 	// do we have 11 cards and 1 deadwood .. this is GIN
 	const pEval = evaluate(game.player);
 	const deadwoodCards = pEval.deadwoodCards;
@@ -131,6 +134,24 @@ function updateButtons() {
 //    }
     
 } // updateButtons
+
+function checkKnock(evalPlayer) {
+    const total = evalPlayer.deadwood;
+    const dcs = evalPlayer.deadwoodCards;  // array of { value: N }
+
+//    cLog("checkKnock",total,dcs);
+    
+
+    if (dcs.length === 0) return false; // no deadwood, but you need 11 cards to knock
+
+    for (const dc of dcs) {
+        if (total - dc.deadwoodValue <= 10) {
+            return true;  // knocking is possible
+        }
+    }
+
+    return false; // no discard gets you to 10 or under
+}//checkKnock
 
 
 //__ render

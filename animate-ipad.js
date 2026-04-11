@@ -14,7 +14,8 @@ function celebrateMatchWin() {
 	celebrateMatchWin_canvasStarburst_v7,
 	celebrateMatchWin_fireworks,
 	celebrateMatchWin_canvasButterflies_v3	
-	//    celebrateMatchWin_canvasLightning_v1
+	//  .. out  celebrateMatchWin_canvasLightning_v1
+//not yet..	celebrateMatchWin_canvasDolphins_v2
     ];
 
     const randomIndex = Math.floor(Math.random() * celebrationEffects.length);
@@ -1499,6 +1500,160 @@ if (fadeOut) {
         }
 
 	
+        requestAnimationFrame(draw);
+    }//draw
+
+    requestAnimationFrame(draw);
+}
+
+function celebrateMatchWin_canvasDolphins_v2() {
+
+    log("celebrateMatchWin_canvasDolphins_v2", "player");
+
+    const canvas = document.getElementById("starburst-canvas");
+    const ctx = canvas.getContext("2d");
+
+    // full screen
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = "fixed";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "999999";
+    canvas.style.display = "block";
+
+    // Dolphin shapes (simple vector silhouettes)
+    function drawDolphin(ctx, size, rot) {
+        ctx.rotate(rot);
+        ctx.scale(size, size);
+        ctx.beginPath();
+        ctx.moveTo(-1.2, 0.2);
+        ctx.quadraticCurveTo(-0.8, -0.4, 0, -0.3);
+        ctx.quadraticCurveTo(0.6, -0.2, 1.0, 0.1);
+        ctx.quadraticCurveTo(0.4, 0.0, -0.2, 0.4);
+        ctx.quadraticCurveTo(-0.8, 0.6, -1.2, 0.2);
+        ctx.fillStyle = "#4FC3F7";
+        ctx.fill();
+    }
+
+    const dolphins = [];
+    const splashes = [];
+    const count = 12;
+
+    let running = true;
+    setTimeout(() => running = false, CelebrationLength);
+
+    function makeDolphin() {
+        return {
+            x: Math.random() * canvas.width,
+            y: canvas.height + 150,
+            vx: (Math.random() - 0.5) * 2,
+            vy: -6 - Math.random() * 2,
+            rot: (Math.random() - 0.5) * 0.2,
+            rotSpeed: (Math.random() - 0.5) * 0.02,
+            life: 0,
+            maxLife: 160 + Math.random() * 80,
+            jumped: false,
+            size: 40 + Math.random() * 30,
+            dead: false
+        };
+    }
+
+    function makeSplash(x, y) {
+        return {
+            x,
+            y,
+            vx: (Math.random() - 0.5) * 4,
+            vy: -2 - Math.random() * 2,
+            size: 4 + Math.random() * 4,
+            life: 0,
+            maxLife: 30 + Math.random() * 20,
+            dead: false
+        };
+    }
+
+    for (let i = 0; i < count; i++) {
+        dolphins.push(makeDolphin());
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let alive = false;
+
+        // Dolphins
+        for (const d of dolphins) {
+            if (d.dead) continue;
+
+            d.life++;
+
+            // Jump arc
+            d.x += d.vx;
+            d.y += d.vy + Math.sin(d.life * 0.1) * 1.5;
+            d.rot += d.rotSpeed;
+
+            // Trigger splash when crossing water line
+            if (!d.jumped && d.y < canvas.height - 80) {
+                d.jumped = true;
+
+                for (let i = 0; i < 10; i++) {
+                    splashes.push(makeSplash(d.x, canvas.height - 20));
+                }
+            }
+
+            // Fade out
+            const t = d.life / d.maxLife;
+            const alpha = 1 - t;
+
+            if (t >= 1) {
+                d.dead = true;
+                continue;
+            }
+
+            alive = true;
+
+            // Draw dolphin
+            ctx.save();
+            ctx.translate(d.x, d.y);
+            ctx.globalAlpha = alpha;
+            drawDolphin(ctx, d.size / 100, d.rot);
+            ctx.restore();
+        }
+
+        // Splash particles
+        for (const s of splashes) {
+            if (s.dead) continue;
+
+            s.life++;
+            s.x += s.vx;
+            s.y += s.vy;
+            s.vy += 0.1; // gravity
+
+            const t = s.life / s.maxLife;
+            const alpha = 1 - t;
+
+            if (t >= 1) {
+                s.dead = true;
+                continue;
+            }
+
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = "#81D4FA";
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // End celebration
+        if (!alive && !running) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = "none";
+            return;
+        }
+
         requestAnimationFrame(draw);
     }
 
